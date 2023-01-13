@@ -6,10 +6,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
+/**
+ * Starts the *command based* robot structure
+ */
 public final class Main {
-  private Main() {}
+  private Main() {} // Only exists to prevent the instantiation of the <code>Main</code> class
 
-  public static void main(String... args) {
-    RobotBase.startRobot(Robot::new);
+  public static void main(String... args) // String... almost the same as String[], this is called a varargs parameter
+  {
+    RobotBase.startRobot(Robot::new); // Robot::new returns 
   }
 }

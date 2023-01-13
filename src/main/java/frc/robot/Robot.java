@@ -10,6 +10,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+/**
+ * Subsubsubclass of the <code>RobotBase</code> class from edu.wpi.first.wpilibj.RobotBase
+ * This class is the iterative => timed version, meaning it operates using a command based system
+ */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
