@@ -19,25 +19,45 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  /**
+   * Method runs once at the time of the creation of the <code>Robot</code> class
+   * Never have an infinite or while loop
+   */
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
   }
 
+  /**
+   * Runs once every 50 milliseconds. This is roughly 4 times faster than the blink of a human eye
+   * Never have an infinite or while loop
+   */
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
   }
 
+  /**
+   * Same as <code>robotInnit</code>, but only for the disabled state
+   */
   @Override
   public void disabledInit() {}
 
+  /**
+   * Same as <code>robotPeriodic</code>, but only for the disabled state
+   */
   @Override
   public void disabledPeriodic() {}
 
+  /**
+   * Same as <code>robotExit</code>, but only for the disabled state
+   */
   @Override
   public void disabledExit() {}
 
+  /**
+   * Same as <code>robotInnit</code>, but only for the autonomous state
+   */
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
@@ -47,12 +67,21 @@ public class Robot extends TimedRobot {
     }
   }
 
+  /**
+   * Same as <code>robotPeriodic</code>, but only for the autonomous state
+   */
   @Override
   public void autonomousPeriodic() {}
 
+  /**
+   * Same as <code>robotExit</code>, but only for the autonomous state
+   */
   @Override
   public void autonomousExit() {}
 
+  /**
+   * Same as <code>robotInnit</code>, but only for the teleoperated state
+   */
   @Override
   public void teleopInit() {
     if (m_autonomousCommand != null) {
@@ -60,20 +89,35 @@ public class Robot extends TimedRobot {
     }
   }
 
+  /**
+   * Same as <code>robotPeriodic</code>, but only for the teleoperated state
+   */
   @Override
   public void teleopPeriodic() {}
 
+  /**
+   * Same as <code>robotExit</code>, but only for the teleoperated state
+   */
   @Override
   public void teleopExit() {}
 
+  /**
+   * Same as <code>robotInnit</code>, but only for the testing state
+   */
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
   }
 
+  /**
+   * Same as <code>robotPeriodic</code>, but only for the testing state
+   */
   @Override
   public void testPeriodic() {}
 
+  /**
+   * Same as <code>robotExit</code>, but only for the testing state
+   */
   @Override
   public void testExit() {}
 }
