@@ -16,10 +16,10 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.JoystickDrive;
+import frc.robot.commands.TestModule;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.DriveTrain;
 
@@ -38,10 +38,10 @@ public class RobotContainer {
     configureButtonBindings();
 
     // Configure default commands
-    driveTrain.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new JoystickDrive(driveTrain));
+    // driveTrain.setDefaultCommand(
+    //     // The left stick controls translation of the robot.
+    //     // Turning is controlled by the X axis of the right stick.
+    //     new JoystickDrive(driveTrain));
   }
 
   /**
@@ -55,9 +55,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .whileTrue(new RunCommand(
-            () -> driveTrain.setX(),
-            driveTrain));
+        .whileTrue(new TestModule(driveTrain));
   }
 
   /**
@@ -65,44 +63,44 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // Create config for trajectory
-    TrajectoryConfig config = new TrajectoryConfig(
-        Constants.Auto.maxSpeed,
-        Constants.Auto.maxAcceleration)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(Constants.Drive.driveKinematics);
+//   public Command getAutonomousCommand() {
+//     // Create config for trajectory
+//     TrajectoryConfig config = new TrajectoryConfig(
+//         Constants.Auto.maxSpeed,
+//         Constants.Auto.maxAcceleration)
+//         // Add kinematics to ensure max speed is actually obeyed
+//         .setKinematics(Constants.Drive.driveKinematics);
 
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
-        config);
+//     // An example trajectory to follow. All units in meters.
+//     Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+//         // Start at the origin facing the +X direction
+//         new Pose2d(0, 0, new Rotation2d(0)),
+//         // Pass through these two interior waypoints, making an 's' curve path
+//         List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+//         // End 3 meters straight ahead of where we started, facing forward
+//         new Pose2d(3, 0, new Rotation2d(0)),
+//         config);
 
-    var thetaController = new ProfiledPIDController(
-        Constants.Auto.thetaP, 0, 0, Constants.Auto.thetaPIDConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+//     var thetaController = new ProfiledPIDController(
+//         Constants.Auto.thetaP, 0, 0, Constants.Auto.thetaPIDConstraints);
+//     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        exampleTrajectory,
-        driveTrain::getPose, // Functional interface to feed supplier
-        Constants.Drive.driveKinematics,
+//     // SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+//     //     exampleTrajectory,
+//     //     driveTrain::getPose, // Functional interface to feed supplier
+//     //     Constants.Drive.driveKinematics,
 
-        // Position controllers
-        new PIDController(Constants.Auto.xP, 0, 0),
-        new PIDController(Constants.Auto.yP, 0, 0),
-        thetaController,
-        driveTrain::setModuleStates,
-        driveTrain);
+//     //     // Position controllers
+//     //     new PIDController(Constants.Auto.xP, 0, 0),
+//     //     new PIDController(Constants.Auto.yP, 0, 0),
+//     //     thetaController,
+//     //     driveTrain::setModuleStates,
+//     //     driveTrain);
 
-    // Reset odometry to the starting pose of the trajectory.
-    driveTrain.resetOdometry(exampleTrajectory.getInitialPose());
+//     // Reset odometry to the starting pose of the trajectory.
+//     // driveTrain.resetOdometry(exampleTrajectory.getInitialPose());
 
-    // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> driveTrain.drive(0, 0, 0, false));
-  }
+//     // // Run path following command, then stop at the end.
+//     // return swerveControllerCommand.andThen(() -> driveTrain.drive(0, 0, 0, false));
+//   }
 }

@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.misc.Constants;
 
@@ -25,70 +26,75 @@ public class DriveTrain extends SubsystemBase {
             Constants.Drive.frontLeftTurnID,
             Constants.Drive.frontLeftAngularOffset);
 
-    private final SwerveModule frontRight = new SwerveModule(
-            Constants.Drive.frontRightWheelID,
-            Constants.Drive.frontRightTurnID,
-            Constants.Drive.frontRightAngularOffset);
+//     private final SwerveModule frontRight = new SwerveModule(
+//             Constants.Drive.frontRightWheelID,
+//             Constants.Drive.frontRightTurnID,
+//             Constants.Drive.frontRightAngularOffset);
 
-    private final SwerveModule backLeft = new SwerveModule(
-            Constants.Drive.backLeftWheelID,
-            Constants.Drive.backLeftTurnID,
-            Constants.Drive.backLeftAngularOffset);
+//     private final SwerveModule backLeft = new SwerveModule(
+//             Constants.Drive.backLeftWheelID,
+//             Constants.Drive.backLeftTurnID,
+//             Constants.Drive.backLeftAngularOffset);
 
-    private final SwerveModule backRight = new SwerveModule(
-            Constants.Drive.backRightWheelID,
-            Constants.Drive.backRightTurnID,
-            Constants.Drive.backRightAngularOffset);
+//     private final SwerveModule backRight = new SwerveModule(
+//             Constants.Drive.backRightWheelID,
+//             Constants.Drive.backRightTurnID,
+//             Constants.Drive.backRightAngularOffset);
         private final ArrayList<SwerveModule> modules = new ArrayList<>(Arrays.asList(frontLeft));
 
     // The gyro sensor
     private final AHRS gyro = new AHRS();
 
     // Odometry class for tracking robot pose
-    SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-            Constants.Drive.driveKinematics,
-            Rotation2d.fromDegrees(gyro.getAngle()),
-            (SwerveModulePosition[]) modules.stream().map(SwerveModule::getPosition).collect(Collectors.toList()).toArray() // iterates through modules's position
-        //     new SwerveModulePosition[] {
-        //             frontLeft.getPosition(),
-        //             frontRight.getPosition(),
-        //             backLeft.getPosition(),
-        //             backRight.getPosition()
-        //     }
-            );
+//     SwerveDriveOdometry odometry = new SwerveDriveOdometry(
+//             Constants.Drive.driveKinematics,
+//             Rotation2d.fromDegrees(gyro.getAngle()),
+//         //     (SwerveModulePosition[]) modules.stream().map(SwerveModule::getPosition).collect(Collectors.toList()).toArray() // iterates through modules's position
+//         new SwerveModulePosition[]{frontLeft.getPosition()}
+//         //     new SwerveModulePosition[] {
+//         //             frontLeft.getPosition(),
+//         //             frontRight.getPosition(),
+//         //             backLeft.getPosition(),
+//         //             backRight.getPosition()
+//         //     }
+//             );
 
     /** Creates a new DriveSubsystem. */
     public DriveTrain() {
     }
 
-    @Override
-    public void periodic() {
-        // Update the odometry in the periodic block
-        odometry.update(
-                Rotation2d.fromDegrees(gyro.getAngle()),
-                (SwerveModulePosition[]) modules.stream().map(SwerveModule::getPosition).collect(Collectors.toList()).toArray()); // iterates through modules's position
-    }
+//     @Override
+//     public void periodic() {
+//         // Update the odometry in the periodic block
+//         odometry.update(
+//                 Rotation2d.fromDegrees(gyro.getAngle()),
+//                 // (SwerveModulePosition[]) modules.stream().map(SwerveModule::getPosition).collect(Collectors.toList()).toArray()); // iterates through modules's position
+                
+//         new SwerveModulePosition[]{frontLeft.getPosition()});
+//     }
 
     /**
      * Returns the currently-estimated pose of the robot.
      *
      * @return The pose.
      */
-    public Pose2d getPose() {
-        return odometry.getPoseMeters();
-    }
+//     public Pose2d getPose() {
+//         return odometry.getPoseMeters();
+//     }
 
     /**
      * Resets the odometry to the specified pose.
      *
      * @param pose The pose to which to set the odometry.
      */
-    public void resetOdometry(Pose2d pose) {
-        odometry.resetPosition(
-                Rotation2d.fromDegrees(gyro.getAngle()),
-                (SwerveModulePosition[]) modules.stream().map(SwerveModule::getPosition).collect(Collectors.toList()).toArray(),
-                pose);
-    }
+//     public void resetOdometry(Pose2d pose) {
+//         odometry.resetPosition(
+//                 Rotation2d.fromDegrees(gyro.getAngle()),
+//                 // (SwerveModulePosition[]) modules.stream().map(SwerveModule::getPosition).collect(Collectors.toList()).toArray(),
+                
+//         new SwerveModulePosition[]{frontLeft.getPosition()},
+//                 pose);
+//     }
 
     /**
      * Method to drive the robot using joystick info.
@@ -118,10 +124,10 @@ public class DriveTrain extends SubsystemBase {
      */
     public void setX() {
         if (modules.size() == 4) {
-                frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-                frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-                backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-                backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+                // frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+                // frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+                // backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+                // backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
         }
     }
 
@@ -133,7 +139,8 @@ public class DriveTrain extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(
                 desiredStates, Constants.Drive.maxSpeed);
-        for (int i = 0; i < modules.size(); i++) modules.get(i).setDesiredState(desiredStates[i]);
+        // for (int i = 0; i < modules.size(); i++) modules.get(i).setDesiredState(desiredStates[i]);
+        frontLeft.setDesiredState(desiredStates[0]);
     }
 
     /** Resets the drive encoders to currently read a position of 0. */

@@ -10,6 +10,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.misc.Constants;
 
 public class SwerveModule {
@@ -62,7 +63,7 @@ public class SwerveModule {
       // longer route.
       turnPID.setPositionPIDWrappingEnabled(true);
       turnPID.setPositionPIDWrappingMinInput(Constants.SwerveModule.turnEncoderPositionPIDMinInput);
-      turnPID.setPositionPIDWrappingMaxInput(Constants.SwerveModule.turnEncoderPositionPIDMinInput);
+      turnPID.setPositionPIDWrappingMaxInput(Constants.SwerveModule.turnEncoderPositionPIDMaxInput);
   
       // Set the PID gains for the driving motor. Note these are example gains, and you
       // may need to tune them for your own robot!
@@ -75,9 +76,9 @@ public class SwerveModule {
       // Set the PID gains for the turning motor. Note these are example gains, and you
       // may need to tune them for your own robot!
       turnPID.setP(Constants.SwerveModule.turnP);
-      turnPID.setI(Constants.SwerveModule.turnP);
-      turnPID.setD(Constants.SwerveModule.turnP);
-      turnPID.setFF(Constants.SwerveModule.turnP);
+      turnPID.setI(Constants.SwerveModule.turnI);
+      turnPID.setD(Constants.SwerveModule.turnD);
+      turnPID.setFF(Constants.SwerveModule.turnFF);
       turnPID.setOutputRange(Constants.SwerveModule.turnOutputMin, Constants.SwerveModule.turnOutputMax);
   
       wheelMotor.setIdleMode(Constants.SwerveModule.wheelIdleMode);
@@ -126,6 +127,8 @@ public class SwerveModule {
      * @param desiredState Desired state with speed and angle.
      */
     public void setDesiredState(SwerveModuleState desiredState) {
+      
+      
       // Apply chassis angular offset to the desired state.
       SwerveModuleState correctedDesiredState = new SwerveModuleState();
       correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
@@ -134,11 +137,15 @@ public class SwerveModule {
       // Optimize the reference state to avoid spinning further than 90 degrees.
       SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
           new Rotation2d(turnEncoder.getPosition()));
+      // SwerveModuleState optimizedDesiredState = correctedDesiredState;
   
       // Command driving and turning SPARKS MAX towards their respective setpoints.
       wheelPID.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
       turnPID.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
   
+      SmartDashboard.putNumber("encoder", turnEncoder.getPosition() / Math.PI * 180);
+      SmartDashboard.putNumber("optimizedAngle", optimizedDesiredState.angle.getDegrees());
+      SmartDashboard.putNumber("desired", desiredState.angle.getDegrees());
       this.desiredState = desiredState;
     }
   

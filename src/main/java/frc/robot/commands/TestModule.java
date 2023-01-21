@@ -10,6 +10,8 @@ import frc.robot.subsystems.DriveTrain;
 public class TestModule extends CommandBase {
     DriveTrain driveTrain;
     XboxController controller = new XboxController(0);
+    double speed;
+    double angle;
     
     public TestModule(DriveTrain driveTrain) {
         this.driveTrain = driveTrain;
@@ -23,8 +25,10 @@ public class TestModule extends CommandBase {
     @Override
     public void execute() {
         double speed = SmartDashboard.getNumber("speed", 0);
+        // speed = -controller.getLeftY();
         double angle = SmartDashboard.getNumber("angle", 0);
-        driveTrain.setModuleStates(new SwerveModuleState[]{new SwerveModuleState(speed, new Rotation2d(angle))});
+        // angle += controller.getLeftX();
+        driveTrain.setModuleStates(new SwerveModuleState[]{new SwerveModuleState(speed, Rotation2d.fromDegrees(angle))});
     }
 
     @Override

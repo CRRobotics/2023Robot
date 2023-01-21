@@ -11,7 +11,7 @@ public interface Constants {
         double wheelDiameter = 0.0762; //meters
         double wheelTeeth = 14;
         // 45 teeth bevel gear, 22 teeth 1st stage spur gear, 15 teeth on bevel pinion gear
-        double wheelGearRatio = (double)(45 * 22) / (wheelTeeth * 15);
+        double wheelGearRatio = (double)(45 * 22) / (wheelTeeth * 15.0);
         double wheelEncoderPositionConversion = wheelDiameter * Math.PI; // meters
         double wheelEncoderVelocityConversion = wheelEncoderPositionConversion / wheelGearRatio / 60; // meters per second
         double wheelP = 0.04;
@@ -33,36 +33,37 @@ public interface Constants {
         double turnOutputMin = -1;
         double turnOutputMax = 1;
         double turnEncoderPositionPIDMinInput = 0;
+        double turnEncoderPositionPIDMaxInput = turnEncoderPositionConversion;
         IdleMode turnIdleMode = IdleMode.kBrake;
         int turnCurrentLimit = 50; // amps
     }
 
     interface Drive {
         // all unset
-        int frontLeftWheelID = 0;
-        int frontLeftTurnID = 0;
+        int frontLeftWheelID = 5;
+        int frontLeftTurnID = 6;
         double frontLeftAngularOffset = 0;
 
-        int frontRightWheelID = 0;
-        int frontRightTurnID = 0;
+        int frontRightWheelID = 20;
+        int frontRightTurnID = 21;
         double frontRightAngularOffset = 0;
 
-        int backLeftWheelID = 0;
-        int backLeftTurnID = 0;
+        int backLeftWheelID = 22;
+        int backLeftTurnID = 23;
         double backLeftAngularOffset = 0;
 
-        int backRightWheelID = 0;
-        int backRightTurnID = 0;
+        int backRightWheelID = 24;
+        int backRightTurnID = 25;
         double backRightAngularOffset = 0;
 
         double trackWidth = Units.inchesToMeters(26.5);// Distance between centers of right and left wheels on robot//TODO Set kTrackWidth to actual track width
         double wheelBase = Units.inchesToMeters(26.5);// Distance between front and back wheels on robot //TODO Set kWheelBase to actual wheel base
         SwerveDriveKinematics driveKinematics = new SwerveDriveKinematics(
-                new Translation2d(wheelBase / 2, trackWidth / 2),
-                new Translation2d(wheelBase / 2, -trackWidth / 2),
-                new Translation2d(-wheelBase / 2, trackWidth / 2),
-                new Translation2d(-wheelBase / 2, -trackWidth / 2));        //Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
-        double maxSpeed = 3; // meters per second
+                new Translation2d(wheelBase / 2, trackWidth / 2));
+                // new Translation2d(wheelBase / 2, -trackWidth / 2),
+                // new Translation2d(-wheelBase / 2, trackWidth / 2),
+                // new Translation2d(-wheelBase / 2, -trackWidth / 2));        //Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
+        double maxSpeed = 10; // meters per second
         double maxAngularSpeed = 2 * Math.PI; // radians per second;
         boolean gyroReversed = false; //Determines whether the gyro is reversed (I think)
 
