@@ -3,10 +3,11 @@ package frc.robot.misc;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public interface Constants {
-    interface DriveConstants {
+    interface SwerveModule {
         double wheelDiameter = 0.0762; //meters
         double wheelTeeth = 14;
         // 45 teeth bevel gear, 22 teeth 1st stage spur gear, 15 teeth on bevel pinion gear
@@ -34,33 +35,52 @@ public interface Constants {
         double turnEncoderPositionPIDMinInput = 0;
         IdleMode turnIdleMode = IdleMode.kBrake;
         int turnCurrentLimit = 50; // amps
-        //New constants that are new I guess (if they are 0 it is unset)
-        //Front Left Swerve
-        int kFrontLeftDrivingCanId = 0;
-        int kFrontLeftTurningCanId = 0;
-        double kFrontLeftChassisAngularOffset = 0;
-        //Front Right Swerve
-        int kFrontRightDrivingCanId = 0;
-        int kFrontRightTurningCanId = 0;
-        double kFrontRightChassisAngularOffset = 0;
-        //Rear Left Swerve
-        int kRearLeftDrivingCanId = 0;
-        int kRearLeftTurningCanId = 0;
-        double kBackLeftChassisAngularOffset = 0;
-        //Rear Right Swerve
-        int kRearRightDrivingCanId = 0;
-        int kRearRightTurningCanId = 0;
-        double kBackRightChassisAngularOffset = 0;
-        //SwerveDriveKinematics Object
-        public static final double kTrackWidth = Units.inchesToMeters(26.5);// Distance between centers of right and left wheels on robot//TODO Set kTrackWidth to actual track width
-        double kWheelBase = Units.inchesToMeters(26.5);// Distance between front and back wheels on robot //TODO Set kWheelBase to actual wheel base
-        SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-                new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-                new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-                new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-                new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));        //Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
-        double kMaxSpeedMetersPerSecond = 3;
-        double kMaxAngularSpeed = 2 * Math.PI; // radians per second;
-        boolean kGyroReversed = false; //Determines whether the gyro is reversed (I think)
+    }
+
+    interface Drive {
+        // all unset
+        int frontLeftWheelID = 0;
+        int frontLeftTurnID = 0;
+        double frontLeftAngularOffset = 0;
+
+        int frontRightWheelID = 0;
+        int frontRightTurnID = 0;
+        double frontRightAngularOffset = 0;
+
+        int backLeftWheelID = 0;
+        int backLeftTurnID = 0;
+        double backLeftAngularOffset = 0;
+
+        int backRightWheelID = 0;
+        int backRightTurnID = 0;
+        double backRightAngularOffset = 0;
+
+        double trackWidth = Units.inchesToMeters(26.5);// Distance between centers of right and left wheels on robot//TODO Set kTrackWidth to actual track width
+        double wheelBase = Units.inchesToMeters(26.5);// Distance between front and back wheels on robot //TODO Set kWheelBase to actual wheel base
+        SwerveDriveKinematics driveKinematics = new SwerveDriveKinematics(
+                new Translation2d(wheelBase / 2, trackWidth / 2),
+                new Translation2d(wheelBase / 2, -trackWidth / 2),
+                new Translation2d(-wheelBase / 2, trackWidth / 2),
+                new Translation2d(-wheelBase / 2, -trackWidth / 2));        //Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
+        double maxSpeed = 3; // meters per second
+        double maxAngularSpeed = 2 * Math.PI; // radians per second;
+        boolean gyroReversed = false; //Determines whether the gyro is reversed (I think)
+
+    }
+
+    interface Controller {
+        int driveControllerPort = 0;
+    }
+
+    interface Auto {
+        double maxSpeed = 3; // meters per second
+        double maxAcceleration = 3; // meters per second squared
+        double maxAngularSpeed = Math.PI; // radians per second
+        double maxAngularAcceleration = Math.PI; // radians per second squared
+        double thetaP = 1; // pids for auto
+        double xP = 1;
+        double yP = 1;
+        TrapezoidProfile.Constraints thetaPIDConstraints = new TrapezoidProfile.Constraints(
+            maxAngularSpeed, maxAngularAcceleration);
     }
 }
