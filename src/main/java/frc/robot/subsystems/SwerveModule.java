@@ -10,6 +10,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.misc.Constants;
 
 public class SwerveModule {
@@ -43,47 +44,47 @@ public class SwerveModule {
       // Apply position and velocity conversion factors for the driving encoder. The
       // native units for position and velocity are rotations and RPM, respectively,
       // but we want meters and meters per second to use with WPILib's swerve APIs.
-      wheelEncoder.setPositionConversionFactor(Constants.DriveConstants.wheelEncoderPositionConversion);
-      wheelEncoder.setVelocityConversionFactor(Constants.DriveConstants.wheelEncoderVelocityConversion);
+      wheelEncoder.setPositionConversionFactor(Constants.SwerveModule.wheelEncoderPositionConversion);
+      wheelEncoder.setVelocityConversionFactor(Constants.SwerveModule.wheelEncoderVelocityConversion);
   
       // Apply position and velocity conversion factors for the turning encoder. We
       // want these in radians and radians per second to use with WPILib's swerve
       // APIs.
-      turnEncoder.setPositionConversionFactor(Constants.DriveConstants.turnEncoderPositionConversion);
-      turnEncoder.setVelocityConversionFactor(Constants.DriveConstants.turnEncoderVelocityConversion);
+      turnEncoder.setPositionConversionFactor(Constants.SwerveModule.turnEncoderPositionConversion);
+      turnEncoder.setVelocityConversionFactor(Constants.SwerveModule.turnEncoderVelocityConversion);
   
       // Invert the turning encoder, since the output shaft rotates in the opposite direction of
       // the steering motor in the MAXSwerve Module.
-      turnEncoder.setInverted(Constants.DriveConstants.turnInverted);
+      turnEncoder.setInverted(Constants.SwerveModule.turnInverted);
   
       // Enable PID wrap around for the turning motor. This will allow the PID
       // controller to go through 0 to get to the setpoint i.e. going from 350 degrees
       // to 10 degrees will go through 0 rather than the other direction which is a
       // longer route.
       turnPID.setPositionPIDWrappingEnabled(true);
-      turnPID.setPositionPIDWrappingMinInput(Constants.DriveConstants.turnEncoderPositionPIDMinInput);
-      turnPID.setPositionPIDWrappingMaxInput(Constants.DriveConstants.turnEncoderPositionPIDMinInput);
+      turnPID.setPositionPIDWrappingMinInput(Constants.SwerveModule.turnEncoderPositionPIDMinInput);
+      turnPID.setPositionPIDWrappingMaxInput(Constants.SwerveModule.turnEncoderPositionPIDMaxInput);
   
       // Set the PID gains for the driving motor. Note these are example gains, and you
       // may need to tune them for your own robot!
-      wheelPID.setP(Constants.DriveConstants.wheelP);
-      wheelPID.setI(Constants.DriveConstants.wheelI);
-      wheelPID.setD(Constants.DriveConstants.wheelD);
-      wheelPID.setFF(Constants.DriveConstants.wheelFF);
-      wheelPID.setOutputRange(Constants.DriveConstants.wheelOutputMin, Constants.DriveConstants.wheelOutputMax);
+      wheelPID.setP(Constants.SwerveModule.wheelP);
+      wheelPID.setI(Constants.SwerveModule.wheelI);
+      wheelPID.setD(Constants.SwerveModule.wheelD);
+      wheelPID.setFF(Constants.SwerveModule.wheelFF);
+      wheelPID.setOutputRange(Constants.SwerveModule.wheelOutputMin, Constants.SwerveModule.wheelOutputMax);
   
       // Set the PID gains for the turning motor. Note these are example gains, and you
       // may need to tune them for your own robot!
-      turnPID.setP(Constants.DriveConstants.turnP);
-      turnPID.setI(Constants.DriveConstants.turnP);
-      turnPID.setD(Constants.DriveConstants.turnP);
-      turnPID.setFF(Constants.DriveConstants.turnP);
-      turnPID.setOutputRange(Constants.DriveConstants.turnOutputMin, Constants.DriveConstants.turnOutputMax);
+      turnPID.setP(Constants.SwerveModule.turnP);
+      turnPID.setI(Constants.SwerveModule.turnI);
+      turnPID.setD(Constants.SwerveModule.turnD);
+      turnPID.setFF(Constants.SwerveModule.turnFF);
+      turnPID.setOutputRange(Constants.SwerveModule.turnOutputMin, Constants.SwerveModule.turnOutputMax);
   
-      wheelMotor.setIdleMode(Constants.DriveConstants.wheelIdleMode);
-      turnMotor.setIdleMode(Constants.DriveConstants.turnIdleMode);
-      wheelMotor.setSmartCurrentLimit(Constants.DriveConstants.wheelCurrentLimit);
-      turnMotor.setSmartCurrentLimit(Constants.DriveConstants.turnCurrentLimit);
+      wheelMotor.setIdleMode(Constants.SwerveModule.wheelIdleMode);
+      turnMotor.setIdleMode(Constants.SwerveModule.turnIdleMode);
+      wheelMotor.setSmartCurrentLimit(Constants.SwerveModule.wheelCurrentLimit);
+      turnMotor.setSmartCurrentLimit(Constants.SwerveModule.turnCurrentLimit);
   
       // Save the SPARK MAX configurations. If a SPARK MAX browns out during
       // operation, it will maintain the above configurations.
@@ -126,6 +127,8 @@ public class SwerveModule {
      * @param desiredState Desired state with speed and angle.
      */
     public void setDesiredState(SwerveModuleState desiredState) {
+      
+      
       // Apply chassis angular offset to the desired state.
       SwerveModuleState correctedDesiredState = new SwerveModuleState();
       correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
@@ -134,11 +137,15 @@ public class SwerveModule {
       // Optimize the reference state to avoid spinning further than 90 degrees.
       SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
           new Rotation2d(turnEncoder.getPosition()));
+      // SwerveModuleState optimizedDesiredState = correctedDesiredState;
   
       // Command driving and turning SPARKS MAX towards their respective setpoints.
       wheelPID.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
       turnPID.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
   
+      SmartDashboard.putNumber("encoder", turnEncoder.getPosition() / Math.PI * 180);
+      SmartDashboard.putNumber("optimizedAngle", optimizedDesiredState.angle.getDegrees());
+      SmartDashboard.putNumber("desired", desiredState.angle.getDegrees());
       this.desiredState = desiredState;
     }
   
