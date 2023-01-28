@@ -26,21 +26,21 @@ public class DriveTrain extends SubsystemBase {
             Constants.Drive.frontLeftTurnID,
             Constants.Drive.frontLeftAngularOffset);
 
-//     private final SwerveModule frontRight = new SwerveModule(
-//             Constants.Drive.frontRightWheelID,
-//             Constants.Drive.frontRightTurnID,
-//             Constants.Drive.frontRightAngularOffset);
+    private final SwerveModule frontRight = new SwerveModule(
+            Constants.Drive.frontRightWheelID,
+            Constants.Drive.frontRightTurnID,
+            Constants.Drive.frontRightAngularOffset);
 
-//     private final SwerveModule backLeft = new SwerveModule(
-//             Constants.Drive.backLeftWheelID,
-//             Constants.Drive.backLeftTurnID,
-//             Constants.Drive.backLeftAngularOffset);
+    private final SwerveModule backLeft = new SwerveModule(
+            Constants.Drive.backLeftWheelID,
+            Constants.Drive.backLeftTurnID,
+            Constants.Drive.backLeftAngularOffset);
 
-//     private final SwerveModule backRight = new SwerveModule(
-//             Constants.Drive.backRightWheelID,
-//             Constants.Drive.backRightTurnID,
-//             Constants.Drive.backRightAngularOffset);
-        private final ArrayList<SwerveModule> modules = new ArrayList<>(Arrays.asList(frontLeft));
+    private final SwerveModule backRight = new SwerveModule(
+            Constants.Drive.backRightWheelID,
+            Constants.Drive.backRightTurnID,
+            Constants.Drive.backRightAngularOffset);
+        private final ArrayList<SwerveModule> modules = new ArrayList<>(Arrays.asList(frontLeft, frontRight, backLeft, backRight));
 
     // The gyro sensor
     private final AHRS gyro = new AHRS();
@@ -124,10 +124,10 @@ public class DriveTrain extends SubsystemBase {
      */
     public void setX() {
         if (modules.size() == 4) {
-                // frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-                // frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-                // backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-                // backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+            frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+            frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+            backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+            backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
         }
     }
 
@@ -139,8 +139,10 @@ public class DriveTrain extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(
                 desiredStates, Constants.Drive.maxSpeed);
-        // for (int i = 0; i < modules.size(); i++) modules.get(i).setDesiredState(desiredStates[i]);
-        frontLeft.setDesiredState(desiredStates[0]);
+                frontLeft.setDesiredState(desiredStates[0]);
+                frontRight.setDesiredState(desiredStates[1]);
+                backLeft.setDesiredState(desiredStates[2]);
+                backRight.setDesiredState(desiredStates[3]);
     }
 
     /** Resets the drive encoders to currently read a position of 0. */

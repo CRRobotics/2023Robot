@@ -24,9 +24,9 @@ public class JoystickDrive extends CommandBase{
 
     @Override
     public void execute() {
-        double xSpeed = MathUtil.applyDeadband(controller.getLeftY(), 0.06);
-        double ySpeed = MathUtil.applyDeadband(controller.getLeftX(), 0.06);
-        double rot = MathUtil.applyDeadband(controller.getRightX(), 0.06);
+        double xSpeed = MathUtil.applyDeadband(controller.getRawAxis(1), 0.06);
+        double ySpeed = MathUtil.applyDeadband(controller.getRawAxis(0), 0.06);
+        double rot = MathUtil.applyDeadband(controller.getRawAxis(2), 0.06);
         boolean fieldRelative = true;
         xSpeed *= Constants.Drive.maxSpeed;
         ySpeed *= Constants.Drive.maxSpeed;

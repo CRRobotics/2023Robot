@@ -30,6 +30,10 @@ public class RobotContainer {
   // The driver's controller
   XboxController driver = new XboxController(Constants.Controller.driveControllerPort);
 
+  public DriveTrain getDriveTrain() {
+      return driveTrain;
+  }
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -38,10 +42,10 @@ public class RobotContainer {
     configureButtonBindings();
 
     // Configure default commands
-    // driveTrain.setDefaultCommand(
-    //     // The left stick controls translation of the robot.
-    //     // Turning is controlled by the X axis of the right stick.
-    //     new JoystickDrive(driveTrain));
+    driveTrain.setDefaultCommand(
+        // The left stick controls translation of the robot.
+        // Turning is controlled by the X axis of the right stick.
+        new JoystickDrive(driveTrain));
   }
 
   /**
