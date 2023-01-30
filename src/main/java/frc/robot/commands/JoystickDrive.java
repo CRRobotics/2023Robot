@@ -34,7 +34,7 @@ public class JoystickDrive extends CommandBase{
 
         var swerveModuleStates = Constants.Drive.driveKinematics.toSwerveModuleStates(
                 fieldRelative
-                        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(driveTrain.getAngle()))
+                        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(driveTrain.getHeading()))
                         : new ChassisSpeeds(xSpeed, ySpeed, rot));
         driveTrain.setModuleStates(swerveModuleStates);
     }
