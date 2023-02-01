@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.RobotBase;
 
 public final class Main {
-  private Main() {}
+  private Main() {} // overrides object constructor, only forces it private: keeps Main from being instantiated
 
   public static void main(String... args) {
     RobotBase.startRobot(Robot::new);

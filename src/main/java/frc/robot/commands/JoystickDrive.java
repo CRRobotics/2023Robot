@@ -3,10 +3,12 @@ package frc.robot.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.SwerveModule;
 
 public class JoystickDrive extends CommandBase{
     DriveTrain driveTrain;
@@ -32,7 +34,7 @@ public class JoystickDrive extends CommandBase{
         ySpeed *= Constants.Drive.maxSpeed;
         rot *= Constants.Drive.maxAngularSpeed;
 
-        var swerveModuleStates = Constants.Drive.driveKinematics.toSwerveModuleStates(
+        SwerveModuleState[] swerveModuleStates = Constants.Drive.driveKinematics.toSwerveModuleStates(
                 fieldRelative
                         ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(driveTrain.getHeading()))
                         : new ChassisSpeeds(xSpeed, ySpeed, rot));

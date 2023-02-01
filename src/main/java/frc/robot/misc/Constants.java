@@ -52,8 +52,8 @@ public interface Constants {
         int backLeftTurnID = 6;
         double backLeftAngularOffset = Math.PI;
 
-        int backRightWheelID = 7;
-        int backRightTurnID = 8;
+        int backRightWheelID = 11;
+        int backRightTurnID = 12;
         double backRightAngularOffset = Math.PI / 2;
 
         double trackWidth = Units.inchesToMeters(26.5);// Distance between centers of right and left wheels on robot//TODO Set kTrackWidth to actual track width
@@ -65,7 +65,7 @@ public interface Constants {
                 new Translation2d(-wheelBase / 2, -trackWidth / 2));        //Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
         double maxSpeed = 2; // meters per second
         double maxAngularSpeed = Math.PI; // radians per second;
-        boolean gyroReversed = false; //Determines whether the gyro is reversed (I think)
+        boolean gyroReversed = true; //Determines whether the gyro is reversed (I think)
 
     }
 

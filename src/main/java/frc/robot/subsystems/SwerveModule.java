@@ -116,6 +116,9 @@ public class SwerveModule {
     public SwerveModulePosition getPosition() {
       // Apply chassis angular offset to the encoder position to get the position
       // relative to the chassis.
+      SmartDashboard.putNumber("odometry pose", new SwerveModulePosition(
+        wheelEncoder.getPosition(),
+        new Rotation2d(turnEncoder.getPosition() - angularOffset)).distanceMeters);
       return new SwerveModulePosition(
           wheelEncoder.getPosition(),
           new Rotation2d(turnEncoder.getPosition() - angularOffset));
@@ -127,7 +130,6 @@ public class SwerveModule {
      * @param desiredState Desired state with speed and angle.
      */
     public void setDesiredState(SwerveModuleState desiredState) {
-      
       
       // Apply chassis angular offset to the desired state.
       SwerveModuleState correctedDesiredState = new SwerveModuleState();
@@ -142,10 +144,6 @@ public class SwerveModule {
       // Command driving and turning SPARKS MAX towards their respective setpoints.
       wheelPID.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
       turnPID.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
-  
-      SmartDashboard.putNumber("encoder", turnEncoder.getPosition() / Math.PI * 180);
-      SmartDashboard.putNumber("optimizedAngle", optimizedDesiredState.angle.getDegrees());
-      SmartDashboard.putNumber("desired", desiredState.angle.getDegrees());
       this.desiredState = desiredState;
     }
   
