@@ -12,12 +12,16 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.misc.Constants;
 import frc.robot.misc.NetworkTableWrapper;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -46,19 +50,18 @@ public class DriveTrain extends SubsystemBase {
             Constants.Drive.backRightAngularOffset);
 
     // The gyro sensor
-    private final AHRS gyro = new AHRS();
+    private final AHRS gyro = new AHRS(SPI.Port.kMXP);
 
-    // Odometry class for tracking robot pose
-    // SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-    //         Constants.Drive.driveKinematics,
-    //         Rotation2d.fromDegrees(gyro.getAngle()),
-    //         new SwerveModulePosition[] {
-    //                 frontLeft.getPosition(),
-    //                 frontRight.getPosition(),
-    //                 backLeft.getPosition(),
-    //                 backRight.getPosition()
-    //         }
-    //         );
+    SwerveDriveOdometry odometry = new SwerveDriveOdometry(
+            Constants.Drive.driveKinematics,
+            Rotation2d.fromDegrees(gyro.getAngle()),
+            new SwerveModulePosition[] {
+                    frontLeft.getPosition(),
+                    frontRight.getPosition(),
+                    backLeft.getPosition(),
+                    backRight.getPosition()
+            }
+            );
     
     // Kalman filter for tracking robot pose
     SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
@@ -73,32 +76,57 @@ public class DriveTrain extends SubsystemBase {
         new Pose2d() // needs to be set based on auto path
         );
 
+    private Field2d field = new Field2d();
+
     /** Creates a new DriveSubsystem. */
     public DriveTrain() {
+        SmartDashboard.putNumber("init pose", poseEstimator.getEstimatedPosition().getX());
     }
 
     @Override
-    public void periodic() {
+    public void periodic()
+    {
+        SwerveModulePosition[] swervePosition =
+        {
+            frontLeft.getPosition(),
+            frontRight.getPosition(),
+            backLeft.getPosition(),
+            backRight.getPosition()
+        };
+
         // update with encoder and gyroscope data
-        poseEstimator.update(
-            Rotation2d.fromDegrees(gyro.getAngle()),
-            new SwerveModulePosition[] {
-                frontLeft.getPosition(),
-                frontRight.getPosition(),
-                backLeft.getPosition(),
-                backRight.getPosition()
-            });
+        odometry.update
+        (
+            Rotation2d.fromDegrees(-gyro.getAngle()),
+            swervePosition
+        );
+        
+        poseEstimator.update
+        (
+            Rotation2d.fromDegrees(-gyro.getAngle()),
+            swervePosition
+        );
+        
         // update with visions data from these cameras ids:
-        for (int i : new int[]{0, 2}) 
-            poseEstimator.addVisionMeasurement(
-                new Pose2d(
+        for (int i : new int[]{0, 2, 4}) if (NetworkTableWrapper.getData(i, "ntags") != 0)
+        {
+            SmartDashboard.putNumber("x", NetworkTableWrapper.getData(i, "rx"));
+            poseEstimator.addVisionMeasurement
+            (
+                new Pose2d
+                (
                     NetworkTableWrapper.getData(i, "rx"),
                     NetworkTableWrapper.getData(i, "ry"),
-                    Rotation2d.fromDegrees(NetworkTableWrapper.getData(i, "theta"))
-                    ),
+                    Rotation2d.fromRadians(NetworkTableWrapper.getData(i, "theta"))
+                ),
                 Timer.getFPGATimestamp(), // needs to be tested and calibrated
                 VecBuilder.fill(0.1, 0.1, 0.1) // needs to be calibrated
-                );
+            );
+        }
+
+        SmartDashboard.putData(field);
+        SmartDashboard.putNumber("pose", poseEstimator.getEstimatedPosition().getX());
+        field.setRobotPose(odometry.getPoseMeters());
     }
 
     /**
