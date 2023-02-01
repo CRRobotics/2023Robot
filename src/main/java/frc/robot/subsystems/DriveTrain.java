@@ -124,9 +124,11 @@ public class DriveTrain extends SubsystemBase {
             );
         }
 
+        // field
         SmartDashboard.putData(field);
-        SmartDashboard.putNumber("pose", poseEstimator.getEstimatedPosition().getX());
         field.setRobotPose(odometry.getPoseMeters());
+
+        SmartDashboard.putNumber("posex", poseEstimator.getEstimatedPosition().getX());
     }
 
     /**
