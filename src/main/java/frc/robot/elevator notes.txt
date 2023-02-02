@@ -1,0 +1,27 @@
+Key:
+- r = radius of linear sprocket
+- angle = angle of the linear axis
+- rotations = rotations of the linear axis motor
+- R = length of the middle arm bar
+- length = length of the bar connecting the four-bar to the linear part + the length of the bar that connects the four bar to the claw
+- armAngle = angle of the four-bar part
+
+Kinematics equations:
+- linear motion
+    - rotation -> linear (chain and sprocket) 2(pi)r in/rotation
+    - linear -> 2d (frame is on an angle) x = 2pir * cos(angle) * rotations y = 2pir * sin(angle) * rotations
+- virtual 4-bar motion
+    - rotation -> 2d translation (chain and two locked sprockets) 2piR
+
+- Combined
+[x,y] = [(2pir * cos(angle) * rotations) + (cos(armAngle) * R) - (length), (2pir * sin(angle) * rotations) + (sin(armAngle) * R)]
+
+
+Inverse equations:
+- linear motion
+- virtual 4-bar motion
+
+Note:
+- singularity filtering
+
+Combined equation:
