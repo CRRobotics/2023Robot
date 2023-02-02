@@ -1,6 +1,10 @@
 package frc.robot.commands;
+import java.lang.invoke.ConstantCallSite;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.misc.Constants;
+import frc.robot.misc.NetworkTableWrapper;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Indexer;
 
@@ -14,7 +18,7 @@ public class AlignCone extends CommandBase{
     }
     @Override
     public void initialize() {
-
+        indexer.turnToAngle(NetworkTableWrapper.getData(Constants.Indexer.indexerCamTable, "coneAngle")  - indexer.getAngle());
     }
 
     @Override
@@ -24,7 +28,7 @@ public class AlignCone extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-
+        indexer.getEncoder().setPosition(0);
     }
 
     @Override

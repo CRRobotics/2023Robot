@@ -12,6 +12,7 @@ public class Indexer extends SubsystemBase{
     private final CANSparkMax indexerMotor;
     private final PIDController indexerPID;
     private final RelativeEncoder indexerEncoder;
+    private double currentAngle;
 
     public Indexer(int indexerMotorID){
         indexerMotor = new CANSparkMax(indexerMotorID, MotorType.kBrushless);
@@ -20,10 +21,19 @@ public class Indexer extends SubsystemBase{
     }
 
     public void turnToAngle(double targetAngle){
-        indexerMotor.set(indexerPID.calculate(indexerEncoder.getPosition() / 360.0, targetAngle));
+        indexerMotor.set(indexerPID.calculate(indexerEncoder.getPosition() / 2 * Math.PI, targetAngle));
+        currentAngle = indexerEncoder.getPosition() / 2 * Math.PI;
     }
 
     public void setIndexerVelocity(double velocity){
         indexerMotor.set(velocity);
+    }
+
+    public double getAngle(){
+        return currentAngle;
+    }
+
+    public RelativeEncoder getEncoder(){
+        return indexerEncoder;
     }
 }
