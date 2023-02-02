@@ -11,8 +11,8 @@ public interface Constants {
         double wheelDiameter = 0.0762; //meters
         double wheelTeeth = 14;
         // 45 teeth bevel gear, 22 teeth 1st stage spur gear, 15 teeth on bevel pinion gear
-        double wheelGearRatio = (double)(45 * 22) / (wheelTeeth * 15.0);
-        double wheelEncoderPositionConversion = wheelDiameter * Math.PI; // meters
+        double wheelGearRatio = (45.0 * 22) / (wheelTeeth * 15.0);
+        double wheelEncoderPositionConversion = wheelDiameter * Math.PI / wheelGearRatio; // meters
         double wheelEncoderVelocityConversion = wheelEncoderPositionConversion / wheelGearRatio / 60; // meters per second
         double wheelP = 0.04;
         double wheelI = 0;
