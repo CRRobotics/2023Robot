@@ -61,7 +61,7 @@ public class DriveTrain extends SubsystemBase {
                     backLeft.getPosition(),
                     backRight.getPosition()
             }
-            );
+        );
     
     // Kalman filter for tracking robot pose
     SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
@@ -74,7 +74,7 @@ public class DriveTrain extends SubsystemBase {
             backRight.getPosition()
         },
         new Pose2d() // needs to be set based on auto path
-        );
+    );
 
     private Field2d field = new Field2d();
 
@@ -84,10 +84,8 @@ public class DriveTrain extends SubsystemBase {
     }
 
     @Override
-    public void periodic()
-    {
-        SwerveModulePosition[] swervePosition =
-        {
+    public void periodic() {
+        SwerveModulePosition[] swervePosition = {
             frontLeft.getPosition(),
             frontRight.getPosition(),
             backLeft.getPosition(),
@@ -95,26 +93,21 @@ public class DriveTrain extends SubsystemBase {
         };
 
         // update with encoder and gyroscope data
-        odometry.update
-        (
+        odometry.update(
             Rotation2d.fromDegrees(-gyro.getAngle()),
             swervePosition
         );
         
-        poseEstimator.update
-        (
+        poseEstimator.update(
             Rotation2d.fromDegrees(-gyro.getAngle()),
             swervePosition
         );
         
         // update with visions data from these cameras ids:
-        for (int i : new int[]{0, 2, 4}) if (NetworkTableWrapper.getData(i, "ntags") != 0)
-        {
+        for (int i : new int[]{0, 2, 4}) if (NetworkTableWrapper.getData(i, "ntags") != 0) {
             SmartDashboard.putNumber("x", NetworkTableWrapper.getData(i, "rx"));
-            poseEstimator.addVisionMeasurement
-            (
-                new Pose2d
-                (
+            poseEstimator.addVisionMeasurement(
+                new Pose2d(
                     NetworkTableWrapper.getData(i, "rx"),
                     NetworkTableWrapper.getData(i, "ry"),
                     Rotation2d.fromRadians(NetworkTableWrapper.getData(i, "theta"))
@@ -172,13 +165,13 @@ public class DriveTrain extends SubsystemBase {
      *
      * @param desiredStates The desired SwerveModule states.
      */
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(
-                desiredStates, Constants.Drive.maxSpeed);
-                frontLeft.setDesiredState(desiredStates[0]);
-                frontRight.setDesiredState(desiredStates[1]);
-                backLeft.setDesiredState(desiredStates[2]);
-                backRight.setDesiredState(desiredStates[3]);
+    public void setModuleStates(SwerveModuleState[] desiredStates)
+    {
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Drive.maxSpeed);
+        frontLeft.setDesiredState(desiredStates[0]);
+        frontRight.setDesiredState(desiredStates[1]);
+        backLeft.setDesiredState(desiredStates[2]);
+        backRight.setDesiredState(desiredStates[3]);
     }
 
     /** Resets the drive encoders to currently read a position of 0. */
