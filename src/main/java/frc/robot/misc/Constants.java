@@ -7,6 +7,12 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public interface Constants {
+    interface Indexer {
+        double indexerP = 0.001; //TODO these values need to be tuned
+        double indexerI = 0;
+        double indexerD = 0;
+
+    }
     interface SwerveModule {
         double wheelDiameter = 0.0762; //meters
         double wheelTeeth = 14;
