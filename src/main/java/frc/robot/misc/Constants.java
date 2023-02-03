@@ -84,4 +84,12 @@ public interface Constants {
         TrapezoidProfile.Constraints thetaPIDConstraints = new TrapezoidProfile.Constraints(
             maxAngularSpeed, maxAngularAcceleration);
     }
+
+    interface Elevator {
+        double elevatorMotorID = 0;
+        double elevatorP = 0.001;
+        double elevatorI = 0;
+        double elevatorD = 0;
+        double elevatorEncoderRate = 0;
+    }
 }
