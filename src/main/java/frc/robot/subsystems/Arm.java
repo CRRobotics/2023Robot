@@ -1,4 +1,6 @@
-package org.littletonrobotics.frc2023.util;
+package frc.robot.subsystems;
+
+import java.util.HashMap;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -18,13 +20,46 @@ public class Arm {
   /*basically creates a class that stores all the parameters as pivs
     with getters and setters
   */
-  public static record JointConfig(
-      double mass, double length, double moi, double cgRadius, DCMotor motor) {}
+  public class JointConfig {
+    private final double mass;
+    private final double length;
+    private final double moi;
+    private final double cgRadius;
+    private final DCMotor motor;
+
+    public JointConfig(double mass, double length, double moi, double cgRadius, DCMotor motor) {
+        this.mass = mass;
+        this.length = length;
+        this.moi = moi;
+        this.cgRadius = cgRadius;
+        this.motor = motor;
+    }
+
+    public double mass() {
+        return mass;
+    }
+
+    public double length() {
+        return length;
+    }
+
+    public double moi() {
+        return moi;
+    }
+    
+    public double cgRadius() {
+        return cgRadius;
+    }
+
+    public DCMotor motor() {
+        return motor;
+    }
+  }
 
   private final JointConfig joint_1;
   private final JointConfig joint_2;
 
-  public DoubleJointedArmFeedforward(JointConfig joint_1, JointConfig joint_2) {
+  public Arm(JointConfig joint_1, JointConfig joint_2) {
     this.joint_1 = joint_1;
     this.joint_2 = joint_2;
   }

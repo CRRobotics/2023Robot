@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.misc.Constants;
 import com.revrobotics.CANSparkMax;
@@ -9,8 +10,7 @@ import com.revrobotics.RelativeEncoder;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 public class Elevator extends SubsystemBase{
-
-    private VictorSPX armMotor;
+    private VictorSP armMotor;
     private final PIDController elevatorPID;
     private final PIDController armPID;
     private CANSparkMax elevatorMotor;
