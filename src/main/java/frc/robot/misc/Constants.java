@@ -5,6 +5,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public interface Constants {
     interface SwerveModule {
@@ -91,5 +96,13 @@ public interface Constants {
         double elevatorI = 0;
         double elevatorD = 0;
         double elevatorEncoderRate = 0;
+        double kElevatorMinimumLength = 10;//Relative to the other mech objects
+
+        // the main mechanism object
+        Mechanism2d mech = new Mechanism2d(3, 3);
+        // the mechanism root node
+        MechanismRoot2d root = mech.getRoot("climber", 2, 0);
+        MechanismLigament2d m_elevator = root.append(new MechanismLigament2d("elevator", kElevatorMinimumLength, 90));
+        MechanismLigament2d m_wrist = m_elevator.append(new MechanismLigament2d("wrist", 0.5, 90, 6, new Color8Bit(Color.kPurple)));
     }
 }
