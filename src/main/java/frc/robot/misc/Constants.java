@@ -40,20 +40,20 @@ public interface Constants {
 
     interface Drive {
         // all unset
-        int frontLeftWheelID = 13;
-        int frontLeftTurnID = 14;
+        int chimeraWheelID = 11;
+        int chimeraTurnID = 12;
         double frontLeftAngularOffset = -Math.PI / 2;
 
-        int frontRightWheelID = 9;
-        int frontRightTurnID = 10;
+        int manticoreWheelID = 9;
+        int manticoreTurnID = 10;
         double frontRightAngularOffset = 0;
 
-        int backLeftWheelID = 5;
-        int backLeftTurnID = 6;
+        int phoenixWheelID = 13;
+        int phoenixTurnID = 14;
         double backLeftAngularOffset = Math.PI;
 
-        int backRightWheelID = 11;
-        int backRightTurnID = 12;
+        int leviathanWheelID = 5;
+        int leviathanTurnID = 6;
         double backRightAngularOffset = Math.PI / 2;
 
         double trackWidth = Units.inchesToMeters(26.5);// Distance between centers of right and left wheels on robot//TODO Set kTrackWidth to actual track width

@@ -29,26 +29,26 @@ import java.util.stream.Collectors;
 import com.kauailabs.navx.frc.AHRS;
 public class DriveTrain extends SubsystemBase {
     // Create MAXSwerveModules
-    private final SwerveModule frontLeft = new SwerveModule(
-            Constants.Drive.frontLeftWheelID,
-            Constants.Drive.frontLeftTurnID,
+    private final SwerveModule frontLeft = new SwerveModule( // chimera 11& 12
+            Constants.Drive.chimeraWheelID,
+            Constants.Drive.chimeraTurnID,
             Constants.Drive.frontLeftAngularOffset);
 
-    private final SwerveModule frontRight = new SwerveModule(
-            Constants.Drive.frontRightWheelID,
-            Constants.Drive.frontRightTurnID,
+    private final SwerveModule frontRight = new SwerveModule( // manticore 9&10
+            Constants.Drive.manticoreWheelID,
+            Constants.Drive.manticoreTurnID,
             Constants.Drive.frontRightAngularOffset);
 
-    private final SwerveModule backLeft = new SwerveModule(
-            Constants.Drive.backLeftWheelID,
-            Constants.Drive.backLeftTurnID,
+    private final SwerveModule backLeft = new SwerveModule( //phoenix 13&14
+            Constants.Drive.phoenixWheelID,
+            Constants.Drive.phoenixTurnID,
             Constants.Drive.backLeftAngularOffset);
 
-    private final SwerveModule backRight = new SwerveModule(
-            Constants.Drive.backRightWheelID,
-            Constants.Drive.backRightTurnID,
+    private final SwerveModule backRight = new SwerveModule( //Leviathan 5&6
+            Constants.Drive.leviathanWheelID,
+            Constants.Drive.leviathanTurnID,
             Constants.Drive.backRightAngularOffset);
-
+// Cerberus 7&8
     // The gyro sensor
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
 
