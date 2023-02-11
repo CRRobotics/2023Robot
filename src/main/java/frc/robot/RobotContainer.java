@@ -22,10 +22,12 @@ import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.TestModule;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Elevator;
 
 public class RobotContainer {
   // The robot's subsystems
   private final DriveTrain driveTrain = new DriveTrain();
+  private final Elevator elevator = new Elevator(1, 2);
 
   // The driver's controller
   XboxController driver = new XboxController(Constants.Controller.driveControllerPort);
