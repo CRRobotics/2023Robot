@@ -1,7 +1,7 @@
 # 2023 Robot code
 ##### Code Red Robotics | IHS
 ---
-Held within is our progress and our final program used for our [currently unnamed] FRC competition robot
+Held within is our progress and our final program used for our FRC competition robot: T red
 
 **We are using the GitFlow branch structure for this repository**
 ![image](https://emojis.wiki/emoji-pics/apple/mechanical-arm-apple.png)
