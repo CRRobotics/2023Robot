@@ -1,0 +1,24 @@
+package frc.robot.commands;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import frc.robot.misc.Constants;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class AcqControl extends CommandBase
+{
+    Acquisition acquisition;
+    public AcqControl(Acquisition acquisition) 
+    {
+        this.acquisition = acquisition;
+        addRequirements(acquisition);
+    }
+
+    @Override
+    public void initialize()
+    {
+
+    }
+    @Override 
+    public void execute()
+}
