@@ -13,7 +13,7 @@ public interface Constants {
         // 45 teeth bevel gear, 22 teeth 1st stage spur gear, 15 teeth on bevel pinion gear
         double wheelGearRatio = (45.0 * 22) / (wheelTeeth * 15.0);
         double wheelEncoderPositionConversion = wheelDiameter * Math.PI / wheelGearRatio; // meters
-        double wheelEncoderVelocityConversion = wheelEncoderPositionConversion / wheelGearRatio / 60; // meters per second
+        double wheelEncoderVelocityConversion = wheelEncoderPositionConversion / 60.0; // meters per second
         double wheelP = 0.04;
         double wheelI = 0;
         double wheelD = 0;
@@ -63,7 +63,7 @@ public interface Constants {
                 new Translation2d(wheelBase / 2, -trackWidth / 2),
                 new Translation2d(-wheelBase / 2, trackWidth / 2),
                 new Translation2d(-wheelBase / 2, -trackWidth / 2));        //Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
-        double maxSpeed = 2; // meters per second
+        double maxSpeed = 1; // meters per second
         double maxAngularSpeed = Math.PI; // radians per second;
         boolean gyroReversed = true; //Determines whether the gyro is reversed (I think)
 
@@ -74,7 +74,7 @@ public interface Constants {
     }
 
     interface Auto {
-        double maxSpeed = 3; // meters per second
+        double maxSpeed = 0.25; // meters per second
         double maxAcceleration = 3; // meters per second squared
         double maxAngularSpeed = Math.PI; // radians per second
         double maxAngularAcceleration = Math.PI; // radians per second squared
