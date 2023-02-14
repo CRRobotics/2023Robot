@@ -28,7 +28,6 @@ public class AlignCone extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        indexer.getEncoder().setPosition(0);
     }
 
     @Override

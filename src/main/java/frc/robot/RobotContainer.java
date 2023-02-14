@@ -16,9 +16,11 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.JoystickDrive;
+import frc.robot.commands.SpinIndexer;
 import frc.robot.commands.TestModule;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.DriveTrain;
@@ -26,28 +28,30 @@ import frc.robot.subsystems.Indexer;
 
 public class RobotContainer {
   // The robot's subsystems
-  private final DriveTrain driveTrain = new DriveTrain();
-  private final Indexer indexer = new Indexer(0);
+  // private final DriveTrain driveTrain = new DriveTrain();
+  private final Indexer indexer = new Indexer(1);
+
 
   // The driver's controller
   XboxController driver = new XboxController(Constants.Controller.driveControllerPort);
 
-  public DriveTrain getDriveTrain() {
-      return driveTrain;
-  }
+  // public DriveTrain getDriveTrain() {
+  //     // return driveTrain;
+  // }
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    CommandScheduler.getInstance().setDefaultCommand(indexer, new SpinIndexer(indexer, 0.1));
     // Configure the button bindings
     configureButtonBindings();
 
     // Configure default commands
-    driveTrain.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new JoystickDrive(driveTrain));
+    // driveTrain.setDefaultCommand(
+    //     // The left stick controls translation of the robot.
+    //     // Turning is controlled by the X axis of the right stick.
+    //     new JoystickDrive(driveTrain));
   }
 
   /**
@@ -60,8 +64,9 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .whileTrue(new TestModule(driveTrain));
+    // new JoystickButton(driver, XboxController.Button.kRightBumper.value)
+    //     .whileTrue(new TestModule(driveTrain));
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SpinIndexer(indexer, Math.PI));
   }
 
   /**

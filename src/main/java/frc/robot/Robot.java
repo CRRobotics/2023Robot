@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.JoystickDrive;
+import frc.robot.commands.SpinIndexer;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Indexer;
 
 /**
  * Subsubsubclass of the <code>RobotBase</code> class from edu.wpi.first.wpilibj.RobotBase
