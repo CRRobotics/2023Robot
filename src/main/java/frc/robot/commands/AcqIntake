@@ -5,10 +5,10 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.robot.misc.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class AcqControl extends CommandBase
+public class AcqIntake extends CommandBase
 {
     Acquisition acquisition;
-    public AcqControl(Acquisition acquisition) 
+    public AcqIntake(Acquisition acquisition) 
     {
         this.acquisition = acquisition;
         addRequirements(acquisition);
@@ -19,6 +19,24 @@ public class AcqControl extends CommandBase
     {
 
     }
+    
     @Override 
     public void execute()
+    {
+        acquisition.moveAcq(90);
+        double speed = controller.getLeftTrigger();
+        acquisition.spinAcq(speed);
+    }
+
+    @Override
+    public void end(boolean interrupted)
+    {
+        acquisition.moveAcq(-90);
+    }
+
+    @Override
+    public boolean isFinished()
+    {
+        return false;
+    }
 }

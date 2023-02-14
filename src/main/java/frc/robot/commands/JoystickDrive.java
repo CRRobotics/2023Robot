@@ -14,7 +14,8 @@ public class JoystickDrive extends CommandBase{
     DriveTrain driveTrain;
     XboxController controller = new XboxController(0);
 
-    public JoystickDrive(DriveTrain driveTrain) {
+    public JoystickDrive(DriveTrain driveTrain) 
+    {
         this.driveTrain = driveTrain;
         addRequirements(driveTrain);
     }
