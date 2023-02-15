@@ -15,7 +15,7 @@ public class SpinIndexer extends CommandBase {
 
     @Override
     public void execute() {
-        indexer.setIndexerVelocity(0.1);
+        indexer.setIndexerVelocity(1);
     }
 
     @Override

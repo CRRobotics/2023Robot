@@ -43,7 +43,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    CommandScheduler.getInstance().setDefaultCommand(indexer, new SpinIndexer(indexer, 0.1));
+    CommandScheduler.getInstance().setDefaultCommand(indexer, new SpinIndexer(indexer, 0.5));
     // Configure the button bindings
     configureButtonBindings();
 
