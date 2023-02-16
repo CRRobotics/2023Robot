@@ -19,6 +19,7 @@ public class SpinIndexer extends CommandBase {
 
     @Override
     public void execute() {
+        System.out.println(jeVoisInterface.getConeAngle());
         indexer.setIndexerVelocity(indexerPID.calculate(jeVoisInterface.getConeAngle(), angle));
     }
 

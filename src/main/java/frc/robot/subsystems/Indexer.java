@@ -24,7 +24,6 @@ public class Indexer extends SubsystemBase {
     }
 
     public void setIndexerVelocity(double velocity){
-        System.out.println(velocity);
         indexerMotor.set(ControlMode.PercentOutput, controller.getLeftX() * .5);
     }
 
