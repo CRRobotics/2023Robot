@@ -19,7 +19,7 @@ public class Acquisition extends SubsystemBase
     }
     public void moveAcq (double elevate)
     {
-        victorSPX1.set(mode, acqPID.calculate(victorSPX1.getClosedLoopError(), elevate));
+        victorSPX1.set(ControlMode.Position, acqPID.calculate(victorSPX1.getClosedLoopError(), elevate));
     }
     public void spinAcq (double speed)
     {

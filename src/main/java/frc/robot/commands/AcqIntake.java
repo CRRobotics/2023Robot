@@ -27,7 +27,7 @@ public class AcqIntake extends CommandBase
     @Override 
     public void execute()
     {
-        acquisition.moveAcq(90);
+        acquisition.moveAcq(Constants.Acquisition.acquisitionDown);
         double speed = controller.getLeftTriggerAxis();
         acquisition.spinAcq(speed);
     }
