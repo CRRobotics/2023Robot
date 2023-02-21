@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
@@ -15,6 +16,8 @@ public class Indexer extends SubsystemBase {
 
     public Indexer(int indexerMotorID){
         indexerMotor = new VictorSPX(indexerMotorID);
+        indexerMotor.setNeutralMode(NeutralMode.Brake);
+        indexerMotor.setInverted(true);
         controller = new XboxController(0);
         indexerPID = new PIDController(Constants.Indexer.indexerP, Constants.Indexer.indexerI, Constants.Indexer.indexerD);
     }
@@ -24,7 +27,7 @@ public class Indexer extends SubsystemBase {
     }
 
     public void setIndexerVelocity(double velocity){
-        indexerMotor.set(ControlMode.PercentOutput, controller.getLeftX() * .5);
+        indexerMotor.set(ControlMode.PercentOutput, velocity);
     }
 
     public double getAngle(){

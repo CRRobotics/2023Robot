@@ -29,7 +29,7 @@ import frc.robot.subsystems.Indexer;
 public class RobotContainer {
   // The robot's subsystems
   // private final DriveTrain driveTrain = new DriveTrain();
-  private final Indexer indexer = new Indexer(1);
+  private final Indexer indexer = new Indexer(2);
 
 
   // The driver's controller
@@ -66,7 +66,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // new JoystickButton(driver, XboxController.Button.kRightBumper.value)
     //     .whileTrue(new TestModule(driveTrain));
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SpinIndexer(indexer, Math.PI));
+    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SpinIndexer(indexer, 0.5));
   }
 
   /**
