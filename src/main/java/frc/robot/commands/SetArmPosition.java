@@ -1,11 +1,18 @@
+package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
 public class SetArmPosition extends CommandBase{
     private Elevator elevator;
-    public SetArmPosition(Elevator elevator, double z, double y) {
+    private double x;
+    private double y;
+    private double elevatorRotations;
+    public SetArmPosition(Elevator elevator, double x, double y, double elevatorRotations) {
         this.elevator = elevator;
         addRequirements(elevator);
+        this.elevatorRotations = elevatorRotations;
+        this.x = x;
+        this.y = y;
     }
     @Override
     public void initialize() {
@@ -14,6 +21,8 @@ public class SetArmPosition extends CommandBase{
 
     @Override
     public void execute() {
-        elevator.setArmMotors(0, 0);
+        elevator.setElevatorPosition(elevatorRotations);
+        elevator.setArmMotors(x, y);
     }
+    
 }
