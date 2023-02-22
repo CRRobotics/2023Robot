@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class AcqIntake extends CommandBase
 {
     Acquisition acquisition;
-    XboxController controller = new XboxController(0);
     public AcqIntake(Acquisition acquisition) 
     {
         this.acquisition = acquisition;
@@ -21,21 +20,20 @@ public class AcqIntake extends CommandBase
     @Override
     public void initialize()
     {
-
+        System.out.println("running the intake");
     }
     
     @Override 
     public void execute()
     {
-        acquisition.moveAcq(Constants.Acquisition.acquisitionDown);
-        double speed = controller.getLeftTriggerAxis();
+        double speed = 0.25;
         acquisition.spinAcq(speed);
     }
 
     @Override
     public void end(boolean interrupted)
     {
-        acquisition.moveAcq(-90);
+        acquisition.spinAcq(0);
     }
 
     @Override

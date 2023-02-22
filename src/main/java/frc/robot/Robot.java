@@ -26,6 +26,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    System.out.println("turning on");
     robotContainer = new RobotContainer();
     SmartDashboard.putNumber("speed", 0);
     SmartDashboard.putNumber("angle", 0);

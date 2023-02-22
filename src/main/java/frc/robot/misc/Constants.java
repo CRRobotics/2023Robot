@@ -86,8 +86,8 @@ public interface Constants {
     }
 
     interface Acquisition {
-        int acquisitionMotor1 = 0;
-        int acquisitionMotor2 = 0;
+        int acquisitionMotor1 = 1;
+        int acquisitionMotor2 = 2;
         double acquisitionDown = Math.PI;
     }
 }

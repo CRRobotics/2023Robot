@@ -6,23 +6,32 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Acquisition extends SubsystemBase
 {
-    private VictorSPX victorSPX1;
-    private VictorSPX victorSPX2;
+    // private VictorSPX lowerMotor;
+    private VictorSPX spinMotor;
     private ControlMode mode;
     private PIDController acqPID;
+    private boolean lowered;
+
+    public boolean isLowered() {
+        return lowered;
+    }
+    public void setLowered(boolean lowered) {
+        this.lowered = lowered;
+    }
     public Acquisition()
     {
         mode = ControlMode.Velocity;
         acqPID = new PIDController(0.001, 0, 0);
-        victorSPX1 = new VictorSPX(Constants.Acquisition.acquisitionMotor1);
-        victorSPX2 = new VictorSPX(Constants.Acquisition.acquisitionMotor2);
+        // lowerMotor = new VictorSPX(Constants.Acquisition.acquisitionMotor1);
+        spinMotor = new VictorSPX(Constants.Acquisition.acquisitionMotor2);
+        lowered = false;
     }
     public void moveAcq (double elevate)
     {
-        victorSPX1.set(ControlMode.Position, acqPID.calculate(victorSPX1.getClosedLoopError(), elevate));
+        // lowerMotor.set(ControlMode.Position, acqPID.calculate(lowerMotor.getClosedLoopError(), elevate));
     }
     public void spinAcq (double speed)
     {
-        victorSPX2.set(mode, speed);
+        spinMotor.set(ControlMode.PercentOutput, speed);
     }
 }
