@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
+import com.revrobotics.SparkMaxLimitSwitch.Direction;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,6 +24,7 @@ public class Elevator extends SubsystemBase{
     private CANSparkMax elevatorMotor;
     private boolean coneOrCube;
     private SparkMaxLimitSwitch bottomSwitch;
+    private SparkMaxLimitSwitch topSwitch;
     //True for cone, false for cube
     private RelativeEncoder elevatorEncoder;
     private ControlMode control;
@@ -34,6 +38,10 @@ public class Elevator extends SubsystemBase{
         armPID1 = new PIDController(0.001, 0, 0); //TODO make these constants
         armPID2 = new PIDController(0.001, 0, 0); //TODO make these constants
         elevatorEncoder = elevatorMotor.getEncoder();
+        bottomSwitch = elevatorMotor.getReverseLimitSwitch(Type.kNormallyOpen);
+        bottomSwitch.enableLimitSwitch(true);
+        topSwitch = elevatorMotor.getForwardLimitSwitch(Type.kNormallyOpen);
+        topSwitch.enableLimitSwitch(true);
     }
 
     public void setElevatorVelocity(double velocity)
@@ -61,5 +69,4 @@ public class Elevator extends SubsystemBase{
         armMotor1.set(control, armPID1.calculate(pos1)) ;
         armMotor2.set(control,armPID2.calculate(pos2));
     }
-
 }
