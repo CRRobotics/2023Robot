@@ -2,38 +2,40 @@ package frc.robot.misc;
 
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.XboxController;
 
 public interface ControllerWrapper {
     XboxController driveController = new XboxController(0);
     XboxController controlController = new XboxController(1);
 
-   public static DPadButton DriverDPadUp = new DPadButton(DriverController, 0);
-    public static DPadButton DriverDPadRight = new DPadButton(DriverController, 90);
-    public static DPadButton DriverDPadDown = new DPadButton(DriverController, 180);
-    public static DPadButton DriverDPadLeft = new DPadButton(DriverController, 270);
+    public static JoystickButton controllerA = new JoystickButton(controlController, 0);
+    public static JoystickButton controllerB = new JoystickButton(controlController, 1);
+    public static JoystickButton controllerX = new JoystickButton(controlController, 2);
+    public static JoystickButton controllerY = new JoystickButton(controlController,3);
 
-    public static JoystickButton DriverButtonY = new JoystickButton(DriverController, XboxController.Button.kY.value);
-    public static JoystickButton DriverButtonX = new JoystickButton(DriverController, XboxController.Button.kX.value);
-    public static JoystickButton DriverButtonA = new JoystickButton(DriverController, XboxController.Button.kA.value);
-    public static JoystickButton DriverButtonB = new JoystickButton(DriverController, XboxController.Button.kB.value);
+    public static JoystickButton controllerLeftTopTrigger = new JoystickButton(controlController,4);
+    public static JoystickButton controllerRightTopTrigger = new JoystickButton(controlController,5);
 
-    public static JoystickButton DriverRightBumper = new JoystickButton(DriverController, XboxController.Button.kRightBumper.value);
-    public static JoystickButton DriverLeftBumper = new JoystickButton(DriverController, XboxController.Button.kLeftBumper.value);
+    public static JoystickButton controllerTopLeftWeirdButton = new JoystickButton(controlController,6);
+    public static JoystickButton controllerTopRightWeirdButton = new JoystickButton(controlController,7);
 
-    //Controller XBOX Controller
-    public static DPadButton ControlDPadUp = new DPadButton(ControlController, 0);
-    public static DPadButton ControlDPadRight = new DPadButton(ControlController, 90);
-    public static DPadButton ControlDPadDown = new DPadButton(ControlController, 180);
-    public static DPadButton ControlDPadLeft = new DPadButton(ControlController, 270);
+    public static JoystickButton controllerLeftJoystickIn = new JoystickButton(controlController, 8);
+    public static JoystickButton controllerRightJoystickIn = new JoystickButton(controlController, 9);
 
-    public static JoystickButton ControlButtonY = new JoystickButton(ControlController, XboxController.Button.kY.value);
-    public static JoystickButton ControlButtonX = new JoystickButton(ControlController, XboxController.Button.kX.value);
-    public static JoystickButton ControlButtonA = new JoystickButton(ControlController, XboxController.Button.kA.value);
-    public static JoystickButton ControlButtonB = new JoystickButton(ControlController, XboxController.Button.kB.value);
+    public static JoystickButton driverA = new JoystickButton(driveController, 0);
+    public static JoystickButton driverB = new JoystickButton(driveController, 1);
+    public static JoystickButton driverX = new JoystickButton(driveController, 2);
+    public static JoystickButton driverY = new JoystickButton(driveController,3);
 
-    public static JoystickButton ControlRightBumper = new JoystickButton(ControlController, XboxController.Button.kRightBumper.value);
-    public static JoystickButton ControlLeftBumper = new JoystickButton(ControlController, XboxController.Button.kLeftBumper.value);
-    
+    public static JoystickButton driverLeftTopTrigger = new JoystickButton(driveController,4);
+    public static JoystickButton driverRightTopTrigger = new JoystickButton(driveController,5);
+
+    public static JoystickButton driverTopLeftWeirdButton = new JoystickButton(driveController,6);
+    public static JoystickButton driverTopRightWeirdButton = new JoystickButton(driveController,7);
+
+    public static JoystickButton driverLeftJoystickIn = new JoystickButton(driveController, 8);
+    public static JoystickButton driverRightJoystickIn = new JoystickButton(driveController, 9);
 }
