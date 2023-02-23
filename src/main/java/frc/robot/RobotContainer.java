@@ -49,7 +49,7 @@ public class RobotContainer {
     //     // The left stick controls translation of the robot.
     //     // Turning is controlled by the X axis of the right stick.
     //     new JoystickDrive(driveTrain));
-    acquisition.setDefaultCommand(new AcqIntake(acquisition));
+    // acquisition.setDefaultCommand(new AcqIntake(acquisition));
       
   }
 
