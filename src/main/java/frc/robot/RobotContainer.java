@@ -23,13 +23,15 @@ import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.SpinIndexer;
 import frc.robot.commands.TestModule;
 import frc.robot.misc.Constants;
+import frc.robot.misc.JeVoisInterface;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Indexer;
 
 public class RobotContainer {
   // The robot's subsystems
   // private final DriveTrain driveTrain = new DriveTrain();
-  private final Indexer indexer = new Indexer(2);
+  // private final Indexer indexer = new Indexer(2);
+  JeVoisInterface jeVoisInterface = new JeVoisInterface();
 
 
   // The driver's controller
@@ -43,7 +45,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    CommandScheduler.getInstance().setDefaultCommand(indexer, new SpinIndexer(indexer, 0.5));
+    // CommandScheduler.getInstance().setDefaultCommand(indexer, new SpinIndexer(indexer, 0.5));
     // Configure the button bindings
     configureButtonBindings();
 
