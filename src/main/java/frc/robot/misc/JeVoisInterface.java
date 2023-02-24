@@ -604,12 +604,12 @@ public class JeVoisInterface
         //WRITES TO NETWORKTABLES.
         String[] tokens = pkt.split(PKT_SEP);
         for (String x:tokens) {
-            // System.out.println(x);
+            System.out.println(x);
             coneangle.set(Double.parseDouble(tokens[C_ANGLE]));
         }
         // System.out.println("TOKENCANGLE"+tokens[C_ANGLE]);
         //Check there were enough substrings found
-        if (tokens.length < 4) {
+        if (tokens.length < 2) {
             DriverStation.reportError("Malformed vision packet. Expected " + Integer.toString(4) + 
                 ", received " + Integer.toString(tokens.length), false);
             return -1;
