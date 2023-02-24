@@ -7,6 +7,9 @@ public class SetArmPosition extends CommandBase{
     private double x;
     private double y;
     private double elevatorRotations;
+    private double pos = 0.1;
+
+
     public SetArmPosition(Elevator elevator, double x, double y, double elevatorRotations) {
         this.elevator = elevator;
         addRequirements(elevator);
@@ -21,8 +24,9 @@ public class SetArmPosition extends CommandBase{
 
     @Override
     public void execute() {
-        elevator.setElevatorPosition(elevatorRotations);
         elevator.setArmMotors(x, y);
+        elevator.setElevatorPosition(pos);
+        pos += 0.2;
     }
     
 }

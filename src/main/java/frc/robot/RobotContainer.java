@@ -19,19 +19,26 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.JoystickDrive;
+import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.TestModule;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Elevator;
 
 public class RobotContainer {
   // The robot's subsystems
   private final DriveTrain driveTrain = new DriveTrain();
+  private final Elevator elevator = new Elevator(15, 16, 17);
 
   // The driver's controller
   XboxController driver = new XboxController(Constants.Controller.driveControllerPort);
 
   public DriveTrain getDriveTrain() {
       return driveTrain;
+  }
+
+  public Elevator getElevator(){
+    return elevator;
   }
 
   /**
@@ -42,10 +49,12 @@ public class RobotContainer {
     configureButtonBindings();
 
     // Configure default commands
+    //elevator.setDefaultCommand(new SetArmPosition(elevator, .5, 0.5, 10));
     driveTrain.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new JoystickDrive(driveTrain));
+
   }
 
   /**

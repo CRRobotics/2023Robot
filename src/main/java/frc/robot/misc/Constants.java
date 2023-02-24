@@ -90,6 +90,6 @@ public interface Constants {
         double elevatorP = 0.001;
         double elevatorI = 0;
         double elevatorD = 0;
-        double elevatorEncoderRate = 0;
+        double elevatorEncoderRate = 1;
     }
 }
