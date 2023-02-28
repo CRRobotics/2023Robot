@@ -1,20 +1,5 @@
 package frc.robot.subsystems;
 
-<<<<<<< HEAD
-import com.revrobotics.CANSparkMax;
-import frc.robot.misc.Constants;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-public class Elevator extends SubsystemBase implements Constants
-{
-    private final CANSparkMax linearMotor = new CANSparkMax(Constants.Elevator.linearMotorID, null); //replace null
-
-    public Elevator() {
-
-    }
-
-
-=======
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
@@ -34,41 +19,53 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-public class Elevator extends SubsystemBase{
-    private TalonFX armMotor1;
-    private TalonFX armMotor2;
-    private final PIDController elevatorPID;
+/**
+ * Contains the arm and elevator assemblies
+ */
+public class Elevator extends SubsystemBase implements Constants{
+    private TalonFX armMotor1; //Works with armMotor2
+    private TalonFX armMotor2; //Works with armMotor1
     private final PIDController armPID1;
     private final PIDController armPID2;
-    private CANSparkMax elevatorMotor;
-    private boolean coneOrCube;
-    private SparkMaxLimitSwitch bottomSwitch;
-    private SparkMaxLimitSwitch topSwitch;
-    //True for cone, false for cube
+    private CANSparkMax elevatorMotor; // Linear axis
+    private final PIDController elevatorPID;
     private RelativeEncoder elevatorEncoder;
+
+    private SparkMaxLimitSwitch topSwitch; //Limit switch on linear axis
+    private SparkMaxLimitSwitch bottomSwitch; //Limit switch on linear axis
+
+    private boolean coneOrCube; //True for cone, false for cube
     private ControlMode control;
     private XboxController controller;
-    public Elevator(int motorID, int motorID2, int motorID3){
+
+    /**
+     * Constructs an <code>Elevator</code> using motor ID's in <code>Contants.java</code>
+     */
+    public Elevator(){
         
-        control = ControlMode.PercentOutput;
-        controller = new XboxController(2);
-        coneOrCube = true;
-        elevatorMotor = new CANSparkMax(motorID, MotorType.kBrushless);
-        elevatorMotor.setIdleMode(IdleMode.kBrake);
-        armMotor1 = new TalonFX(motorID2);
-        armMotor2 = new TalonFX(motorID3);
+        armMotor1 = new TalonFX(Elevator.armMotor1ID);
+        armMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         armMotor1.setNeutralMode(NeutralMode.Brake);
+        armPID1 = new PIDController(Elevator.armMotor1P, Elevator.armMotor1I, Elevator.armMotor1D); //TODO make these constants
+
+        armMotor2 = new TalonFX(Elevator.armMotor2ID);
+        armMotor2.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         armMotor2.setNeutralMode(NeutralMode.Brake);
-        elevatorPID = new PIDController(Constants.Elevator.elevatorP, Constants.Elevator.elevatorI, Constants.Elevator.elevatorD);
-        armPID1 = new PIDController(0.005, 0, 0); //TODO make these constants
-        armPID2 = new PIDController(0.005, 0, 0); //TODO make these constants
+        armPID2 = new PIDController(Elevator.armMotor1P, Elevator.armMotor1I, Elevator.armMotor1D); //TODO make these constants
+
+        elevatorMotor = new CANSparkMax(Constants.Elevator.elevatorMotorID, MotorType.kBrushless);
+        elevatorMotor.setIdleMode(IdleMode.kBrake);
         //elevatorEncoder = elevatorMotor.getEncoder();
+        elevatorPID = new PIDController(Constants.Elevator.elevatorP, Constants.Elevator.elevatorI, Constants.Elevator.elevatorD);
+
         //bottomSwitch = elevatorMotor.getReverseLimitSwitch(Type.kNormallyOpen);
         //bottomSwitch.enableLimitSwitch(true);
         //topSwitch = elevatorMotor.getForwardLimitSwitch(Type.kNormallyOpen);
         //topSwitch.enableLimitSwitch(true);
-        armMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        armMotor2.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+
+        coneOrCube = true;
+        control = ControlMode.PercentOutput;
+        controller = new XboxController(2);
     }
 
     public void setElevatorVelocity(double velocity)
@@ -101,5 +98,4 @@ public class Elevator extends SubsystemBase{
         //armMotor1.set(ControlMode.PercentOutput, armPID1.calculate(armMotor1.getSelectedSensorPosition(), pos1));
         //armMotor2.set(ControlMode.PercentOutput, armPID2.calculate(armMotor2.getSelectedSensorPosition(), pos2));
     }
->>>>>>> 274208638f399df46da86a3fdc702fa43eb97692
 }
