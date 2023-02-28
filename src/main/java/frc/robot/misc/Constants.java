@@ -69,6 +69,10 @@ public interface Constants {
 
     }
 
+    interface Grabber {
+        int motorID = 0; //Placeholder
+    }
+
     interface Controller {
         int driveControllerPort = 0;
     }

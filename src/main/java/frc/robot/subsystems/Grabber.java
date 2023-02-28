@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,7 +27,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
-public class Grabber extends SubsystemBase {
-    
+public class Grabber extends SubsystemBase implements Constants{
+    TalonSRX motor = new TalonSRX(Grabber.motorID);
+
+    public Grabber()
+    {
+        motor.configFactoryDefault();
+        motor.setNeutralMode(NeutralMode.Brake);
+    }
+
+    public void setPos(double pos)
+    {
+        motor.set(ControlMode.Position, pos);
+    }
 }
