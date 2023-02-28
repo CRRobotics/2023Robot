@@ -16,6 +16,7 @@ public class AlignCone extends CommandBase{
         addRequirements(indexer);
         
     }
+
     @Override
     public void initialize() {
         indexer.turnToAngle(NetworkTableWrapper.getData(Constants.Indexer.indexerCamTable, "coneAngle")  - indexer.getAngle());
