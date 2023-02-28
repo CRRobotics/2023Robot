@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public interface Constants {
     interface SwerveModule {
@@ -86,6 +87,7 @@ public interface Constants {
     }
 
     interface Elevator {
+<<<<<<< Updated upstream
         int armMotor1ID = 16;
         double armMotor1P = 0.005;
         double armMotor1I = 0;
@@ -100,6 +102,12 @@ public interface Constants {
         double elevatorP = 0.001;
         double elevatorI = 0;
         double elevatorD = 0;
+=======
+        double elevatorMotorID = 0;
+        double elevatorP = SmartDashboard.getNumber("P", 0);
+        double elevatorI = SmartDashboard.getNumber("I", 0);
+        double elevatorD = SmartDashboard.getNumber("D", 0);
+>>>>>>> Stashed changes
         double elevatorEncoderRate = 1;
     }
 }
