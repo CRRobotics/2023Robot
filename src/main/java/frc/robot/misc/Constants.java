@@ -86,7 +86,15 @@ public interface Constants {
     }
 
     interface Elevator {
+<<<<<<< HEAD
         int linearMotorID = -1; //TODO replace with real ID
         int fourBarMotorID = -1; //TODO replace with real ID
+=======
+        double elevatorMotorID = 0;
+        double elevatorP = 0.001;
+        double elevatorI = 0;
+        double elevatorD = 0;
+        double elevatorEncoderRate = 1;
+>>>>>>> 274208638f399df46da86a3fdc702fa43eb97692
     }
 }

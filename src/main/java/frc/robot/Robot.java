@@ -8,8 +8,11 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import frc.robot.commands.JoystickDrive;
+import frc.robot.commands.SetArmPosition;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Elevator;
 
 /**
  * Subsubsubclass of the <code>RobotBase</code> class from edu.wpi.first.wpilibj.RobotBase
@@ -19,6 +22,7 @@ public class Robot extends TimedRobot {
   private Command autoCommand;
 
   private RobotContainer robotContainer;
+  private Elevator elevator;
 
   /**
    * Method runs once at the time of the creation of the <code>Robot</code> class
@@ -86,16 +90,22 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopInit() {
+    System.out.println("initiated");
     if (autoCommand != null) {
       autoCommand.cancel();
     }
+    CommandScheduler.getInstance().schedule(new SetArmPosition(robotContainer.getElevator(), 0, 0, 10));
   }
 
   /**
    * Same as <code>robotPeriodic</code>, but only for the teleoperated state
    */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    robotContainer.getElevator().setElevatorVelocity(1);
+    robotContainer.getElevator().setArmMotors(10, 10);
+    //CommandScheduler.getInstance().run();
+  }
 
   /**
    * Same as <code>robotExit</code>, but only for the teleoperated state
