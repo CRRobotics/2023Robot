@@ -11,6 +11,10 @@ import frc.robot.subsystems.Indexer;
 public class AlignCone extends CommandBase{
     Indexer indexer;
 
+    /**
+     * Creates an AlignCone object referencing the indexer given.
+     * @param indexer the indexer given.
+     */
     public AlignCone(Indexer indexer) {
         this.indexer = indexer;
         addRequirements(indexer);

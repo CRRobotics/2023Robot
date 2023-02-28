@@ -13,15 +13,24 @@ public class SpinIndexer extends CommandBase {
     double angle;
     PIDController indexerPID;
     JeVoisInterface jeVoisInterface;
-    public SpinIndexer(Indexer indexer, double angle) {
+
+    /**
+     * Creates a <code>SpinIndexer</code> with a given indexer
+     * @param indexer The indexer to be referenced by the <code>SpinIndexer</code>
+     */
+    public SpinIndexer(Indexer indexer) {
         this.indexer = indexer;
-        addRequirements(indexer); 
+        this.angle = NetworkTableInstance.getDefault().getTable("Visions").getEntry("ctheta").getDouble(6.0);
+        addRequirements(indexer);
         indexerPID = new PIDController(0.08, 0.02, 0);
         indexerPID.setTolerance(Math.PI / 24);
         indexerPID.enableContinuousInput(-Math.PI, Math.PI);
         jeVoisInterface = new JeVoisInterface();
     }
 
+    /**
+     * Finds the angle of the object relative to the robot and spins the plate to put the object in the correct position.
+     */
     @Override
     public void execute() {
         angle = NetworkTableInstance.getDefault().getTable("Visions").getEntry("ctheta").getDouble(6.0);
@@ -30,6 +39,7 @@ public class SpinIndexer extends CommandBase {
         if (angle <= 10) indexer.setIndexerVelocity(indexerPID.calculate(angle, Math.PI / 2));
         else indexer.setIndexerVelocity(0);
     }
+
 
     @Override
     public void end(boolean interrupted) {
