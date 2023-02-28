@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+ /**
+  * Runs the acquisition backwards based on a trigger axis
+  */
 public class AcqReject extends CommandBase
 {
     Acquisition acquisition;
