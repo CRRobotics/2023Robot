@@ -63,10 +63,10 @@ public class Elevator extends SubsystemBase implements Constants{
         armPID2 = new PIDController(0.005, 0, 0); //TODO make these constants
         elevatorEncoder = elevatorMotor.getEncoder();
         elevatorMotor.setSmartCurrentLimit(10);
-        //bottomSwitch = elevatorMotor.getReverseLimitSwitch(Type.kNormallyOpen);
-        //bottomSwitch.enableLimitSwitch(true);
-        //topSwitch = elevatorMotor.getForwardLimitSwitch(Type.kNormallyOpen);
-        //topSwitch.enableLimitSwitch(true);
+        bottomSwitch = elevatorMotor.getReverseLimitSwitch(Type.kNormallyOpen);
+        bottomSwitch.enableLimitSwitch(true);
+        topSwitch = elevatorMotor.getForwardLimitSwitch(Type.kNormallyOpen);
+        topSwitch.enableLimitSwitch(true);
         armMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         armMotor2.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         armMotor1.setSelectedSensorPosition(0);
@@ -84,6 +84,13 @@ public class Elevator extends SubsystemBase implements Constants{
         SmartDashboard.putData(elevatorPID);
         SmartDashboard.putNumber("position", elevatorEncoder.getPosition());
         elevatorMotor.set(elevatorPID.calculate(elevatorEncoder.getPosition(), targetPosition));
+    }
+
+    public SparkMaxLimitSwitch getTopSwitch() {
+        return topSwitch;
+    }
+    public SparkMaxLimitSwitch getBottomSwitch() {
+        return bottomSwitch;
     }
 
     public void setConeOrCube()
