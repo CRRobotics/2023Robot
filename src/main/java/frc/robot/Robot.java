@@ -94,7 +94,7 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.cancel();
     }
-    CommandScheduler.getInstance().schedule(new SetArmPosition(robotContainer.getElevator(), 0, 0, 10));
+    CommandScheduler.getInstance().schedule(new SetArmPosition(robotContainer.getElevator(), 0, 0, SmartDashboard.getNumber("setpoint", -50)));
   }
 
   /**
@@ -102,8 +102,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    robotContainer.getElevator().setElevatorVelocity(1);
-    robotContainer.getElevator().setArmMotors(10, 10);
+    // robotContainer.getElevator().setElevatorPosition(-10);
+    // robotContainer.getElevator().setArmMotors(10, 10);
     //CommandScheduler.getInstance().run();
   }
 

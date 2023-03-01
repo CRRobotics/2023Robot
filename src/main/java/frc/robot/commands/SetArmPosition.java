@@ -1,4 +1,5 @@
 package frc.robot.commands;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
@@ -7,7 +8,6 @@ public class SetArmPosition extends CommandBase{
     private double x;
     private double y;
     private double elevatorRotations;
-    private double pos = 0.1;
 
 
     public SetArmPosition(Elevator elevator, double x, double y, double elevatorRotations) {
@@ -24,7 +24,6 @@ public class SetArmPosition extends CommandBase{
     @Override
     public void execute() {
         elevator.setArmMotors(x, y);
-        elevator.setElevatorPosition(pos);
-        pos += 0.2;
+        elevator.setElevatorPosition(elevatorRotations);
     }
 }
