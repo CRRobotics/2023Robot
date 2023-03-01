@@ -84,6 +84,15 @@ public class Elevator extends SubsystemBase implements Constants{
         SmartDashboard.putData(elevatorPID);
         SmartDashboard.putNumber("position", elevatorEncoder.getPosition());
         elevatorMotor.set(elevatorPID.calculate(elevatorEncoder.getPosition(), targetPosition));
+        if (topSwitch.isPressed()){
+            elevatorMotor.set(0);
+        }
+        else if (bottomSwitch.isPressed()){
+            elevatorMotor.set(0);
+        }
+
+        }
+
     }
 
     public SparkMaxLimitSwitch getTopSwitch() {
@@ -92,6 +101,8 @@ public class Elevator extends SubsystemBase implements Constants{
     public SparkMaxLimitSwitch getBottomSwitch() {
         return bottomSwitch;
     }
+
+
 
     public void setConeOrCube()
     {
