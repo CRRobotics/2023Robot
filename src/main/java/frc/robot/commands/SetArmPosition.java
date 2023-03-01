@@ -17,10 +17,9 @@ public class SetArmPosition extends CommandBase{
         this.x = x;
         this.y = y;
     }
-    @Override
-    public void initialize() {
 
-    }
+    @Override
+    public void initialize() {}
 
     @Override
     public void execute() {
@@ -28,5 +27,4 @@ public class SetArmPosition extends CommandBase{
         elevator.setElevatorPosition(pos);
         pos += 0.2;
     }
-    
 }
