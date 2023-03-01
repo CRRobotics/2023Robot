@@ -34,12 +34,19 @@ import com.kauailabs.navx.frc.AHRS;
 public class Grabber extends SubsystemBase implements Constants{
     TalonSRX motor = new TalonSRX(Grabber.motorID);
 
+    /**
+     * Sets the neutral mode to brake. Configures the factory defaults in constructor.
+     */
     public Grabber()
     {
         motor.configFactoryDefault();
         motor.setNeutralMode(NeutralMode.Brake);
     }
 
+    /**
+     * Sets the position of the motor to the given position
+     * @param pos The new position of the grabber in encoder ticks.
+     */
     public void setPos(double pos)
     {
         motor.set(ControlMode.Position, pos);
