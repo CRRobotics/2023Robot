@@ -87,7 +87,6 @@ public interface Constants {
     }
 
     interface Elevator {
-<<<<<<< Updated upstream
         int armMotor1ID = 16;
         double armMotor1P = 0.005;
         double armMotor1I = 0;
@@ -102,12 +101,6 @@ public interface Constants {
         double elevatorP = 0.001;
         double elevatorI = 0;
         double elevatorD = 0;
-=======
-        double elevatorMotorID = 0;
-        double elevatorP = SmartDashboard.getNumber("P", 0);
-        double elevatorI = SmartDashboard.getNumber("I", 0);
-        double elevatorD = SmartDashboard.getNumber("D", 0);
->>>>>>> Stashed changes
         double elevatorEncoderRate = 1;
     }
 }

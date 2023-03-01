@@ -28,11 +28,7 @@ import frc.robot.subsystems.Elevator;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveTrain driveTrain = new DriveTrain();
-<<<<<<< Updated upstream
-  private final Elevator elevator = new Elevator());
-=======
-  private final Elevator elevator = new Elevator(62, 16, 17);
->>>>>>> Stashed changes
+  private final Elevator elevator = new Elevator();
 
   // The driver's controller
   XboxController driver = new XboxController(Constants.Controller.driveControllerPort);

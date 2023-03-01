@@ -44,56 +44,33 @@ public class Elevator extends SubsystemBase implements Constants{
      */
     public Elevator(){
         
-<<<<<<< Updated upstream
-        armMotor1 = new TalonFX(Elevator.armMotor1ID);
-        armMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-=======
         control = ControlMode.PercentOutput;
         controller = new XboxController(2);
         coneOrCube = true;
-        elevatorMotor = new CANSparkMax(motorID, MotorType.kBrushless);
+        elevatorMotor = new CANSparkMax(62, MotorType.kBrushless);
         elevatorMotor.restoreFactoryDefaults();
         elevatorMotor.setIdleMode(IdleMode.kBrake);
-        armMotor1 = new TalonFX(motorID2);
-        armMotor2 = new TalonFX(motorID3);
+        armMotor1 = new TalonFX(16);
+        armMotor2 = new TalonFX(17);
         armMotor1.configFactoryDefault();
->>>>>>> Stashed changes
         armMotor1.setNeutralMode(NeutralMode.Brake);
         armPID1 = new PIDController(Elevator.armMotor1P, Elevator.armMotor1I, Elevator.armMotor1D); //TODO make these constants
 
         armMotor2 = new TalonFX(Elevator.armMotor2ID);
         armMotor2.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         armMotor2.setNeutralMode(NeutralMode.Brake);
-<<<<<<< Updated upstream
-        armPID2 = new PIDController(Elevator.armMotor1P, Elevator.armMotor1I, Elevator.armMotor1D); //TODO make these constants
-
-        elevatorMotor = new CANSparkMax(Constants.Elevator.elevatorMotorID, MotorType.kBrushless);
-        elevatorMotor.setIdleMode(IdleMode.kBrake);
-        //elevatorEncoder = elevatorMotor.getEncoder();
         elevatorPID = new PIDController(Constants.Elevator.elevatorP, Constants.Elevator.elevatorI, Constants.Elevator.elevatorD);
-
-=======
-        elevatorPID = new PIDController(Constants.Elevator.elevatorP, Constants.Elevator.elevatorI, Constants.Elevator.elevatorD);
-        armPID1 = new PIDController(0.005, 0, 0); //TODO make these constants
         armPID2 = new PIDController(0.005, 0, 0); //TODO make these constants
         elevatorEncoder = elevatorMotor.getEncoder();
         elevatorMotor.setSmartCurrentLimit(10);
->>>>>>> Stashed changes
         //bottomSwitch = elevatorMotor.getReverseLimitSwitch(Type.kNormallyOpen);
         //bottomSwitch.enableLimitSwitch(true);
         //topSwitch = elevatorMotor.getForwardLimitSwitch(Type.kNormallyOpen);
         //topSwitch.enableLimitSwitch(true);
-<<<<<<< Updated upstream
-
-        coneOrCube = true;
-        control = ControlMode.PercentOutput;
-        controller = new XboxController(2);
-=======
         armMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         armMotor2.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         armMotor1.setSelectedSensorPosition(0);
         armMotor2.setSelectedSensorPosition(0);
->>>>>>> Stashed changes
     }
 
     public void setElevatorVelocity(double velocity)
@@ -123,9 +100,9 @@ public class Elevator extends SubsystemBase implements Constants{
     public void setArmMotors(double pos1, double pos2){
         // System.out.println(armMotor1.getSelectedSensorPosition());
         //System.out.println(armPID1.calculate(armMotor1.getSelectedSensorPosition(), pos1));
-        armMotor1.set(ControlMode.PercentOutput, controller.getLeftY() * 0.2);
-        armMotor2.set(ControlMode.PercentOutput, controller.getRightY() * 0.1);
-        //armMotor1.set(ControlMode.PercentOutput, armPID1.calculate(armMotor1.getSelectedSensorPosition(), pos1));
-        //armMotor2.set(ControlMode.PercentOutput, armPID2.calculate(armMotor2.getSelectedSensorPosition(), pos2));
+        // armMotor1.set(ControlMode.PercentOutput, controller.getLeftY() * 0.2);
+        // armMotor2.set(ControlMode.PercentOutput, controller.getRightY() * 0.1);
+        armMotor1.set(ControlMode.PercentOutput, armPID1.calculate(armMotor1.getSelectedSensorPosition(), pos1));
+        armMotor2.set(ControlMode.PercentOutput, armPID2.calculate(armMotor2.getSelectedSensorPosition(), pos2));
     }
 }
