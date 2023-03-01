@@ -50,5 +50,4 @@ public class JoystickDrive extends CommandBase{
     public boolean isFinished() {
         return false;
     }
-    
 }

@@ -17,15 +17,13 @@ public class SetArmPosition extends CommandBase{
         this.x = x;
         this.y = y;
     }
-    @Override
-    public void initialize() {
 
-    }
+    @Override
+    public void initialize() {}
 
     @Override
     public void execute() {
         elevator.setArmMotors(x, y);
         elevator.setElevatorPosition(elevatorRotations);
     }
-    
 }
