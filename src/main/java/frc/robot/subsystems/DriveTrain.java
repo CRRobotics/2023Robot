@@ -29,39 +29,39 @@ import java.util.stream.Collectors;
 import com.kauailabs.navx.frc.AHRS;
 public class DriveTrain extends SubsystemBase {
     // Create MAXSwerveModules
-    private final SwerveModule frontLeft = new SwerveModule(
-            Constants.Drive.frontLeftWheelID,
-            Constants.Drive.frontLeftTurnID,
+    private final SwerveModule frontLeft = new SwerveModule( // chimera 11& 12
+            Constants.Drive.chimeraWheelID,
+            Constants.Drive.chimeraTurnID,
             Constants.Drive.frontLeftAngularOffset);
 
-    private final SwerveModule frontRight = new SwerveModule(
-            Constants.Drive.frontRightWheelID,
-            Constants.Drive.frontRightTurnID,
+    private final SwerveModule frontRight = new SwerveModule( // manticore 9&10
+            Constants.Drive.manticoreWheelID,
+            Constants.Drive.manticoreTurnID,
             Constants.Drive.frontRightAngularOffset);
 
-    private final SwerveModule backLeft = new SwerveModule(
-            Constants.Drive.backLeftWheelID,
-            Constants.Drive.backLeftTurnID,
+    private final SwerveModule backLeft = new SwerveModule( //phoenix 13&14
+            Constants.Drive.phoenixWheelID,
+            Constants.Drive.phoenixTurnID,
             Constants.Drive.backLeftAngularOffset);
 
-    private final SwerveModule backRight = new SwerveModule(
-            Constants.Drive.backRightWheelID,
-            Constants.Drive.backRightTurnID,
+    private final SwerveModule backRight = new SwerveModule( //Leviathan 5&6
+            Constants.Drive.leviathanWheelID,
+            Constants.Drive.leviathanTurnID,
             Constants.Drive.backRightAngularOffset);
-
+// Cerberus 7&8
     // The gyro sensor
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-            Constants.Drive.driveKinematics,
-            Rotation2d.fromDegrees(gyro.getAngle()),
-            new SwerveModulePosition[] {
-                    frontLeft.getPosition(),
-                    frontRight.getPosition(),
-                    backLeft.getPosition(),
-                    backRight.getPosition()
-            }
-        );
+        Constants.Drive.driveKinematics,
+        Rotation2d.fromDegrees(gyro.getAngle()),
+        new SwerveModulePosition[] {
+                frontLeft.getPosition(),
+                frontRight.getPosition(),
+                backLeft.getPosition(),
+                backRight.getPosition()
+        }
+    );
     
     // Kalman filter for tracking robot pose
     SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
@@ -73,14 +73,17 @@ public class DriveTrain extends SubsystemBase {
             backLeft.getPosition(),
             backRight.getPosition()
         },
-        new Pose2d() // needs to be set based on auto path
+        new Pose2d(1.6, 4.4, Rotation2d.fromRadians(2.8)), // needs to be set based on auto path
+        VecBuilder.fill(1, 1, 1),
+        VecBuilder.fill(0.1, 0.1, 0.1)
     );
 
     private Field2d field = new Field2d();
+    private Field2d odoField = new Field2d();
 
     /** Creates a new DriveSubsystem. */
     public DriveTrain() {
-        SmartDashboard.putNumber("init pose", poseEstimator.getEstimatedPosition().getX());
+        resetOdometry(new Pose2d(1.6, 4.4, Rotation2d.fromRadians(2.8)));
     }
 
     @Override
@@ -91,21 +94,19 @@ public class DriveTrain extends SubsystemBase {
             backLeft.getPosition(),
             backRight.getPosition()
         };
-
-        // update with encoder and gyroscope data
-        odometry.update(
+        
+        poseEstimator.update(
             Rotation2d.fromDegrees(-gyro.getAngle()),
             swervePosition
         );
-        
-        poseEstimator.update(
+
+        odometry.update(
             Rotation2d.fromDegrees(-gyro.getAngle()),
             swervePosition
         );
         
         // update with visions data from these cameras ids:
         for (int i : new int[]{0, 2, 4}) if (NetworkTableWrapper.getData(i, "ntags") != 0) {
-            SmartDashboard.putNumber("x", NetworkTableWrapper.getData(i, "rx"));
             poseEstimator.addVisionMeasurement(
                 new Pose2d(
                     NetworkTableWrapper.getData(i, "rx"),
@@ -113,13 +114,16 @@ public class DriveTrain extends SubsystemBase {
                     Rotation2d.fromRadians(NetworkTableWrapper.getData(i, "theta"))
                 ),
                 Timer.getFPGATimestamp(), // needs to be tested and calibrated
-                VecBuilder.fill(0.1, 0.1, 0.1) // needs to be calibrated
+                VecBuilder.fill(0.05, 0.05, 0.05) // needs to be calibrated
             );
         }
 
         // field
+        // odoField.setRobotPose(odometry.getPoseMeters());
+        // SmartDashboard.putData(odoField);
+        field.setRobotPose(getPose());
         SmartDashboard.putData(field);
-        field.setRobotPose(odometry.getPoseMeters());
+        SmartDashboard.putNumber("odoY", odometry.getPoseMeters().getY());
 
         SmartDashboard.putNumber("posex", poseEstimator.getEstimatedPosition().getX());
     }

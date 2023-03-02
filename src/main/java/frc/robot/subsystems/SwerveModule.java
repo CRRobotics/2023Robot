@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -45,7 +46,7 @@ public class SwerveModule {
       // native units for position and velocity are rotations and RPM, respectively,
       // but we want meters and meters per second to use with WPILib's swerve APIs.
       wheelEncoder.setPositionConversionFactor(Constants.SwerveModule.wheelEncoderPositionConversion);
-      wheelEncoder.setVelocityConversionFactor(Constants.SwerveModule.wheelEncoderVelocityConversion);
+      wheelEncoder.setVelocityConversionFactor(Constants.SwerveModule.wheelEncoderVelocityConversion / 1000);
   
       // Apply position and velocity conversion factors for the turning encoder. We
       // want these in radians and radians per second to use with WPILib's swerve
@@ -142,6 +143,7 @@ public class SwerveModule {
       // SwerveModuleState optimizedDesiredState = correctedDesiredState;
   
       // Command driving and turning SPARKS MAX towards their respective setpoints.
+      // SmartDashboard.putNumber("speedMetersPerSecond (allegedly)", wheelEncoder.getVelocityConversion Factor());
       wheelPID.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
       turnPID.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
       this.desiredState = desiredState;

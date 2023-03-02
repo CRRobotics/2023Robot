@@ -18,9 +18,9 @@ public interface Constants {
         double wheelDiameter = 0.0762; //meters
         double wheelTeeth = 14;
         // 45 teeth bevel gear, 22 teeth 1st stage spur gear, 15 teeth on bevel pinion gear
-        double wheelGearRatio = (double)(45 * 22) / (wheelTeeth * 15.0);
-        double wheelEncoderPositionConversion = wheelDiameter * Math.PI; // meters
-        double wheelEncoderVelocityConversion = wheelEncoderPositionConversion / wheelGearRatio / 60; // meters per second
+        double wheelGearRatio = (45.0 * 22) / (wheelTeeth * 15.0);
+        double wheelEncoderPositionConversion = wheelDiameter * Math.PI / wheelGearRatio; // meters
+        double wheelEncoderVelocityConversion = wheelEncoderPositionConversion / 60.0; // meters per second
         double wheelP = 0.04;
         double wheelI = 0;
         double wheelD = 0;
@@ -47,20 +47,20 @@ public interface Constants {
 
     interface Drive {
         // all unset
-        int frontLeftWheelID = 13;
-        int frontLeftTurnID = 14;
+        int chimeraWheelID = 11;
+        int chimeraTurnID = 12;
         double frontLeftAngularOffset = -Math.PI / 2;
 
-        int frontRightWheelID = 9;
-        int frontRightTurnID = 10;
+        int manticoreWheelID = 9;
+        int manticoreTurnID = 10;
         double frontRightAngularOffset = 0;
 
-        int backLeftWheelID = 5;
-        int backLeftTurnID = 6;
+        int phoenixWheelID = 13;
+        int phoenixTurnID = 14;
         double backLeftAngularOffset = Math.PI;
 
-        int backRightWheelID = 11;
-        int backRightTurnID = 12;
+        int leviathanWheelID = 5;
+        int leviathanTurnID = 6;
         double backRightAngularOffset = Math.PI / 2;
 
         double trackWidth = Units.inchesToMeters(26.5);// Distance between centers of right and left wheels on robot//TODO Set kTrackWidth to actual track width
@@ -70,7 +70,7 @@ public interface Constants {
                 new Translation2d(wheelBase / 2, -trackWidth / 2),
                 new Translation2d(-wheelBase / 2, trackWidth / 2),
                 new Translation2d(-wheelBase / 2, -trackWidth / 2));        //Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
-        double maxSpeed = 2; // meters per second
+        double maxSpeed = 1; // meters per second
         double maxAngularSpeed = Math.PI; // radians per second;
         boolean gyroReversed = true; //Determines whether the gyro is reversed (I think)
 
@@ -85,7 +85,7 @@ public interface Constants {
     }
 
     interface Auto {
-        double maxSpeed = 3; // meters per second
+        double maxSpeed = 0.25; // meters per second
         double maxAcceleration = 3; // meters per second squared
         double maxAngularSpeed = Math.PI; // radians per second
         double maxAngularAcceleration = Math.PI; // radians per second squared
