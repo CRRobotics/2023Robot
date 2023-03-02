@@ -71,6 +71,9 @@ public class Elevator extends SubsystemBase implements Constants{
         armMotor2.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         armMotor1.setSelectedSensorPosition(0);
         armMotor2.setSelectedSensorPosition(0);
+
+        armMotor1.setSelectedSensorPosition(0);
+        armMotor2.setSelectedSensorPosition(0);
     }
 
     public void setElevatorVelocity(double velocity)
@@ -84,16 +87,15 @@ public class Elevator extends SubsystemBase implements Constants{
         SmartDashboard.putData(elevatorPID);
         SmartDashboard.putNumber("position", elevatorEncoder.getPosition());
         elevatorMotor.set(elevatorPID.calculate(elevatorEncoder.getPosition(), targetPosition));
-        if (topSwitch.isPressed()){
-            elevatorMotor.set(0);
-        }
-        else if (bottomSwitch.isPressed()){
-            elevatorMotor.set(0);
-        }
-
-        }
+        // if (topSwitch.isPressed()){
+        //     elevatorMotor.set(0);
+        // }
+        // else if (bottomSwitch.isPressed()){
+        //     elevatorMotor.set(0);
+        // }
 
     }
+
 
     public SparkMaxLimitSwitch getTopSwitch() {
         return topSwitch;
