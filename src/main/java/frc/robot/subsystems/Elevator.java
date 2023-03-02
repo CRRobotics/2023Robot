@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,7 +28,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
  */
 public class Elevator extends SubsystemBase implements Constants.Elevator {
     private CANSparkMax elevatorMotor; // Linear axis
-    private RelativeEncoder elevatorEncoder;
+    private Encoder elevatorEncoder;
     private TalonFX elbowMotor; //Works with armMotor2
     private TalonFX wristMotor; //Works with armMotor1
 
@@ -45,7 +46,8 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         elevatorMotor.restoreFactoryDefaults();
         elevatorMotor.setIdleMode(IdleMode.kBrake);
         elevatorMotor.setSmartCurrentLimit(elevatorCurrentLimit);
-        elevatorEncoder = elevatorMotor.getEncoder();
+        elevatorEncoder = new Encoder(0,1);
+
 
         elbowMotor = new TalonFX(elbowMotorID);
         elbowMotor.configFactoryDefault();
@@ -65,12 +67,11 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
             true, wristMotorCurrentLimit, wristMotorCurrentLimit, 0));
         wristMotor.configVoltageCompSaturation(wristMotorVoltageLimit);
 
-        // not mounted yet
-        // bottomSwitch = elevatorMotor.getReverseLimitSwitch(Type.kNormallyOpen);
-        // bottomSwitch.enableLimitSwitch(true);
+        bottomSwitch = elevatorMotor.getReverseLimitSwitch(Type.kNormallyOpen);
+        bottomSwitch.enableLimitSwitch(true);
 
-        // topSwitch = elevatorMotor.getForwardLimitSwitch(Type.kNormallyOpen);
-        // topSwitch.enableLimitSwitch(true);
+        topSwitch = elevatorMotor.getForwardLimitSwitch(Type.kNormallyOpen);
+        topSwitch.enableLimitSwitch(true);
 
 
 
@@ -84,21 +85,21 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
 
     public void setElevatorPosition(double targetPosition)
     {
-        // if (topSwitch.isPressed()){
-        //     elevatorMotor.set(0);
-        // }
-        // else if (bottomSwitch.isPressed()){
-        //     elevatorMotor.set(0);
-        // }
+        if (topSwitch.isPressed()){
+            elevatorMotor.set(0);
+        }
+        else if (bottomSwitch.isPressed()){
+            elevatorMotor.set(0);
+        }
 
     }
 
 
-    public SparkMaxLimitSwitch getTopSwitch() {
-        return topSwitch;
+    public boolean getTopSwitch() {
+        return topSwitch.isLimitSwitchEnabled();
     }
-    public SparkMaxLimitSwitch getBottomSwitch() {
-        return bottomSwitch;
+    public boolean getBottomSwitch() {
+        return bottomSwitch.isLimitSwitchEnabled();
     }
 
 
@@ -131,5 +132,9 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     public void periodic() {
         SmartDashboard.putNumber("elbow position", elbowMotor.getSelectedSensorPosition());
         SmartDashboard.putNumber("wrist position", elbowMotor.getSelectedSensorPosition());
+    }
+
+    public void resetElevatorEncoder() {
+        elevatorEncoder.reset();
     }
 }

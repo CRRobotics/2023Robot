@@ -117,6 +117,7 @@ public interface Constants {
         double elevatorD = 0;
         double elevatorEncoderRate = 1;
         int elevatorCurrentLimit = 10;
+        double elevatorCalibrationSpeed = 0.01;
     }
 
     interface Acquisition {
