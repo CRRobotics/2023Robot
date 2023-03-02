@@ -18,21 +18,24 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.Grab;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.TestModule;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Grabber;
 
 public class RobotContainer {
   // The robot's subsystems
-  private final DriveTrain driveTrain = new DriveTrain();
+  // private final DriveTrain driveTrain = new DriveTrain();
+  Grabber grabber = new Grabber();
 
   // The driver's controller
   XboxController driver = new XboxController(Constants.Controller.driveControllerPort);
 
-  public DriveTrain getDriveTrain() {
-      return driveTrain;
-  }
+  // public DriveTrain getDriveTrain() {
+  //     return driveTrain;
+  // }
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -42,10 +45,12 @@ public class RobotContainer {
     configureButtonBindings();
 
     // Configure default commands
-    driveTrain.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new JoystickDrive(driveTrain));
+    // driveTrain.setDefaultCommand(
+    //     // The left stick controls translation of the robot.
+    //     // Turning is controlled by the X axis of the right stick.
+    //     new JoystickDrive(driveTrain));
+    grabber.setDefaultCommand(new Grab(grabber));
+
   }
 
   /**
@@ -58,8 +63,9 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .whileTrue(new TestModule(driveTrain));
+    // new JoystickButton(driver, XboxController.Button.kRightBumper.value)
+    //     .whileTrue(new TestModule(driveTrain));
+
   }
 
   /**

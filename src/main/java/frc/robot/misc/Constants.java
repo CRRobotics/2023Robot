@@ -70,7 +70,7 @@ public interface Constants {
     }
 
     interface Grabber {
-        int motorID = 0; //Placeholder
+        int motorID = 18; //Placeholder
     }
 
     interface Controller {
