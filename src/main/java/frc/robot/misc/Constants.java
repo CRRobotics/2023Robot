@@ -117,9 +117,13 @@ public interface Constants {
         double elevatorD = 0;
         double elevatorEncoderRate = 1;
         int elevatorCurrentLimit = 10;
+    }
+
     interface Acquisition {
-        int acquisitionMotor1 = 1;
-        int acquisitionMotor2 = 2;
-        double acquisitionDown = Math.PI;
+        int highMotorID = 1;
+        int lowMotorID = 2;
+        double intakeSpeed = 0.25;
+        double rejectSpeed = 0.25;
+        double downPosition = 0;
     }
 }

@@ -4,13 +4,18 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.robot.misc.Constants;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-public class Acquisition extends SubsystemBase
-{
+public class Acquisition extends SubsystemBase implements Constants.Acquisition {
     // private VictorSPX lowerMotor;
-    private VictorSPX spinMotor;
-    private ControlMode mode;
-    private PIDController acqPID;
+    private VictorSPX highMotor;
+    private VictorSPX lowMotor;
     private boolean lowered;
+
+    public Acquisition() {
+        highMotor = new VictorSPX(highMotorID);
+        lowMotor = new VictorSPX(lowMotorID);
+        lowMotor.follow(highMotor);
+        lowered = false;
+    }
 
     /**
      *Returns whether the acquisition is lowered
@@ -27,22 +32,13 @@ public class Acquisition extends SubsystemBase
         this.lowered = lowered;
     }
 
-    public Acquisition()
-    {
-        mode = ControlMode.Velocity;
-        acqPID = new PIDController(0.001, 0, 0);
-        // lowerMotor = new VictorSPX(Constants.Acquisition.acquisitionMotor1);
-        spinMotor = new VictorSPX(Constants.Acquisition.acquisitionMotor2);
-        lowered = false;
-    }
-
     /**
      * Moves acquisition
      * @param elevate The distance to elevate
      */
     public void moveAcq (double elevate)
     {
-        // lowerMotor.set(ControlMode.Position, acqPID.calculate(lowerMotor.getClosedLoopError(), elevate));
+        // lowMotor.set(ControlMode.Position, acqPID.calculate(lowerMotor.getClosedLoopError(), elevate));
     }
 
      /**
@@ -51,6 +47,6 @@ public class Acquisition extends SubsystemBase
      */
     public void spinAcq(double speed)
     {
-        spinMotor.set(ControlMode.PercentOutput, speed);
+        highMotor.set(ControlMode.PercentOutput, speed);
     }
 }

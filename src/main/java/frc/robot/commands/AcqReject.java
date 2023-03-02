@@ -11,34 +11,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  /**
   * Runs the acquisition backwards based on a trigger axis
   */
-public class AcqReject extends CommandBase
-{
+public class AcqReject extends CommandBase implements Constants.Acquisition {
     Acquisition acquisition;
-    XboxController controller = new XboxController(0);
-    public AcqReject(Acquisition acquisition)
-    {
+
+    public AcqReject(Acquisition acquisition) {
         this.acquisition = acquisition;
         addRequirements(acquisition);
     }
 
     @Override
-    public void initialize()
-    {
-
-    }
-
-    @Override
     public void execute()
     {
-        acquisition.moveAcq(90);
-        double speed = -controller.getLeftTriggerAxis();
-        acquisition.spinAcq(speed);
+        acquisition.moveAcq(downPosition);
+        acquisition.spinAcq(rejectSpeed);
     }
 
     @Override
     public void end(boolean interrupted)
     {
-        acquisition.moveAcq(-90);
+        
     }
 
     @Override
