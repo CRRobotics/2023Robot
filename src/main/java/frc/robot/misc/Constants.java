@@ -8,6 +8,12 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public interface Constants {
+    interface Indexer {
+        double indexerP = 0.001; //TODO these values need to be tuned
+        double indexerI = 0;
+        double indexerD = 0;
+        int indexerCamTable = 0;
+    }
     interface SwerveModule {
         double wheelDiameter = 0.0762; //meters
         double wheelTeeth = 14;
