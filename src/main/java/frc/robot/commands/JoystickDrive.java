@@ -10,11 +10,15 @@ import frc.robot.misc.Constants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.SwerveModule;
 
+/**
+ * Runs the drivetrain
+ */
 public class JoystickDrive extends CommandBase{
     DriveTrain driveTrain;
     XboxController controller = new XboxController(0);
 
-    public JoystickDrive(DriveTrain driveTrain) {
+    public JoystickDrive(DriveTrain driveTrain) 
+    {
         this.driveTrain = driveTrain;
         addRequirements(driveTrain);
     }
