@@ -15,6 +15,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -27,15 +28,15 @@ import frc.robot.subsystems.Elevator;
 
 public class RobotContainer {
   // The robot's subsystems
-  private final DriveTrain driveTrain = new DriveTrain();
+  // private final DriveTrain driveTrain = new DriveTrain();
   private final Elevator elevator = new Elevator();
 
   // The driver's controller
   XboxController driver = new XboxController(Constants.Controller.driveControllerPort);
 
-  public DriveTrain getDriveTrain() {
-      return driveTrain;
-  }
+  // public DriveTrain getDriveTrain() {
+  //     return driveTrain;
+  // }
 
   public Elevator getElevator(){
     return elevator;
@@ -49,11 +50,21 @@ public class RobotContainer {
     configureButtonBindings();
 
     // Configure default commands
-    //elevator.setDefaultCommand(new SetArmPosition(elevator, .5, 0.5, 10));
-    driveTrain.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new JoystickDrive(driveTrain));
+    // elevator.setDefaultCommand(new SetArmPosition(elevator, 0, 0, 10));
+    // driveTrain.setDefaultCommand(
+    //     // The left stick controls translation of the robot.
+    //     // Turning is controlled by the X axis of the right stick.
+    //     new JoystickDrive(driveTrain));
+
+    SmartDashboard.putNumber("wrist setpoint", 0);
+    SmartDashboard.putNumber("wrist P", 0);
+    SmartDashboard.putNumber("wrist I", 0);
+    SmartDashboard.putNumber("wrist D", 0);
+
+    SmartDashboard.putNumber("elbow setpoint", 0);
+    SmartDashboard.putNumber("elbow P", 0);
+    SmartDashboard.putNumber("elbow I", 0);
+    SmartDashboard.putNumber("elbow D", 0);
 
   }
 
@@ -67,8 +78,8 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .whileTrue(new TestModule(driveTrain));
+    new JoystickButton(driver, XboxController.Button.kA.value)
+      .whileTrue(new SetArmPosition(elevator,0, SmartDashboard.getNumber("wrist setpoint", 0), 0));
   }
 
   /**

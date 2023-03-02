@@ -71,7 +71,7 @@ public interface Constants {
     }
 
     interface Controller {
-        int driveControllerPort = 0;
+        int driveControllerPort = 1;
     }
 
     interface Auto {
@@ -87,20 +87,25 @@ public interface Constants {
     }
 
     interface Elevator {
-        int armMotor1ID = 16;
-        double armMotor1P = 0.005;
-        double armMotor1I = 0;
-        double armMotor1D = 0;
+        int elbowMotorID = 16;
+        double elbowMotorP = 0.005;
+        double elbowMotorI = 0;
+        double elbowMotorD = 0;
+        double elbowMotorCurrentLimit = 15;
+        double elbowMotorVoltageLimit = 6;
 
-        int armMotor2ID = 17;
-        double armMotor2P = 0.005;
-        double armMotor2I = 0;
-        double armMotor2D = 0;
+        int wristMotorID = 17;
+        double wristMotorP = 0.005;
+        double wristMotorI = 0;
+        double wristMotorD = 0;
+        double wristMotorCurrentLimit = 15;
+        double wristMotorVoltageLimit = 6;
 
-        int elevatorMotorID = 15;
+        int elevatorMotorID = 62;
         double elevatorP = 0.001;
         double elevatorI = 0;
         double elevatorD = 0;
         double elevatorEncoderRate = 1;
+        int elevatorCurrentLimit = 10;
     }
 }

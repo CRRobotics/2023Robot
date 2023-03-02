@@ -17,76 +17,73 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 /**
  * Contains the arm and elevator assemblies
  */
-public class Elevator extends SubsystemBase implements Constants{
-    private TalonFX armMotor1; //Works with armMotor2
-    private TalonFX armMotor2; //Works with armMotor1
-    private final PIDController armPID1;
-    private final PIDController armPID2;
+public class Elevator extends SubsystemBase implements Constants.Elevator {
     private CANSparkMax elevatorMotor; // Linear axis
-    private final PIDController elevatorPID;
     private RelativeEncoder elevatorEncoder;
+    private TalonFX elbowMotor; //Works with armMotor2
+    private TalonFX wristMotor; //Works with armMotor1
 
     private SparkMaxLimitSwitch topSwitch; //Limit switch on linear axis
     private SparkMaxLimitSwitch bottomSwitch; //Limit switch on linear axis
 
     private boolean coneOrCube; //True for cone, false for cube
-    private ControlMode control;
-    private XboxController controller;
 
     /**
      * Constructs an <code>Elevator</code> using motor ID's in <code>Contants.java</code>
      */
-    public Elevator(){
-        
-        control = ControlMode.PercentOutput;
-        controller = new XboxController(2);
+    public Elevator() {
         coneOrCube = true;
-        elevatorMotor = new CANSparkMax(62, MotorType.kBrushless);
+        elevatorMotor = new CANSparkMax(elevatorMotorID, MotorType.kBrushless);
         elevatorMotor.restoreFactoryDefaults();
         elevatorMotor.setIdleMode(IdleMode.kBrake);
-        armMotor1 = new TalonFX(16);
-        armMotor2 = new TalonFX(17);
-        armMotor1.configFactoryDefault();
-        armMotor1.setNeutralMode(NeutralMode.Brake);
-        armPID1 = new PIDController(Elevator.armMotor1P, Elevator.armMotor1I, Elevator.armMotor1D); //TODO make these constants
-
-        armMotor2 = new TalonFX(Elevator.armMotor2ID);
-        armMotor2.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        armMotor2.setNeutralMode(NeutralMode.Brake);
-        elevatorPID = new PIDController(Constants.Elevator.elevatorP, Constants.Elevator.elevatorI, Constants.Elevator.elevatorD);
-        armPID2 = new PIDController(0.005, 0, 0); //TODO make these constants
+        elevatorMotor.setSmartCurrentLimit(elevatorCurrentLimit);
         elevatorEncoder = elevatorMotor.getEncoder();
-        elevatorMotor.setSmartCurrentLimit(10);
-        bottomSwitch = elevatorMotor.getReverseLimitSwitch(Type.kNormallyOpen);
-        bottomSwitch.enableLimitSwitch(true);
-        topSwitch = elevatorMotor.getForwardLimitSwitch(Type.kNormallyOpen);
-        topSwitch.enableLimitSwitch(true);
-        armMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        armMotor2.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        armMotor1.setSelectedSensorPosition(0);
-        armMotor2.setSelectedSensorPosition(0);
 
-        armMotor1.setSelectedSensorPosition(0);
-        armMotor2.setSelectedSensorPosition(0);
+        elbowMotor = new TalonFX(elbowMotorID);
+        elbowMotor.configFactoryDefault();
+        elbowMotor.setNeutralMode(NeutralMode.Brake);
+        elbowMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        elbowMotor.setSelectedSensorPosition(0);
+        elbowMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
+            true, elbowMotorCurrentLimit, elbowMotorCurrentLimit, 0));
+        elbowMotor.configVoltageCompSaturation(elbowMotorVoltageLimit);
+
+        wristMotor = new TalonFX(wristMotorID);
+        wristMotor.configFactoryDefault();
+        wristMotor.setNeutralMode(NeutralMode.Brake);
+        wristMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        wristMotor.setSelectedSensorPosition(0);
+        wristMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
+            true, wristMotorCurrentLimit, wristMotorCurrentLimit, 0));
+        wristMotor.configVoltageCompSaturation(wristMotorVoltageLimit);
+
+        // not mounted yet
+        // bottomSwitch = elevatorMotor.getReverseLimitSwitch(Type.kNormallyOpen);
+        // bottomSwitch.enableLimitSwitch(true);
+
+        // topSwitch = elevatorMotor.getForwardLimitSwitch(Type.kNormallyOpen);
+        // topSwitch.enableLimitSwitch(true);
+
+
+
+
     }
 
     public void setElevatorVelocity(double velocity)
     {
         elevatorMotor.set(velocity);
-        System.out.println(elevatorEncoder.getPosition());
     }
 
     public void setElevatorPosition(double targetPosition)
     {
-        SmartDashboard.putData(elevatorPID);
-        SmartDashboard.putNumber("position", elevatorEncoder.getPosition());
-        elevatorMotor.set(elevatorPID.calculate(elevatorEncoder.getPosition(), targetPosition));
         // if (topSwitch.isPressed()){
         //     elevatorMotor.set(0);
         // }
@@ -118,11 +115,21 @@ public class Elevator extends SubsystemBase implements Constants{
     }
 
     public void setArmMotors(double pos1, double pos2){
-        // System.out.println(armMotor1.getSelectedSensorPosition());
-        //System.out.println(armPID1.calculate(armMotor1.getSelectedSensorPosition(), pos1));
-        // armMotor1.set(ControlMode.PercentOutput, controller.getLeftY() * 0.2);
-        // armMotor2.set(ControlMode.PercentOutput, controller.getRightY() * 0.1);
-        armMotor1.set(ControlMode.PercentOutput, armPID1.calculate(armMotor1.getSelectedSensorPosition(), pos1));
-        armMotor2.set(ControlMode.PercentOutput, armPID2.calculate(armMotor2.getSelectedSensorPosition(), pos2));
+        elbowMotor.config_kP(0, SmartDashboard.getNumber("elbow P", 0));
+        elbowMotor.config_kI(0, SmartDashboard.getNumber("elbow I", 0));
+        elbowMotor.config_kD(0, SmartDashboard.getNumber("elbow D", 0));
+
+        wristMotor.config_kP(0, SmartDashboard.getNumber("wrist P", 0));
+        wristMotor.config_kI(0, SmartDashboard.getNumber("wrist I", 0));
+        wristMotor.config_kD(0, SmartDashboard.getNumber("wrist D", 0));
+
+        wristMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
+        wristMotor.set(ControlMode.Position, pos2);
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("elbow position", elbowMotor.getSelectedSensorPosition());
+        SmartDashboard.putNumber("wrist position", elbowMotor.getSelectedSensorPosition());
     }
 }
