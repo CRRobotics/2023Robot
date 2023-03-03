@@ -11,37 +11,26 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  /**
   * Runs the acquisition inward
   */
-public class AcqIntake extends CommandBase
-{
+public class AcqIntake extends CommandBase implements Constants.Acquisition {
     Acquisition acquisition;
-    public AcqIntake(Acquisition acquisition) 
-    {
+
+    public AcqIntake(Acquisition acquisition) {
         this.acquisition = acquisition;
         addRequirements(acquisition);
     }
-
-    @Override
-    public void initialize()
-    {
-        System.out.println("running the intake");
-    }
     
     @Override 
-    public void execute()
-    {
-        double speed = 0.25;
-        acquisition.spinAcq(speed);
+    public void execute() {
+        acquisition.spinAcq(intakeSpeed);
     }
 
     @Override
-    public void end(boolean interrupted)
-    {
+    public void end(boolean interrupted) {
         acquisition.spinAcq(0);
     }
 
     @Override
-    public boolean isFinished()
-    {
+    public boolean isFinished() {
         return false;
     }
 }
