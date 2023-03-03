@@ -77,12 +77,18 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
 
 
     }
-
+    /**
+    *Changes the motor speed of the elevator motor
+    *@param velocity desired motor speed
+    */
     public void setElevatorVelocity(double velocity)
     {
         elevatorMotor.set(velocity);
     }
-
+    /**
+    *Decides based on conditions how to run the elevator motor based on inputs from the top and bottom limit switches
+    *@param targetPosition the position of the motor if the switches are not pressed
+     */
     public void setElevatorPosition(double targetPosition)
     {
         if (topSwitch.isPressed()){
@@ -91,30 +97,47 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         else if (bottomSwitch.isPressed()){
             elevatorMotor.set(0);
         }
-
+        else {
+            elevatorMotor.set(ControlMode.Position, targetPosition);
+        }
     }
 
-
+    /**
+    * Returns true if top limit switch is enabled
+    * @return Returns true if top switch is enabled
+    */
     public boolean getTopSwitch() {
         return topSwitch.isLimitSwitchEnabled();
     }
+    /**
+    * Returns true if bottom limit switch is enabled
+    * @return Returns true if bottom switch is enabled
+    */
     public boolean getBottomSwitch() {
         return bottomSwitch.isLimitSwitchEnabled();
     }
 
 
-
+    /**
+    *Sets the variable so that the coneOrCube boolean is reversed
+    */
     public void setConeOrCube()
     {
-        if (coneOrCube) coneOrCube = false;
-        else coneOrCube = true;
+        coneOrCube = !coneOrCube;
     }
-
+    /**
+    * This code shows whether the variable coneOrCube is true or false.
+    * @return Returns whether the variable coneOrCube is true or false
+     */
     public boolean getConeOrCube()
     {
         return coneOrCube; 
     }
-
+    /**
+    *Sets arm motors to inputed positions
+    *@param pos1 joint position for the elbow
+    *@param pos2 joint position for wrist
+     */
     public void setArmMotors(double pos1, double pos2){
         elbowMotor.config_kP(0, SmartDashboard.getNumber("elbow P", 0));
         elbowMotor.config_kI(0, SmartDashboard.getNumber("elbow I", 0));
@@ -134,6 +157,9 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         SmartDashboard.putNumber("wrist position", elbowMotor.getSelectedSensorPosition());
     }
 
+    /**
+     * Resets elevator encoder
+    */
     public void resetElevatorEncoder() {
         elevatorEncoder.reset();
     }

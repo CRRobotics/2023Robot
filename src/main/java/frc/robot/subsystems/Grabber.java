@@ -45,14 +45,17 @@ public class Grabber extends SubsystemBase implements Constants{
     }
 
     /**
-     * Sets the position of the motor to the given position
+     * Sets the position of the motor to the given position.
      * @param pos The new position of the grabber in encoder ticks.
      */
     public void setPos(double pos)
     {
         motor.set(ControlMode.Position, pos);
     }
-
+    /**
+     * sets the speed of the motor
+     * @param speed Represents the speed of a percent of the motor capcity.
+     */
     public void setSpeed(double speed)
     {
         motor.set(ControlMode.PercentOutput, speed);
