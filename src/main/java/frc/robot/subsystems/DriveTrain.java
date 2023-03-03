@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -12,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.I2C.Port;
@@ -27,7 +29,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import com.kauailabs.navx.frc.AHRS;
-public class DriveTrain extends SubsystemBase {
+public class DriveTrain extends SubsystemBase implements Constants.Drive {
     // Create MAXSwerveModules
     private final SwerveModule frontLeft = new SwerveModule( // chimera 11& 12
             Constants.Drive.chimeraWheelID,
@@ -52,6 +54,8 @@ public class DriveTrain extends SubsystemBase {
     // The gyro sensor
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
 
+    
+    
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(
         Constants.Drive.driveKinematics,
         Rotation2d.fromDegrees(gyro.getAngle()),

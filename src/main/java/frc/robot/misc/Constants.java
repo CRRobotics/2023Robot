@@ -74,6 +74,11 @@ public interface Constants {
         double maxAngularSpeed = Math.PI; // radians per second;
         boolean gyroReversed = true; //Determines whether the gyro is reversed (I think)
 
+        double driveDeadBand = 0.05;
+
+        double magnitudeSlewRate = 1.2; //rads per second
+        double kDirectionSlewRate = 1.8; // percent per second (1 = 100%)
+        double rotationSlewRate = 2.0; // percent per second (1 = 100%)
     }
 
     interface Grabber {

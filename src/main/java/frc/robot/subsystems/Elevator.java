@@ -98,7 +98,8 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
             elevatorMotor.set(0);
         }
         else {
-            elevatorMotor.set(ControlMode.Position, targetPosition);
+            //must be changed later
+            // elevatorMotor.set(ControlMode.Position, targetPosition);
         }
     }
 

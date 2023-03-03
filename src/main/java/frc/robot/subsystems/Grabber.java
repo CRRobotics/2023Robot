@@ -42,6 +42,7 @@ public class Grabber extends SubsystemBase implements Constants{
         motor.configFactoryDefault();
         motor.setNeutralMode(NeutralMode.Brake);
         motor.configContinuousCurrentLimit(3);
+        motor.enableCurrentLimit(true);
     }
 
     /**
