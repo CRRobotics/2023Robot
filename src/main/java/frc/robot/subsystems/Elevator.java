@@ -36,6 +36,8 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     private SparkMaxLimitSwitch topSwitch; //Limit switch on linear axis
     private SparkMaxLimitSwitch bottomSwitch; //Limit switch on linear axis
 
+    private PIDController elevatorPID;
+
     private TalonFX elbowMotor; //Works with armMotor2
     private TalonFXConfiguration elbowConfig;
     private TalonFX wristMotor; //Works with armMotor1
@@ -53,8 +55,13 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         elevatorMotor = new CANSparkMax(elevatorMotorID, MotorType.kBrushless);
         elevatorMotor.restoreFactoryDefaults();
         elevatorMotor.setIdleMode(IdleMode.kBrake);
+        elevatorMotor.setInverted(true);
         elevatorMotor.setSmartCurrentLimit(elevatorCurrentLimit);
         elevatorEncoder = new Encoder(0,1);
+        elevatorEncoder.setDistancePerPulse(1);
+        elevatorEncoder.reset();
+
+        elevatorPID = new PIDController(0,0,0);
 
 
         elbowMotor = new TalonFX(elbowMotorID);
@@ -102,7 +109,8 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     */
     public void setElevatorVelocity(double velocity)
     {
-        // elevatorMotor.set(velocity);
+        // elevatorMotor.set(velocity * 0.1);
+        // SmartDashboard.putNumber("elevator/percent output", velocity * 0.1);
     }
     /**
     *Decides based on conditions how to run the elevator motor based on inputs from the top and bottom limit switches
@@ -110,16 +118,66 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
      */
     public void setElevatorPosition(double targetPosition)
     {
-        if (topSwitch.isPressed()){
-            elevatorMotor.set(0);
-        }
-        else if (bottomSwitch.isPressed()){
-            elevatorMotor.set(0);
-        }
-        else {
-            //must be changed later              
-            // elevatorMotor.set(ControlMode.Position, targetPosition);
-        }
+        elevatorPID.setSetpoint(SmartDashboard.getNumber("elevator/elevator setpoint", 0) * elevatorTicksPerMeter);
+        elevatorMotor.set(SmartDashboard.getNumber("elevator/kg", 0.03)
+            + elevatorPID.calculate(elevatorEncoder.getDistance()));
+    }
+
+    
+    /**
+    *Sets arm motors to inputed positions
+    *@param pos1 joint position for the elbow
+    *@param pos2 joint position for wrist
+     */
+    public void setArmMotors(double pos1, double pos2){
+        elbowMotor.config_kP(0, SmartDashboard.getNumber("elbow/elbow P", 0));
+        elbowMotor.config_kI(0, SmartDashboard.getNumber("elbow/elbow I", 0));
+        elbowMotor.config_kD(0, SmartDashboard.getNumber("elbow/elbow D", 0));
+
+        wristMotor.config_kP(0, SmartDashboard.getNumber("wrist/wrist P", 0.08));
+        wristMotor.config_kI(0, SmartDashboard.getNumber("wrist/wrist I", 0));
+        wristMotor.config_kD(0, SmartDashboard.getNumber("wrist/wrist D", 0));
+
+        elbowMotor.set(TalonFXControlMode.Position,
+            SmartDashboard.getNumber("elbow/elbow setpoint", 0) * elbowTicksPerDegree,
+            DemandType.ArbitraryFeedForward,
+            SmartDashboard.getNumber("elbow/kg", 0.01)
+            * Math.cos(elbowMotor.getSelectedSensorPosition() / (elbowTicksPerRadian)));
+
+        wristMotor.set(TalonFXControlMode.Position,
+        SmartDashboard.getNumber("wrist/wrist setpoint", 0) * wristTicksPerDegree,
+            DemandType.ArbitraryFeedForward,
+            SmartDashboard.getNumber("wrist/kg", 0.01)
+            * Math.cos(wristMotor.getSelectedSensorPosition() / (wristTicksPerRadian)));
+    }
+
+    public void stopArmMotors() {
+        elbowMotor.set(ControlMode.PercentOutput, 0);
+        wristMotor.set(ControlMode.PercentOutput, 0);
+        elevatorMotor.set(0);
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("elbow/elbow position", elbowMotor.getSelectedSensorPosition());
+        SmartDashboard.putNumber("elbow/elbow voltage", elbowMotor.getMotorOutputVoltage());
+        SmartDashboard.putNumber("elbow/elbow position degrees", elbowMotor.getSelectedSensorPosition() / 189);
+
+        SmartDashboard.putNumber("wrist/wrist position", wristMotor.getSelectedSensorPosition());
+        SmartDashboard.putNumber("wrist/wrist voltage", wristMotor.getMotorOutputVoltage());
+        SmartDashboard.putNumber("wrist/wrist position degrees", wristMotor.getSelectedSensorPosition() / 189);
+
+        SmartDashboard.putNumber("elevator/elevator position", elevatorEncoder.getDistance());
+        SmartDashboard.putNumber("elevator/elevator position meters", elevatorEncoder.getDistance() * elevatorTicksPerMeter);
+    }
+
+    /**
+     * Resets elevator encoder
+    */
+    public void resetElevatorEncoder() {
+        elevatorEncoder.reset();
+        elbowMotor.setSelectedSensorPosition(0);
+        wristMotor.setSelectedSensorPosition(0);
     }
 
     /**
@@ -152,56 +210,5 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     public boolean getConeOrCube()
     {
         return coneOrCube; 
-    }
-    /**
-    *Sets arm motors to inputed positions
-    *@param pos1 joint position for the elbow
-    *@param pos2 joint position for wrist
-     */
-    public void setArmMotors(double pos1, double pos2){
-        elbowMotor.config_kP(0, SmartDashboard.getNumber("elbow/elbow P", 0));
-        elbowMotor.config_kI(0, SmartDashboard.getNumber("elbow/elbow I", 0));
-        elbowMotor.config_kD(0, SmartDashboard.getNumber("elbow/elbow D", 0));
-
-        wristMotor.config_kP(0, SmartDashboard.getNumber("wrist/wrist P", 0.08));
-        wristMotor.config_kI(0, SmartDashboard.getNumber("wrist/wrist I", 0));
-        wristMotor.config_kD(0, SmartDashboard.getNumber("wrist/wrist D", 0));
-
-        elbowMotor.set(TalonFXControlMode.Position,
-            SmartDashboard.getNumber("elbow/elbow setpoint", 0) * elbowTicksPerDegree,
-            DemandType.ArbitraryFeedForward,
-            SmartDashboard.getNumber("elbow/kg", 0.01)
-            * Math.cos(elbowMotor.getSelectedSensorPosition() / (elbowTicksPerRadian)));
-
-        wristMotor.set(TalonFXControlMode.Position,
-        SmartDashboard.getNumber("wrist/wrist setpoint", 0) * wristTicksPerDegree,
-            DemandType.ArbitraryFeedForward,
-            SmartDashboard.getNumber("wrist/kg", 0.01)
-            * Math.cos(wristMotor.getSelectedSensorPosition() / (wristTicksPerRadian)));
-    }
-
-    public void stopArmMotors() {
-        elbowMotor.set(ControlMode.PercentOutput, 0);
-        wristMotor.set(ControlMode.PercentOutput, 0);
-    }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("elbow/elbow position", elbowMotor.getSelectedSensorPosition());
-        SmartDashboard.putNumber("elbow/elbow voltage", elbowMotor.getMotorOutputVoltage());
-        SmartDashboard.putNumber("elbow/elbow position degrees", elbowMotor.getSelectedSensorPosition() / 189);
-
-        SmartDashboard.putNumber("wrist/wrist position", wristMotor.getSelectedSensorPosition());
-        SmartDashboard.putNumber("wrist/wrist voltage", wristMotor.getMotorOutputVoltage());
-        SmartDashboard.putNumber("wrist/wrist position degrees", wristMotor.getSelectedSensorPosition() / 189);
-    }
-
-    /**
-     * Resets elevator encoder
-    */
-    public void resetElevatorEncoder() {
-        elevatorEncoder.reset();
-        elbowMotor.setSelectedSensorPosition(0);
-        wristMotor.setSelectedSensorPosition(0);
     }
 }

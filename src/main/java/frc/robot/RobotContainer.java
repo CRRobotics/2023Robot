@@ -58,18 +58,25 @@ public class RobotContainer {
     //     // Turning is controlled by the X axis of the right stick.
     //     new JoystickDrive(driveTrain));
 
-    SmartDashboard.putNumber("wrist/wrist setpoint", 0);
-    SmartDashboard.putNumber("wrist/wrist P", 0.08);
-    SmartDashboard.putNumber("wrist/wrist I", 0);
-    SmartDashboard.putNumber("wrist/wrist D", 0);
+    SmartDashboard.putNumber("elevator/elevator setpoint", 0);
+    SmartDashboard.putNumber("elevator/elevator P", 0.04);
+    SmartDashboard.putNumber("elevator/elevator I", 0);
+    SmartDashboard.putNumber("elevator/elevator D", 0);
+    SmartDashboard.putNumber("elevator/kg", 0.03);
 
     SmartDashboard.putNumber("elbow/elbow setpoint", 0);
     SmartDashboard.putNumber("elbow/elbow P", 0.04);
     SmartDashboard.putNumber("elbow/elbow I", 0);
     SmartDashboard.putNumber("elbow/elbow D", 0);
+
     SmartDashboard.putNumber("elbow/elbow position", 0);
     SmartDashboard.putNumber("elbow/elbow voltage", 0);
     SmartDashboard.putNumber("elbow/kg", 0);
+
+    SmartDashboard.putNumber("wrist/wrist setpoint", 0);
+    SmartDashboard.putNumber("wrist/wrist P", 0.08);
+    SmartDashboard.putNumber("wrist/wrist I", 0);
+    SmartDashboard.putNumber("wrist/wrist D", 0);
 
     SmartDashboard.putNumber("wrist/wrist position", 0);
     SmartDashboard.putNumber("wrist/wrist voltage", 0);

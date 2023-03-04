@@ -124,7 +124,7 @@ public interface Constants {
         double elevatorP = 0.001;
         double elevatorI = 0;
         double elevatorD = 0;
-        double elevatorEncoderRate = 1;
+        double elevatorTicksPerMeter = 13434.639;
         int elevatorCurrentLimit = 10;
         double elevatorCalibrationSpeed = 0.01;
     }
