@@ -86,7 +86,7 @@ public interface Constants {
     }
 
     interface Controller {
-        int driveControllerPort = 1;
+        int driveControllerPort = 0;
     }
 
     interface Auto {
@@ -108,6 +108,8 @@ public interface Constants {
         double elbowMotorD = 0;
         double elbowMotorCurrentLimit = 15;
         double elbowMotorVoltageLimit = 6;
+        double elbowTicksPerDegree = 1422.639;
+        double elbowTicksPerRadian = elbowTicksPerDegree * (180 / Math.PI);
 
         int wristMotorID = 17;
         double wristMotorP = 0.005;
@@ -115,6 +117,8 @@ public interface Constants {
         double wristMotorD = 0;
         double wristMotorCurrentLimit = 15;
         double wristMotorVoltageLimit = 6;
+        double wristTicksPerDegree = 189.639;
+        double wristTicksPerRadian = wristTicksPerDegree * (180 / Math.PI);
 
         int elevatorMotorID = 62;
         double elevatorP = 0.001;

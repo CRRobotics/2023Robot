@@ -16,11 +16,15 @@ import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 /**
@@ -29,11 +33,14 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 public class Elevator extends SubsystemBase implements Constants.Elevator {
     private CANSparkMax elevatorMotor; // Linear axis
     private Encoder elevatorEncoder;
-    private TalonFX elbowMotor; //Works with armMotor2
-    private TalonFX wristMotor; //Works with armMotor1
-
     private SparkMaxLimitSwitch topSwitch; //Limit switch on linear axis
     private SparkMaxLimitSwitch bottomSwitch; //Limit switch on linear axis
+
+    private TalonFX elbowMotor; //Works with armMotor2
+    private TalonFXConfiguration elbowConfig;
+    private TalonFX wristMotor; //Works with armMotor1
+    private TalonFXConfiguration wristConfig;
+
 
     private boolean coneOrCube; //True for cone, false for cube
 
@@ -42,6 +49,7 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
      */
     public Elevator() {
         coneOrCube = true;
+
         elevatorMotor = new CANSparkMax(elevatorMotorID, MotorType.kBrushless);
         elevatorMotor.restoreFactoryDefaults();
         elevatorMotor.setIdleMode(IdleMode.kBrake);
@@ -52,20 +60,31 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         elbowMotor = new TalonFX(elbowMotorID);
         elbowMotor.configFactoryDefault();
         elbowMotor.setNeutralMode(NeutralMode.Brake);
-        elbowMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        elbowConfig = new TalonFXConfiguration();
+        elbowConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
         elbowMotor.setSelectedSensorPosition(0);
         elbowMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
             true, elbowMotorCurrentLimit, elbowMotorCurrentLimit, 0));
-        elbowMotor.configVoltageCompSaturation(elbowMotorVoltageLimit);
+        elbowConfig.slot0.allowableClosedloopError = 0;
+        elbowMotor.selectProfileSlot(0, 0);
+        elbowConfig.neutralDeadband = 0;
+        elbowConfig.slot0.closedLoopPeakOutput = 0.8;
+        elbowMotor.configAllSettings(elbowConfig);
 
         wristMotor = new TalonFX(wristMotorID);
-        wristMotor.configFactoryDefault();
+        wristMotor.configFactoryDefault(100);
         wristMotor.setNeutralMode(NeutralMode.Brake);
-        wristMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        wristConfig = new TalonFXConfiguration();
+        wristConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
         wristMotor.setSelectedSensorPosition(0);
         wristMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
             true, wristMotorCurrentLimit, wristMotorCurrentLimit, 0));
-        wristMotor.configVoltageCompSaturation(wristMotorVoltageLimit);
+        wristConfig.slot0.allowableClosedloopError = 0;
+        wristMotor.selectProfileSlot(0, 0);
+        wristConfig.neutralDeadband = 0;
+        wristConfig.slot0.closedLoopPeakOutput = 1;
+        wristMotor.configAllSettings(wristConfig);
+        
 
         bottomSwitch = elevatorMotor.getReverseLimitSwitch(Type.kNormallyOpen);
         bottomSwitch.enableLimitSwitch(true);
@@ -83,7 +102,7 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     */
     public void setElevatorVelocity(double velocity)
     {
-        elevatorMotor.set(velocity);
+        // elevatorMotor.set(velocity);
     }
     /**
     *Decides based on conditions how to run the elevator motor based on inputs from the top and bottom limit switches
@@ -98,7 +117,7 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
             elevatorMotor.set(0);
         }
         else {
-            //must be changed later
+            //must be changed later              
             // elevatorMotor.set(ControlMode.Position, targetPosition);
         }
     }
@@ -140,22 +159,41 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     *@param pos2 joint position for wrist
      */
     public void setArmMotors(double pos1, double pos2){
-        elbowMotor.config_kP(0, SmartDashboard.getNumber("elbow P", 0));
-        elbowMotor.config_kI(0, SmartDashboard.getNumber("elbow I", 0));
-        elbowMotor.config_kD(0, SmartDashboard.getNumber("elbow D", 0));
+        elbowMotor.config_kP(0, SmartDashboard.getNumber("elbow/elbow P", 0));
+        elbowMotor.config_kI(0, SmartDashboard.getNumber("elbow/elbow I", 0));
+        elbowMotor.config_kD(0, SmartDashboard.getNumber("elbow/elbow D", 0));
 
-        wristMotor.config_kP(0, SmartDashboard.getNumber("wrist P", 0));
-        wristMotor.config_kI(0, SmartDashboard.getNumber("wrist I", 0));
-        wristMotor.config_kD(0, SmartDashboard.getNumber("wrist D", 0));
+        wristMotor.config_kP(0, SmartDashboard.getNumber("wrist/wrist P", 0.08));
+        wristMotor.config_kI(0, SmartDashboard.getNumber("wrist/wrist I", 0));
+        wristMotor.config_kD(0, SmartDashboard.getNumber("wrist/wrist D", 0));
 
-        wristMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
-        wristMotor.set(ControlMode.Position, pos2);
+        elbowMotor.set(TalonFXControlMode.Position,
+            SmartDashboard.getNumber("elbow/elbow setpoint", 0) * elbowTicksPerDegree,
+            DemandType.ArbitraryFeedForward,
+            SmartDashboard.getNumber("elbow/kg", 0.01)
+            * Math.cos(elbowMotor.getSelectedSensorPosition() / (elbowTicksPerRadian)));
+
+        wristMotor.set(TalonFXControlMode.Position,
+        SmartDashboard.getNumber("wrist/wrist setpoint", 0) * wristTicksPerDegree,
+            DemandType.ArbitraryFeedForward,
+            SmartDashboard.getNumber("wrist/kg", 0.01)
+            * Math.cos(wristMotor.getSelectedSensorPosition() / (wristTicksPerRadian)));
+    }
+
+    public void stopArmMotors() {
+        elbowMotor.set(ControlMode.PercentOutput, 0);
+        wristMotor.set(ControlMode.PercentOutput, 0);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("elbow position", elbowMotor.getSelectedSensorPosition());
-        SmartDashboard.putNumber("wrist position", elbowMotor.getSelectedSensorPosition());
+        SmartDashboard.putNumber("elbow/elbow position", elbowMotor.getSelectedSensorPosition());
+        SmartDashboard.putNumber("elbow/elbow voltage", elbowMotor.getMotorOutputVoltage());
+        SmartDashboard.putNumber("elbow/elbow position degrees", elbowMotor.getSelectedSensorPosition() / 189);
+
+        SmartDashboard.putNumber("wrist/wrist position", wristMotor.getSelectedSensorPosition());
+        SmartDashboard.putNumber("wrist/wrist voltage", wristMotor.getMotorOutputVoltage());
+        SmartDashboard.putNumber("wrist/wrist position degrees", wristMotor.getSelectedSensorPosition() / 189);
     }
 
     /**
@@ -163,5 +201,7 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     */
     public void resetElevatorEncoder() {
         elevatorEncoder.reset();
+        elbowMotor.setSelectedSensorPosition(0);
+        wristMotor.setSelectedSensorPosition(0);
     }
 }
