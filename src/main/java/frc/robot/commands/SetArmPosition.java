@@ -25,7 +25,7 @@ public class SetArmPosition extends CommandBase{
 
     @Override
     public void execute() {
-        // elevator.setArmMotors(0, 0);
+        elevator.setArmMotors(0, 0);
         elevator.setElevatorPosition(controller.getLeftY());
     }
 

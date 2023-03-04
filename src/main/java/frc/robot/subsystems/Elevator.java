@@ -118,6 +118,7 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
      */
     public void setElevatorPosition(double targetPosition)
     {
+        elevatorPID.setP(SmartDashboard.getNumber("elevator/elevator P", 0));
         elevatorPID.setSetpoint(SmartDashboard.getNumber("elevator/elevator setpoint", 0) * elevatorTicksPerMeter);
         elevatorMotor.set(SmartDashboard.getNumber("elevator/kg", 0.03)
             + elevatorPID.calculate(elevatorEncoder.getDistance()));
@@ -168,7 +169,7 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         SmartDashboard.putNumber("wrist/wrist position degrees", wristMotor.getSelectedSensorPosition() / 189);
 
         SmartDashboard.putNumber("elevator/elevator position", elevatorEncoder.getDistance());
-        SmartDashboard.putNumber("elevator/elevator position meters", elevatorEncoder.getDistance() * elevatorTicksPerMeter);
+        SmartDashboard.putNumber("elevator/elevator position meters", elevatorEncoder.getDistance() / elevatorTicksPerMeter);
     }
 
     /**

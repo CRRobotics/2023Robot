@@ -59,7 +59,7 @@ public class RobotContainer {
     //     new JoystickDrive(driveTrain));
 
     SmartDashboard.putNumber("elevator/elevator setpoint", 0);
-    SmartDashboard.putNumber("elevator/elevator P", 0.04);
+    SmartDashboard.putNumber("elevator/elevator P", 0.003);
     SmartDashboard.putNumber("elevator/elevator I", 0);
     SmartDashboard.putNumber("elevator/elevator D", 0);
     SmartDashboard.putNumber("elevator/kg", 0.03);
