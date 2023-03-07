@@ -16,15 +16,18 @@ public interface Constants {
     }
     interface SwerveModule {
         double wheelDiameter = 0.0762; //meters
+        double wheelCircumference = Math.PI * wheelDiameter; // meters
         double wheelTeeth = 14;
         // 45 teeth bevel gear, 22 teeth 1st stage spur gear, 15 teeth on bevel pinion gear
         double wheelGearRatio = (45.0 * 22) / (wheelTeeth * 15.0);
         double wheelEncoderPositionConversion = wheelDiameter * Math.PI / wheelGearRatio; // meters
         double wheelEncoderVelocityConversion = wheelEncoderPositionConversion / 60.0; // meters per second
+        double wheelMotorFreeSpeed = 5676.0 / 60; // rotations per second
+        double wheelFreeSpeed = (wheelMotorFreeSpeed * wheelCircumference) / wheelGearRatio; // rotations per second
         double wheelP = 0.04;
         double wheelI = 0;
         double wheelD = 0;
-        double wheelFF = 0;
+        double wheelFF = 1 / wheelFreeSpeed;
         double wheelOutputMin = -1;
         double wheelOutputMax = 1;
         IdleMode wheelIdleMode = IdleMode.kBrake;
@@ -42,7 +45,7 @@ public interface Constants {
         double turnEncoderPositionPIDMinInput = 0;
         double turnEncoderPositionPIDMaxInput = turnEncoderPositionConversion;
         IdleMode turnIdleMode = IdleMode.kBrake;
-        int turnCurrentLimit = 50; // amps
+        int turnCurrentLimit = 20; // amps
     }
 
     interface Drive {
@@ -69,15 +72,15 @@ public interface Constants {
                 new Translation2d(wheelBase / 2, trackWidth / 2),
                 new Translation2d(wheelBase / 2, -trackWidth / 2),
                 new Translation2d(-wheelBase / 2, trackWidth / 2),
-                new Translation2d(-wheelBase / 2, -trackWidth / 2));        //Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
-        double maxSpeed = 1; // meters per second
-        double maxAngularSpeed = Math.PI; // radians per second;
+                new Translation2d(-wheelBase / 2, -trackWidth / 2));//Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
+        double maxSpeed = 4.8; // meters per second
+        double maxAngularSpeed = 2 * Math.PI; // radians per second;
         boolean gyroReversed = true; //Determines whether the gyro is reversed (I think)
 
         double driveDeadBand = 0.05;
 
-        double magnitudeSlewRate = 1.2; //rads per second
-        double kDirectionSlewRate = 1.8; // percent per second (1 = 100%)
+        double magnitudeSlewRate = 1.8; //rads per second
+        double kDirectionSlewRate = 1.2; // percent per second (1 = 100%)
         double rotationSlewRate = 2.0; // percent per second (1 = 100%)
     }
 

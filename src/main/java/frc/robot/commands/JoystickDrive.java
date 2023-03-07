@@ -21,9 +21,9 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
     double currentRotation;
     double currentTranslationDir;
     double currentTranslationMag;
-    SlewRateLimiter magLimiter;
-    SlewRateLimiter rotLimiter;
-    double prevTime;
+    SlewRateLimiter magnitudeLimiter;
+    SlewRateLimiter rotationLimiter;
+    double previousTime;
     XboxController controller = new XboxController(0);
 
     public JoystickDrive(DriveTrain driveTrain) 
@@ -38,14 +38,15 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
         currentTranslationDir = 0.0;
         currentTranslationMag = 0.0;
       
-        magLimiter = new SlewRateLimiter(magnitudeSlewRate);
-        rotLimiter = new SlewRateLimiter(rotationSlewRate);
-        prevTime = WPIUtilJNI.now() * 1e-6;
+        magnitudeLimiter = new SlewRateLimiter(magnitudeSlewRate);
+        rotationLimiter = new SlewRateLimiter(rotationSlewRate);
+        previousTime = WPIUtilJNI.now() * 1e-6;
     }
 
     @Override
     public void execute() {
-        //old drive code
+        //drive code without slew rate limiting
+        
         // double xSpeed = MathUtil.applyDeadband(controller.getLeftY(), 0.06);
         // double ySpeed = MathUtil.applyDeadband(controller.getLeftX(), 0.06);
         // double rot = MathUtil.applyDeadband(controller.getRightX(), 0.06);
@@ -62,15 +63,15 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
 
         double xSpeed = -MathUtil.applyDeadband(controller.getLeftY(), driveDeadBand);
         double ySpeed = -MathUtil.applyDeadband(controller.getLeftX(), driveDeadBand);
-        double rot = -MathUtil.applyDeadband(controller.getRightX(), driveDeadBand);
+        double rotation = -MathUtil.applyDeadband(controller.getRightX(), driveDeadBand);
         boolean fieldRelative = true;
 
         double xSpeedCommanded;
         double ySpeedCommanded;
 
         // Convert XY to polar for rate limiting
-        double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
-        double inputTranslationMag = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
+        double inputDirection = Math.atan2(ySpeed, xSpeed);
+        double inputMagnitude = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
 
         // Calculate the direction slew rate based on an estimate of the lateral acceleration
         double directionSlewRate;
@@ -82,28 +83,28 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
         
 
         double currentTime = WPIUtilJNI.now() * 1e-6;
-        double elapsedTime = currentTime - prevTime;
-        double angleDif = angleDifference(inputTranslationDir, currentTranslationDir);
+        double elapsedTime = currentTime - previousTime;
+        double angleDif = angleDifference(inputDirection, currentTranslationDir);
         if (angleDif < 0.45 * Math.PI) {
-            currentTranslationDir = stepTowardsCircular(currentTranslationDir, inputTranslationDir, directionSlewRate * elapsedTime);
-            currentTranslationMag = magLimiter.calculate(inputTranslationMag);
+            currentTranslationDir = stepTowardsCircular(currentTranslationDir, inputDirection, directionSlewRate * elapsedTime);
+            currentTranslationMag = magnitudeLimiter.calculate(inputMagnitude);
         } else if (angleDif > 0.85*Math.PI) {
             if (currentTranslationMag > 1e-4) { //some small number to avoid floating-point errors with equality checking
             // keep currentTranslationDir unchanged
-            currentTranslationMag = magLimiter.calculate(0.0);
+            currentTranslationMag = magnitudeLimiter.calculate(0.0);
             } else {
             currentTranslationDir = wrapAngle(currentTranslationDir + Math.PI);
-            currentTranslationMag = magLimiter.calculate(inputTranslationMag);
+            currentTranslationMag = magnitudeLimiter.calculate(inputMagnitude);
             }
         } else {
-            currentTranslationDir = stepTowardsCircular(currentTranslationDir, inputTranslationDir, directionSlewRate * elapsedTime);
-            currentTranslationMag = magLimiter.calculate(0.0);
+            currentTranslationDir = stepTowardsCircular(currentTranslationDir, inputDirection, directionSlewRate * elapsedTime);
+            currentTranslationMag = magnitudeLimiter.calculate(0.0);
         }
-        prevTime = currentTime;
+        previousTime = currentTime;
         
         xSpeedCommanded = currentTranslationMag * Math.cos(currentTranslationDir);
         ySpeedCommanded = currentTranslationMag * Math.sin(currentTranslationDir);
-        currentRotation = rotLimiter.calculate(rot);
+        currentRotation = rotationLimiter.calculate(rotation);
 
         // Convert the commanded speeds into the correct units for the drivetrain
         double xSpeedDelivered = xSpeedCommanded * maxSpeed;
@@ -114,8 +115,6 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
             fieldRelative
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(driveTrain.getHeading()))
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
-        SwerveDriveKinematics.desaturateWheelSpeeds(
-            swerveModuleStates, maxSpeed);
         driveTrain.setModuleStates(swerveModuleStates);
     }
 
@@ -137,7 +136,7 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
      */
     private static double angleDifference(double angleA, double angleB) {
         double difference = Math.abs(angleA - angleB);
-        return difference > Math.PI? (2 * Math.PI) - difference : difference;
+        return difference > Math.PI ? (2 * Math.PI) - difference : difference;
     }
 
     /**
@@ -179,7 +178,7 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
      * @return An angle (in radians) from 0 and 2*PI (exclusive).
      */
     private static double wrapAngle(double angle) {
-        double twoPi = 2*Math.PI;
+        double twoPi = 2 * Math.PI;
 
         if (angle == twoPi) { // Handle this case separately to avoid floating point errors with the floor after the division in the case below
             return 0.0;

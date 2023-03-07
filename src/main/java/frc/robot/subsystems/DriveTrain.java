@@ -53,8 +53,6 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
 // Cerberus 7&8
     // The gyro sensor
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
-
-    
     
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(
         Constants.Drive.driveKinematics,
