@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.Elevator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -60,7 +60,7 @@ public class SetArmPosition extends CommandBase implements Constants.Elevator {
     public void execute() {
         double timeChange = Timer.getFPGATimestamp() - startTime;
         elevator.setElevatorPosition(elevatorProfile.calculate(timeChange).position);
-        elevator.setArmMotors(elbowProfile.calculate(timeChange).position, wristProfile.calculate(timeChange).position);
+        elevator.setArmPosition(elbowProfile.calculate(timeChange).position, wristProfile.calculate(timeChange).position);
     }
 
     @Override

@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.misc.Constants;
 import frc.robot.misc.NetworkTableWrapper;
+import frc.robot.misc.SwerveModule;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

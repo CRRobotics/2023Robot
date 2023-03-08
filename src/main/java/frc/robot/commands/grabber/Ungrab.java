@@ -1,14 +1,14 @@
-package frc.robot.commands;
+package frc.robot.commands.grabber;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Grabber;
 
-public class Grab extends CommandBase{
+public class Ungrab extends CommandBase{
     Grabber grabber;
     XboxController controller = new XboxController(0);
     
-    public Grab(Grabber grabber)
+    public Ungrab(Grabber grabber)
     {
         this.grabber = grabber;
         addRequirements(grabber);
@@ -20,11 +20,13 @@ public class Grab extends CommandBase{
     @Override
     public void execute()
     {
-        grabber.setSpeed(controller.getLeftY());
+        grabber.setSpeed(-0.1);
     }
 
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+
+    }
 
     @Override
     public boolean isFinished() {

@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.acquisition;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj2.command.CommandBase;

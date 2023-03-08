@@ -136,6 +136,30 @@ public interface Constants {
         double wristTicksPerRadian = wristTicksPerDegree * (180 / Math.PI);
         double wristMaxVelocity = 0.1;
         double wristMaxAcceleration = 0.1;
+
+        double highElevator = 0;
+        double highElbow = 0;
+        double highWrist = 0;
+
+        double midElevator = 0;
+        double midElbow = 0;
+        double midWrist = 0;
+        
+        double lowElevator = 0;
+        double lowElbow = 0;
+        double lowWrist = 0;
+
+        double indexerElevator = 0;
+        double indexerElbow = 0;
+        double indexerWrist = 0;
+
+        double substationElevator = 0;
+        double substationElbow = 0;
+        double substationWrist = 0;
+
+        double groundElevator = 0;
+        double groundElbow = 0;
+        double groundWrist = 0;
     }
 
     interface Acquisition {

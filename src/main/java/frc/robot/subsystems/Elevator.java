@@ -145,7 +145,7 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     *@param elbowPos joint position for the elbow
     *@param wristPos joint position for wrist
      */
-    public void setArmMotors(double elbowPos, double wristPos){
+    public void setArmPosition(double elbowPos, double wristPos){
         elbowMotor.config_kP(0, SmartDashboard.getNumber("elbow/elbow P", 0));
         elbowMotor.config_kI(0, SmartDashboard.getNumber("elbow/elbow I", 0));
         elbowMotor.config_kD(0, SmartDashboard.getNumber("elbow/elbow D", 0));

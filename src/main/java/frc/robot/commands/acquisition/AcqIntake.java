@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.acquisition;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -9,32 +9,28 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
  /**
-  * Runs the acquisition backwards based on a trigger axis
+  * Runs the acquisition inward
   */
-public class AcqReject extends CommandBase implements Constants.Acquisition {
+public class AcqIntake extends CommandBase implements Constants.Acquisition {
     Acquisition acquisition;
 
-    public AcqReject(Acquisition acquisition) {
+    public AcqIntake(Acquisition acquisition) {
         this.acquisition = acquisition;
         addRequirements(acquisition);
     }
-
-    @Override
-    public void execute()
-    {
-        acquisition.moveAcq(downPosition);
-        acquisition.spinAcq(rejectSpeed);
+    
+    @Override 
+    public void execute() {
+        acquisition.spinAcq(intakeSpeed);
     }
 
     @Override
-    public void end(boolean interrupted)
-    {
-        
+    public void end(boolean interrupted) {
+        acquisition.spinAcq(0);
     }
 
     @Override
-    public boolean isFinished()
-    {
+    public boolean isFinished() {
         return false;
     }
 }

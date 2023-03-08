@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.misc;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANEncoder;
@@ -12,7 +12,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.misc.Constants;
 
 public class SwerveModule {
     private final CANSparkMax wheelMotor;

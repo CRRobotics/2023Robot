@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -10,8 +10,8 @@ import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.misc.Constants;
+import frc.robot.misc.SwerveModule;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.SwerveModule;
 
 /**
  * Runs the drivetrain
