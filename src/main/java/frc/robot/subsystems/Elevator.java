@@ -4,7 +4,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -45,6 +47,8 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
 
 
     private boolean coneOrCube; //True for cone, false for cube
+    private TrapezoidProfile.State setpoint;
+    private TrapezoidProfile.State goal;
 
     /**
      * Constructs an <code>Elevator</code> using motor ID's in <code>Contants.java</code>
@@ -99,9 +103,13 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         topSwitch = elevatorMotor.getForwardLimitSwitch(Type.kNormallyOpen);
         topSwitch.enableLimitSwitch(true);
 
+        setpoint = new TrapezoidProfile.State(0, 0);
+        goal = new TrapezoidProfile.State();
+    }
 
-
-
+    public void setPosition() {
+        System.out.println(elevatorEncoder.getDistance() / elevatorTicksPerMeter);
+        setpoint = new TrapezoidProfile.State(elevatorEncoder.getDistance() / elevatorTicksPerMeter, 0);
     }
     /**
     *Changes the motor speed of the elevator motor
@@ -116,12 +124,16 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     *Decides based on conditions how to run the elevator motor based on inputs from the top and bottom limit switches
     *@param targetPosition the position of the motor if the switches are not pressed
      */
-    public void setElevatorPosition(double targetPosition)
+    public void setElevatorPosition(double targetPosition, double time)
     {
+        goal = new TrapezoidProfile.State(SmartDashboard.getNumber("elevator/elevator setpoint", 0),0);
         elevatorPID.setP(SmartDashboard.getNumber("elevator/elevator P", 0));
-        elevatorPID.setSetpoint(SmartDashboard.getNumber("elevator/elevator setpoint", 0) * elevatorTicksPerMeter);
+        TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(0.1, 0.1), goal, setpoint);
+        setpoint = profile.calculate(time);
+        elevatorPID.setSetpoint(setpoint.position * elevatorTicksPerMeter);
         elevatorMotor.set(SmartDashboard.getNumber("elevator/kg", 0.03)
             + elevatorPID.calculate(elevatorEncoder.getDistance()));
+        System.out.println(setpoint.position);
     }
 
     

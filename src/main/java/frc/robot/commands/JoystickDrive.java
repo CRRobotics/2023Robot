@@ -64,13 +64,19 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
         double xSpeed = -MathUtil.applyDeadband(controller.getLeftY(), driveDeadBand);
         double ySpeed = -MathUtil.applyDeadband(controller.getLeftX(), driveDeadBand);
         double rotation = -MathUtil.applyDeadband(controller.getRightX(), driveDeadBand);
-        boolean fieldRelative = true;
+        boolean fieldRelative = false;
 
         double xSpeedCommanded;
         double ySpeedCommanded;
 
         // Convert XY to polar for rate limiting
-        double inputDirection = Math.atan2(ySpeed, xSpeed);
+        double inputDirection;
+        if (ySpeed == 0 && xSpeed == 0) {
+            inputDirection = currentTranslationDir;
+        }
+        else {
+            inputDirection = Math.atan2(ySpeed, xSpeed);
+        }
         double inputMagnitude = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
 
         // Calculate the direction slew rate based on an estimate of the lateral acceleration

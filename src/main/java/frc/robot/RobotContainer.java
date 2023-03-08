@@ -6,6 +6,10 @@ package frc.robot;
 
 import java.util.List;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -29,7 +33,7 @@ import frc.robot.subsystems.Elevator;
 
 public class RobotContainer {
   // The robot's subsystems
-  // private final DriveTrain driveTrain = new DriveTrain();
+  private final DriveTrain driveTrain = new DriveTrain();
   private final Elevator elevator = new Elevator();
   XboxController controller = new XboxController(1);
 
@@ -53,10 +57,10 @@ public class RobotContainer {
 
     // Configure default commands
     // elevator.setDefaultCommand(new SetArmPosition(elevator, 0, 0, 0));
-    // driveTrain.setDefaultCommand(
-    //     // The left stick controls translation of the robot.
-    //     // Turning is controlled by the X axis of the right stick.
-    //     new JoystickDrive(driveTrain));
+    driveTrain.setDefaultCommand(
+        // The left stick controls translation of the robot.
+        // Turning is controlled by the X axis of the right stick.
+        new JoystickDrive(driveTrain));
 
     SmartDashboard.putNumber("elevator/elevator setpoint", 0);
     SmartDashboard.putNumber("elevator/elevator P", 0.003);
@@ -82,6 +86,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("wrist/wrist voltage", 0);
     SmartDashboard.putNumber("wrist/kg", 0.01);
 
+    
+
   }
 
   /**
@@ -99,6 +105,10 @@ public class RobotContainer {
 
     new JoystickButton(driver, XboxController.Button.kB.value)
       .whileTrue(new ResetArmEncoders(elevator));
+
+    new JoystickButton(driver, XboxController.Button.kX.value)
+      .whileTrue(driveTrain.followTrajectoryCommand(PathPlanner.loadPath(
+        "test path", new PathConstraints(1, 1)), true));
   }
 
   /**

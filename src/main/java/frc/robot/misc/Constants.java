@@ -93,7 +93,7 @@ public interface Constants {
     }
 
     interface Auto {
-        double maxSpeed = 0.25; // meters per second
+        double maxSpeed = 3; // meters per second
         double maxAcceleration = 3; // meters per second squared
         double maxAngularSpeed = Math.PI; // radians per second
         double maxAngularAcceleration = Math.PI; // radians per second squared
@@ -128,7 +128,7 @@ public interface Constants {
         double elevatorI = 0;
         double elevatorD = 0;
         double elevatorTicksPerMeter = 13434.639;
-        int elevatorCurrentLimit = 10;
+        int elevatorCurrentLimit = 20;
         double elevatorCalibrationSpeed = 0.01;
     }
 

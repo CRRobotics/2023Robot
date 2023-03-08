@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,6 +20,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.misc.Constants;
 import frc.robot.misc.NetworkTableWrapper;
@@ -29,6 +33,8 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 public class DriveTrain extends SubsystemBase implements Constants.Drive {
     // Create MAXSwerveModules
     private final SwerveModule frontLeft = new SwerveModule( // chimera 11& 12
@@ -173,6 +179,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
      */
     public void setModuleStates(SwerveModuleState[] desiredStates)
     {
+        SmartDashboard.putNumber("drive/wheel angle", desiredStates[0].angle.getDegrees());
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Drive.maxSpeed);
         frontLeft.setDesiredState(desiredStates[0]);
         frontRight.setDesiredState(desiredStates[1]);
@@ -209,5 +216,27 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
      */
     public double getTurnRate() {
         return gyro.getRate() * (Constants.Drive.gyroReversed ? -1.0 : 1.0);
+    }
+
+    public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                       // Reset odometry for the first path you run during auto
+                       if(isFirstPath){
+                           resetOdometry(traj.getInitialHolonomicPose());
+                       }
+                     }),
+                     new PPSwerveControllerCommand(
+                         traj, 
+                         this::getPose, // Pose supplier
+                         driveKinematics, // SwerveDriveKinematics
+                         new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                         new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
+                         new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                         this::setModuleStates, // Module states consumer
+                         true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+                         this // Requires this drive subsystem
+                     )
+        );
     }
 }
