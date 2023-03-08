@@ -27,14 +27,18 @@ import frc.robot.commands.Elevator.ResetArmEncoders;
 import frc.robot.commands.Elevator.SetArmPosition;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.drivetrain.TestModule;
+import frc.robot.commands.grabber.Grab;
+import frc.robot.commands.grabber.Ungrab;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Grabber;
 
 public class RobotContainer {
   // The robot's subsystems
   private final DriveTrain driveTrain = new DriveTrain();
   private final Elevator elevator = new Elevator();
+  private final Grabber grabber = new Grabber();
   XboxController controller = new XboxController(1);
 
   // The driver's controller
@@ -86,6 +90,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("wrist/wrist voltage", 0);
     SmartDashboard.putNumber("wrist/kg", 0.01);
 
+    SmartDashboard.putNumber("grabber/speed", 0.1);
     
 
   }
@@ -112,6 +117,11 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kX.value)
       .whileTrue(driveTrain.followTrajectoryCommand(PathPlanner.loadPath(
         "test path", new PathConstraints(1, 1)), true));
+
+    new JoystickButton(controller, XboxController.Axis.kLeftTrigger.value)
+      .whileTrue(new Grab(grabber));
+    new JoystickButton(controller, XboxController.Axis.kRightTrigger.value)
+      .whileTrue(new Ungrab(grabber));
   }
 
   /**

@@ -1,6 +1,7 @@
 package frc.robot.commands.grabber;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Grabber;
 
@@ -20,7 +21,7 @@ public class Ungrab extends CommandBase{
     @Override
     public void execute()
     {
-        grabber.setSpeed(-0.1);
+        grabber.setSpeed(-SmartDashboard.getNumber("grabber/speed", 0.1));
     }
 
     @Override
