@@ -8,6 +8,7 @@ public class CalibrateElevator extends CommandBase implements Constants.Elevator
 
     private Elevator elevator;
     private boolean done;
+    private boolean startingAtBottom;
     public CalibrateElevator(Elevator elevator) {
         this.elevator = elevator;
         addRequirements(elevator);
@@ -16,17 +17,26 @@ public class CalibrateElevator extends CommandBase implements Constants.Elevator
 
     @Override
     public void initialize() {
-
+        startingAtBottom = elevator.getBottomSwitch();
     }
 
     @Override
     public void execute() {
-        if (!elevator.getBottomSwitch()) {
-            elevator.setElevatorVelocity(elevatorCalibrationSpeed);
+        if (startingAtBottom) {
+            if (!elevator.getBottomSwitch()) {
+                startingAtBottom = false;
+            } else {
+                elevator.setElevatorVelocity(elevatorCalibrationSpeed);
+            }
+            
         } else {
-            elevator.setElevatorVelocity(0);
-            elevator.resetElevatorEncoder();
-            done = true;
+            if (!elevator.getBottomSwitch()) {
+                elevator.setElevatorVelocity(-elevatorCalibrationSpeed);
+            } else {
+                elevator.setElevatorVelocity(0);
+                elevator.resetElevatorEncoder();
+                done = true;
+            }
         }
     }
 

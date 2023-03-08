@@ -101,7 +101,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(driver, XboxController.Button.kA.value)
-      .whileTrue(new SetArmPosition(elevator,0, 0, 0));
+      .whileTrue(new SetArmPosition(elevator,
+      SmartDashboard.getNumber("elevator/elevator setpoint", 0),
+      SmartDashboard.getNumber("elbow/elbow setpoint", 0),
+      SmartDashboard.getNumber("wrist/wrist setpoint", 0)));
 
     new JoystickButton(driver, XboxController.Button.kB.value)
       .whileTrue(new ResetArmEncoders(elevator));

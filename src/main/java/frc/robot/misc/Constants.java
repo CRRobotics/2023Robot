@@ -105,6 +105,16 @@ public interface Constants {
     }
 
     interface Elevator {
+        int elevatorMotorID = 62;
+        double elevatorP = 0.001;
+        double elevatorI = 0;
+        double elevatorD = 0;
+        double elevatorTicksPerMeter = 13434.639;
+        int elevatorCurrentLimit = 20;
+        double elevatorCalibrationSpeed = 0.01;
+        double elevatorMaxVelocity = 0.1;
+        double elevatorMaxAcceleration = 0.1;
+
         int elbowMotorID = 16;
         double elbowMotorP = 0.005;
         double elbowMotorI = 0;
@@ -113,6 +123,8 @@ public interface Constants {
         double elbowMotorVoltageLimit = 6;
         double elbowTicksPerDegree = 1422.639;
         double elbowTicksPerRadian = elbowTicksPerDegree * (180 / Math.PI);
+        double elbowMaxVelocity = 0.1;
+        double elbowMaxAcceleration = 0.1;
 
         int wristMotorID = 17;
         double wristMotorP = 0.005;
@@ -122,14 +134,8 @@ public interface Constants {
         double wristMotorVoltageLimit = 6;
         double wristTicksPerDegree = 189.639;
         double wristTicksPerRadian = wristTicksPerDegree * (180 / Math.PI);
-
-        int elevatorMotorID = 62;
-        double elevatorP = 0.001;
-        double elevatorI = 0;
-        double elevatorD = 0;
-        double elevatorTicksPerMeter = 13434.639;
-        int elevatorCurrentLimit = 20;
-        double elevatorCalibrationSpeed = 0.01;
+        double wristMaxVelocity = 0.1;
+        double wristMaxAcceleration = 0.1;
     }
 
     interface Acquisition {

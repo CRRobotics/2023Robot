@@ -47,8 +47,13 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
 
 
     private boolean coneOrCube; //True for cone, false for cube
-    private TrapezoidProfile.State setpoint;
-    private TrapezoidProfile.State goal;
+
+    private TrapezoidProfile.State elevatorSetpoint;
+    private TrapezoidProfile.State elevatorGoal;
+    private TrapezoidProfile.State elbowSetpoint;
+    private TrapezoidProfile.State elbowGoal;
+    private TrapezoidProfile.State wristSetpoint;
+    private TrapezoidProfile.State wristGoal;
 
     /**
      * Constructs an <code>Elevator</code> using motor ID's in <code>Contants.java</code>
@@ -103,13 +108,15 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         topSwitch = elevatorMotor.getForwardLimitSwitch(Type.kNormallyOpen);
         topSwitch.enableLimitSwitch(true);
 
-        setpoint = new TrapezoidProfile.State(0, 0);
-        goal = new TrapezoidProfile.State();
+        elevatorSetpoint = new TrapezoidProfile.State(0, 0);
+        elbowSetpoint = new TrapezoidProfile.State(0, 0);
+        wristSetpoint = new TrapezoidProfile.State(0, 0);
     }
 
     public void setPosition() {
-        System.out.println(elevatorEncoder.getDistance() / elevatorTicksPerMeter);
-        setpoint = new TrapezoidProfile.State(elevatorEncoder.getDistance() / elevatorTicksPerMeter, 0);
+        elevatorSetpoint = new TrapezoidProfile.State(elevatorEncoder.getDistance() / elevatorTicksPerMeter, 0);
+        elbowSetpoint = new TrapezoidProfile.State(elbowMotor.getSelectedSensorPosition() / elbowTicksPerRadian, 0);
+        wristSetpoint = new TrapezoidProfile.State(wristMotor.getSelectedSensorPosition() / wristTicksPerRadian, 0);
     }
     /**
     *Changes the motor speed of the elevator motor
@@ -122,27 +129,23 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     }
     /**
     *Decides based on conditions how to run the elevator motor based on inputs from the top and bottom limit switches
-    *@param targetPosition the position of the motor if the switches are not pressed
+    *@param elevatorPos in meters
      */
-    public void setElevatorPosition(double targetPosition, double time)
+    public void setElevatorPosition(double elevatorPos)
     {
-        goal = new TrapezoidProfile.State(SmartDashboard.getNumber("elevator/elevator setpoint", 0),0);
         elevatorPID.setP(SmartDashboard.getNumber("elevator/elevator P", 0));
-        TrapezoidProfile profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(0.1, 0.1), goal, setpoint);
-        setpoint = profile.calculate(time);
-        elevatorPID.setSetpoint(setpoint.position * elevatorTicksPerMeter);
+        elevatorPID.setSetpoint(elevatorPos * elevatorTicksPerMeter);
         elevatorMotor.set(SmartDashboard.getNumber("elevator/kg", 0.03)
-            + elevatorPID.calculate(elevatorEncoder.getDistance()));
-        System.out.println(setpoint.position);
+            + elevatorPID.calculate(getElevatorPosition() * elevatorTicksPerMeter));
     }
 
     
     /**
     *Sets arm motors to inputed positions
-    *@param pos1 joint position for the elbow
-    *@param pos2 joint position for wrist
+    *@param elbowPos joint position for the elbow
+    *@param wristPos joint position for wrist
      */
-    public void setArmMotors(double pos1, double pos2){
+    public void setArmMotors(double elbowPos, double wristPos){
         elbowMotor.config_kP(0, SmartDashboard.getNumber("elbow/elbow P", 0));
         elbowMotor.config_kI(0, SmartDashboard.getNumber("elbow/elbow I", 0));
         elbowMotor.config_kD(0, SmartDashboard.getNumber("elbow/elbow D", 0));
@@ -152,13 +155,13 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         wristMotor.config_kD(0, SmartDashboard.getNumber("wrist/wrist D", 0));
 
         elbowMotor.set(TalonFXControlMode.Position,
-            SmartDashboard.getNumber("elbow/elbow setpoint", 0) * elbowTicksPerDegree,
+            elbowPos * elbowTicksPerDegree,
             DemandType.ArbitraryFeedForward,
             SmartDashboard.getNumber("elbow/kg", 0.01)
             * Math.cos(elbowMotor.getSelectedSensorPosition() / (elbowTicksPerRadian)));
 
         wristMotor.set(TalonFXControlMode.Position,
-        SmartDashboard.getNumber("wrist/wrist setpoint", 0) * wristTicksPerDegree,
+            wristPos * wristTicksPerDegree,
             DemandType.ArbitraryFeedForward,
             SmartDashboard.getNumber("wrist/kg", 0.01)
             * Math.cos(wristMotor.getSelectedSensorPosition() / (wristTicksPerRadian)));
@@ -223,5 +226,29 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     public boolean getConeOrCube()
     {
         return coneOrCube; 
+    }
+
+    /**
+     * elevator position in meters
+     * @return position in meters
+     */
+    public double getElevatorPosition() {
+        return elevatorEncoder.getDistance() / elevatorTicksPerMeter;
+    }
+
+    /**
+     * elbow position in radians
+     * @return position in radians
+     */
+    public double getElbowPosition() {
+        return elbowMotor.getSelectedSensorPosition() / elbowTicksPerRadian;
+    }
+
+    /**
+     * wrist position in radians
+     * @return position in radians
+     */
+    public double getWristPosition() {
+        return wristMotor.getSelectedSensorPosition() / wristTicksPerRadian;
     }
 }
