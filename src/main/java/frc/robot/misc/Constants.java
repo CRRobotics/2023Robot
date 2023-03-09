@@ -86,6 +86,7 @@ public interface Constants {
 
     interface Grabber {
         int motorID = 18; //Placeholder
+        double grabSpeed = 0.1;
     }
 
     interface Controller {
@@ -123,8 +124,8 @@ public interface Constants {
         double elbowMotorVoltageLimit = 6;
         double elbowTicksPerDegree = 1422.639;
         double elbowTicksPerRadian = elbowTicksPerDegree * (180 / Math.PI);
-        double elbowMaxVelocity = 0.1;
-        double elbowMaxAcceleration = 0.1;
+        double elbowMaxVelocity = 0.5;
+        double elbowMaxAcceleration = 0.5;
 
         int wristMotorID = 17;
         double wristMotorP = 0.005;
@@ -134,8 +135,8 @@ public interface Constants {
         double wristMotorVoltageLimit = 6;
         double wristTicksPerDegree = 189.639;
         double wristTicksPerRadian = wristTicksPerDegree * (180 / Math.PI);
-        double wristMaxVelocity = 0.1;
-        double wristMaxAcceleration = 0.1;
+        double wristMaxVelocity = 0.5;
+        double wristMaxAcceleration = 0.5;
 
         double highElevator = 0;
         double highElbow = 0;

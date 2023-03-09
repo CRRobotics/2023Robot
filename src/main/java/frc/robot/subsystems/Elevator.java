@@ -68,7 +68,6 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         elevatorMotor.setSmartCurrentLimit(elevatorCurrentLimit);
         elevatorEncoder = new Encoder(0,1);
         elevatorEncoder.setDistancePerPulse(1);
-        elevatorEncoder.reset();
 
         elevatorPID = new PIDController(0,0,0);
 
@@ -155,13 +154,13 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         wristMotor.config_kD(0, SmartDashboard.getNumber("wrist/wrist D", 0));
 
         elbowMotor.set(TalonFXControlMode.Position,
-            elbowPos * elbowTicksPerDegree,
+            elbowPos * elbowTicksPerRadian,
             DemandType.ArbitraryFeedForward,
             SmartDashboard.getNumber("elbow/kg", 0.01)
             * Math.cos(elbowMotor.getSelectedSensorPosition() / (elbowTicksPerRadian)));
 
         wristMotor.set(TalonFXControlMode.Position,
-            wristPos * wristTicksPerDegree,
+            wristPos * wristTicksPerRadian,
             DemandType.ArbitraryFeedForward,
             SmartDashboard.getNumber("wrist/kg", 0.01)
             * Math.cos(wristMotor.getSelectedSensorPosition() / (wristTicksPerRadian)));
