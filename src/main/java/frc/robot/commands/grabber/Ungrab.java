@@ -16,17 +16,19 @@ public class Ungrab extends CommandBase{
     }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+        grabber.setCurrentLimit(10);
+    }
 
     @Override
     public void execute()
     {
-        grabber.setSpeed(-SmartDashboard.getNumber("grabber/speed", 0.1));
+        grabber.setSpeed(-1);
     }
 
     @Override
     public void end(boolean interrupted) {
-
+        grabber.setSpeed(0);
     }
 
     @Override

@@ -19,10 +19,16 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.AcquireDoubleSub;
+import frc.robot.commands.FoldIn;
+import frc.robot.commands.placeBottom;
+import frc.robot.commands.placeMidCone;
+import frc.robot.commands.placeTopCone;
 import frc.robot.commands.Elevator.ResetArmEncoders;
 import frc.robot.commands.Elevator.SetArmPosition;
 import frc.robot.commands.drivetrain.JoystickDrive;
@@ -108,19 +114,20 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kA.value)
       .whileTrue(new SetArmPosition(elevator,
       SmartDashboard.getNumber("elevator/elevator setpoint", 0),
-      SmartDashboard.getNumber("elbow/elbow setpoint", 0) * Constants.Elevator.elbowTicksPerDegree,
-      SmartDashboard.getNumber("wrist/wrist setpoint", 0) * Constants.Elevator.wristTicksPerDegree));
 
     new JoystickButton(driver, XboxController.Button.kB.value)
       .whileTrue(new ResetArmEncoders(elevator));
 
     new JoystickButton(driver, XboxController.Button.kX.value)
-      .whileTrue(driveTrain.followTrajectoryCommand(PathPlanner.loadPath(
-        "test path", new PathConstraints(1, 1)), true));
+    new JoystickButton(driver, XboxController.Button.kY.value).onTrue(new placeTopCone(elevator, grabber));
+    new JoystickButton(driver, XboxController.Button.kX.value).onTrue(new placeMidCone(elevator, grabber));
+    new JoystickButton(driver, XboxController.Button.kA.value).onTrue(new placeBottom(elevator, grabber));
+    new JoystickButton(driver, XboxController.Button.kB.value).onTrue(new AcquireDoubleSub(elevator));
+    new JoystickButton(driver, XboxController.Button.kStart.value).onTrue(new FoldIn(elevator));
 
-    new JoystickButton(controller, XboxController.Axis.kLeftTrigger.value)
+    new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
       .whileTrue(new Grab(grabber));
-    new JoystickButton(controller, XboxController.Axis.kRightTrigger.value)
+    new JoystickButton(driver, XboxController.Button.kRightBumper.value)
       .whileTrue(new Ungrab(grabber));
   }
 

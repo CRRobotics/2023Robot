@@ -29,9 +29,9 @@ public class SetArmPosition extends CommandBase implements Constants.Elevator {
 
     public SetArmPosition(Elevator elevator, double elevatorPosition, double elbowPosition, double wristPosition) {
         this.elevator = elevator;
-        this.elevatorPosition = elevatorPosition;
-        this.elbowPosition = elbowPosition;
-        this.wristPosition = wristPosition;
+        this. elevatorPosition = elevatorPosition;
+        this.elbowPosition = elbowPosition * (Math.PI / 180);
+        this.wristPosition = wristPosition * (Math.PI / 180);
         addRequirements(elevator);
     }
 
@@ -43,6 +43,14 @@ public class SetArmPosition extends CommandBase implements Constants.Elevator {
         elevatorGoal = new TrapezoidProfile.State(elevatorPosition, 0);
         elbowGoal = new TrapezoidProfile.State(elbowPosition, 0);
         wristGoal = new TrapezoidProfile.State(wristPosition, 0);
+
+        elevator.getElbowMotor().config_kP(0, SmartDashboard.getNumber("elbow/elbow P", 0));
+        elevator.getElbowMotor().config_kI(0, SmartDashboard.getNumber("elbow/elbow I", 0));
+        elevator.getElbowMotor().config_kD(0, SmartDashboard.getNumber("elbow/elbow D", 0));
+
+        elevator.getWristMotor().config_kP(0, SmartDashboard.getNumber("wrist/wrist P", 0.08));
+        elevator.getWristMotor().config_kI(0, SmartDashboard.getNumber("wrist/wrist I", 0));
+        elevator.getWristMotor() .config_kD(0, SmartDashboard.getNumber("wrist/wrist D", 0));
 
         elevatorSetpoint = new TrapezoidProfile.State(elevator.getElevatorPosition(), 0);
         elbowSetpoint = new TrapezoidProfile.State(elevator.getElbowPosition(), 0);
@@ -65,6 +73,17 @@ public class SetArmPosition extends CommandBase implements Constants.Elevator {
 
     @Override
     public void end(boolean interrupted) {
-        elevator.stopArmMotors();
+        //elevator.stopArmMotors();
+    }
+
+    public boolean isFinished(){
+        boolean temp = (Math.abs(elevator.getWristPosition() - wristGoal.position) <= allowableAngleError)
+            && (Math.abs(elevator.getElbowPosition() - elbowGoal.position) <= allowableAngleError)
+            && (Math.abs(elevator.getElevatorPosition() - elevatorGoal.position) <= allowableElevatorError);
+        if(temp){
+            System.out.println("command done");
+            return true;
+        }        
+        return false;
     }
 }

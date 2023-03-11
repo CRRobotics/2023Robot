@@ -28,6 +28,7 @@ public interface Constants {
         double wheelI = 0;
         double wheelD = 0;
         double wheelFF = 1 / wheelFreeSpeed;
+        double wheelFF = 0.22194;
         double wheelOutputMin = -1;
         double wheelOutputMax = 1;
         IdleMode wheelIdleMode = IdleMode.kBrake;
@@ -106,12 +107,15 @@ public interface Constants {
     }
 
     interface Elevator {
+        double allowableAngleError = 0.035;
+        double allowableElevatorError = 0.02;
         int elevatorMotorID = 62;
         double elevatorP = 0.001;
         double elevatorI = 0;
         double elevatorD = 0;
         double elevatorTicksPerMeter = 13434.639;
         int elevatorCurrentLimit = 20;
+        int elevatorCurrentLimit = 40;
         double elevatorCalibrationSpeed = 0.01;
         double elevatorMaxVelocity = 0.1;
         double elevatorMaxAcceleration = 0.1;
@@ -124,8 +128,9 @@ public interface Constants {
         double elbowMotorVoltageLimit = 6;
         double elbowTicksPerDegree = 1422.639;
         double elbowTicksPerRadian = elbowTicksPerDegree * (180 / Math.PI);
-        double elbowMaxVelocity = 0.5;
-        double elbowMaxAcceleration = 0.5;
+
+        double elbowMaxVelocity = 15;
+        double elbowMaxAcceleration = 15;
 
         int wristMotorID = 17;
         double wristMotorP = 0.005;
@@ -135,8 +140,8 @@ public interface Constants {
         double wristMotorVoltageLimit = 6;
         double wristTicksPerDegree = 189.639;
         double wristTicksPerRadian = wristTicksPerDegree * (180 / Math.PI);
-        double wristMaxVelocity = 0.5;
-        double wristMaxAcceleration = 0.5;
+        double wristMaxVelocity = 15;
+        double wristMaxAcceleration = 15;
 
         double highElevator = 0;
         double highElbow = 0;

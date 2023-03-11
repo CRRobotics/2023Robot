@@ -41,7 +41,6 @@ public class Grabber extends SubsystemBase implements Constants{
     {
         motor.configFactoryDefault();
         motor.setNeutralMode(NeutralMode.Brake);
-        motor.configContinuousCurrentLimit(3);
         motor.enableCurrentLimit(true);
     }
 
@@ -60,5 +59,10 @@ public class Grabber extends SubsystemBase implements Constants{
     public void setSpeed(double speed)
     {
         motor.set(ControlMode.PercentOutput, speed);
+    }
+
+    public void setCurrentLimit(int currentLimit) {
+        motor.configContinuousCurrentLimit(currentLimit);
+        motor.enableCurrentLimit(true);
     }
 }

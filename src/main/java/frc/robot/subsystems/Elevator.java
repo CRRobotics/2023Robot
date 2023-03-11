@@ -17,6 +17,9 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+
+import javax.print.CancelablePrintJob;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -77,7 +80,7 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         elbowMotor.setNeutralMode(NeutralMode.Brake);
         elbowConfig = new TalonFXConfiguration();
         elbowConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
-        elbowMotor.setSelectedSensorPosition(0);
+        elbowMotor.setSelectedSensorPosition(-163 * elbowTicksPerDegree);
         elbowMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
             true, elbowMotorCurrentLimit, elbowMotorCurrentLimit, 0));
         elbowConfig.slot0.allowableClosedloopError = 0;
@@ -91,7 +94,7 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         wristMotor.setNeutralMode(NeutralMode.Brake);
         wristConfig = new TalonFXConfiguration();
         wristConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
-        wristMotor.setSelectedSensorPosition(0);
+        wristMotor.setSelectedSensorPosition(-7.5 * wristTicksPerDegree);
         wristMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
             true, wristMotorCurrentLimit, wristMotorCurrentLimit, 0));
         wristConfig.slot0.allowableClosedloopError = 0;
@@ -126,6 +129,17 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         // elevatorMotor.set(velocity * 0.1);
         // SmartDashboard.putNumber("elevator/percent output", velocity * 0.1);
     }
+    public TalonFX getElbowMotor(){
+        return elbowMotor;
+    }
+
+    public TalonFX getWristMotor(){
+        return wristMotor;
+    }
+
+    public CANSparkMax getElevatorMotor(){
+        return elevatorMotor;
+    }
     /**
     *Decides based on conditions how to run the elevator motor based on inputs from the top and bottom limit switches
     *@param elevatorPos in meters
@@ -145,13 +159,7 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     *@param wristPos joint position for wrist
      */
     public void setArmPosition(double elbowPos, double wristPos){
-        elbowMotor.config_kP(0, SmartDashboard.getNumber("elbow/elbow P", 0));
-        elbowMotor.config_kI(0, SmartDashboard.getNumber("elbow/elbow I", 0));
-        elbowMotor.config_kD(0, SmartDashboard.getNumber("elbow/elbow D", 0));
-
-        wristMotor.config_kP(0, SmartDashboard.getNumber("wrist/wrist P", 0.08));
-        wristMotor.config_kI(0, SmartDashboard.getNumber("wrist/wrist I", 0));
-        wristMotor.config_kD(0, SmartDashboard.getNumber("wrist/wrist D", 0));
+        
 
         elbowMotor.set(TalonFXControlMode.Position,
             elbowPos * elbowTicksPerRadian,
@@ -176,14 +184,15 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     public void periodic() {
         SmartDashboard.putNumber("elbow/elbow position", elbowMotor.getSelectedSensorPosition());
         SmartDashboard.putNumber("elbow/elbow voltage", elbowMotor.getMotorOutputVoltage());
-        SmartDashboard.putNumber("elbow/elbow position degrees", elbowMotor.getSelectedSensorPosition() / 189);
+        SmartDashboard.putNumber("elbow/elbow position degrees", elbowMotor.getSelectedSensorPosition() / elbowTicksPerDegree);
 
         SmartDashboard.putNumber("wrist/wrist position", wristMotor.getSelectedSensorPosition());
         SmartDashboard.putNumber("wrist/wrist voltage", wristMotor.getMotorOutputVoltage());
-        SmartDashboard.putNumber("wrist/wrist position degrees", wristMotor.getSelectedSensorPosition() / 189);
+        SmartDashboard.putNumber("wrist/wrist position degrees", wristMotor.getSelectedSensorPosition() / wristTicksPerDegree);
 
         SmartDashboard.putNumber("elevator/elevator position", elevatorEncoder.getDistance());
         SmartDashboard.putNumber("elevator/elevator position meters", elevatorEncoder.getDistance() / elevatorTicksPerMeter);
+        SmartDashboard.putNumber("elevator/elevator voltage", elevatorMotor.getAppliedOutput());
     }
 
     /**
@@ -250,4 +259,10 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     public double getWristPosition() {
         return wristMotor.getSelectedSensorPosition() / wristTicksPerRadian;
     }
+    public void setArmCoast(){
+        elbowMotor.setNeutralMode(NeutralMode.Coast);
+        wristMotor.setNeutralMode(NeutralMode.Coast);
+    }
+
+    
 }

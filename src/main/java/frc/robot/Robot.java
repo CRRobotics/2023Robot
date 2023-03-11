@@ -99,7 +99,9 @@ public class Robot extends TimedRobot {
    * Same as <code>robotExit</code>, but only for the teleoperated state
    */
   @Override
-  public void teleopExit() {}
+  public void teleopExit() {
+    robotContainer.getElevator().setArmCoast();
+  }
 
   /**
    * Same as <code>robotInnit</code>, but only for the testing state
