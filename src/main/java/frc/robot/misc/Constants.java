@@ -27,7 +27,6 @@ public interface Constants {
         double wheelP = 0.04;
         double wheelI = 0;
         double wheelD = 0;
-        double wheelFF = 1 / wheelFreeSpeed;
         double wheelFF = 0.22194;
         double wheelOutputMin = -1;
         double wheelOutputMax = 1;
@@ -114,11 +113,10 @@ public interface Constants {
         double elevatorI = 0;
         double elevatorD = 0;
         double elevatorTicksPerMeter = 13434.639;
-        int elevatorCurrentLimit = 20;
         int elevatorCurrentLimit = 40;
         double elevatorCalibrationSpeed = 0.01;
-        double elevatorMaxVelocity = 0.1;
-        double elevatorMaxAcceleration = 0.1;
+        double elevatorMaxVelocity = 1;
+        double elevatorMaxAcceleration = 1;
 
         int elbowMotorID = 16;
         double elbowMotorP = 0.005;

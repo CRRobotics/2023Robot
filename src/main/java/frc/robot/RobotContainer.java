@@ -115,10 +115,12 @@ public class RobotContainer {
       .whileTrue(new SetArmPosition(elevator,
       SmartDashboard.getNumber("elevator/elevator setpoint", 0),
 
-    new JoystickButton(driver, XboxController.Button.kB.value)
-      .whileTrue(new ResetArmEncoders(elevator));
+      SmartDashboard.getNumber("elbow/elbow setpoint", 0),
+      SmartDashboard.getNumber("wrist/wrist setpoint", 0)));
+    // new JoystickButton(driver, XboxController.Button.kX.value)
+    //   .whileTrue(driveTrain.followTrajectoryCommand(PathPlanner.loadPath(
+    //     "test path", new PathConstraints(1, 1)), true));
 
-    new JoystickButton(driver, XboxController.Button.kX.value)
     new JoystickButton(driver, XboxController.Button.kY.value).onTrue(new placeTopCone(elevator, grabber));
     new JoystickButton(driver, XboxController.Button.kX.value).onTrue(new placeMidCone(elevator, grabber));
     new JoystickButton(driver, XboxController.Button.kA.value).onTrue(new placeBottom(elevator, grabber));
