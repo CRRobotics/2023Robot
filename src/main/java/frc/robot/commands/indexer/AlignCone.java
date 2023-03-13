@@ -23,7 +23,7 @@ public class AlignCone extends CommandBase{
 
     @Override
     public void initialize() {
-        indexer.turnToAngle(NetworkTableWrapper.getData(Constants.Indexer.indexerCamTable, "coneAngle")  - indexer.getAngle());
+        indexer.turnToAngle(NetworkTableWrapper.getDouble(Constants.Indexer.indexerCamTable, "coneAngle")  - indexer.getAngle());
     }
 
     @Override

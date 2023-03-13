@@ -115,19 +115,19 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         );
         
         // update with visions data from these cameras ids:
-        for (int i : new int[]{0, 2, 4}) {
-            if (NetworkTableWrapper.getData(i, "ntags") != 0) {
+        for (String i : new String[]{"0", "2", "4"}) {
+            if (NetworkTableWrapper.getDouble(i, "ntags") != 0) {
                 poseEstimator.addVisionMeasurement(
                     new Pose2d(
-                        NetworkTableWrapper.getData(i, "rx"),
-                        NetworkTableWrapper.getData(i, "ry"),
-                        Rotation2d.fromRadians(NetworkTableWrapper.getData(i, "theta"))
+                        NetworkTableWrapper.getDouble(i, "rx"),
+                        NetworkTableWrapper.getDouble(i, "ry"),
+                        Rotation2d.fromRadians(NetworkTableWrapper.getDouble(i, "theta"))
                     ),
                     Timer.getFPGATimestamp(), // needs to be tested and calibrated
                     VecBuilder.fill(0.8, 0.8, 0.8) // needs to be calibrated
                 );
             }
-            SmartDashboard.putNumber(i + "Theta", NetworkTableWrapper.getData(i, "theta") * 180 / Math.PI);
+            SmartDashboard.putNumber(i + "Theta", NetworkTableWrapper.getDouble(i, "theta") * 180 / Math.PI);
         }
 
         // field

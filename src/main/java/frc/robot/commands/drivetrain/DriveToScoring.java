@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DriveTrain;
 
-public class RunAutoPath extends CommandBase {
+public class DriveToScoring extends CommandBase {
     DriveTrain driveTrain;
-    public RunAutoPath(DriveTrain driveTrain) {
+    public DriveToScoring(DriveTrain driveTrain) {
         this.driveTrain = driveTrain;
         addRequirements(driveTrain);
     }

@@ -26,16 +26,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.AcquireDoubleSub;
-import frc.robot.commands.FoldIn;
-import frc.robot.commands.placeBottom;
-import frc.robot.commands.placeMidCone;
-import frc.robot.commands.placeTopCone;
 import frc.robot.commands.Auto.PlaceTopDriveBackwards;
+import frc.robot.commands.Elevator.AcquireDoubleSub;
+import frc.robot.commands.Elevator.FoldIn;
+import frc.robot.commands.Elevator.PlaceBottom;
+import frc.robot.commands.Elevator.PlaceMid;
+import frc.robot.commands.Elevator.PlaceTop;
 import frc.robot.commands.Elevator.ResetArmEncoders;
 import frc.robot.commands.Elevator.SetArmPosition;
 import frc.robot.commands.drivetrain.JoystickDrive;
-import frc.robot.commands.drivetrain.RunAutoPath;
+import frc.robot.commands.drivetrain.DriveToScoring;
 import frc.robot.commands.drivetrain.TestModule;
 import frc.robot.commands.grabber.Grab;
 import frc.robot.commands.grabber.Ungrab;
@@ -113,9 +113,9 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    new JoystickButton(controller, XboxController.Button.kY.value).onTrue(new placeTopCone(elevator, grabber));
-    new JoystickButton(controller, XboxController.Button.kX.value).onTrue(new placeMidCone(elevator, grabber));
-    new JoystickButton(controller, XboxController.Button.kA.value).onTrue(new placeBottom(elevator, grabber));
+    new JoystickButton(controller, XboxController.Button.kY.value).onTrue(new PlaceTop(elevator, grabber));
+    new JoystickButton(controller, XboxController.Button.kX.value).onTrue(new PlaceMid(elevator, grabber));
+    new JoystickButton(controller, XboxController.Button.kA.value).onTrue(new PlaceBottom(elevator, grabber));
     new JoystickButton(controller, XboxController.Button.kB.value).onTrue(new AcquireDoubleSub(elevator));
     new JoystickButton(controller, XboxController.Button.kStart.value).onTrue(new FoldIn(elevator));
 
@@ -125,7 +125,7 @@ public class RobotContainer {
       .whileTrue(new Ungrab(grabber));
 
     new JoystickButton(driver, XboxController.Button.kA.value)
-      .whileTrue(new RunAutoPath(driveTrain));
+      .whileTrue(new DriveToScoring(driveTrain));
 
       System.out.println(driveTrain.getPose().getRotation().getDegrees());
 

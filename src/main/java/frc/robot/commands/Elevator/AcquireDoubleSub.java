@@ -1,7 +1,6 @@
-package frc.robot.commands;
+package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.Elevator.SetArmPosition;
 import frc.robot.commands.grabber.Grab;
 import frc.robot.commands.grabber.Ungrab;
 import frc.robot.subsystems.DriveTrain;
