@@ -82,9 +82,9 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
             backLeft.getPosition(),
             backRight.getPosition()
         },
-        new Pose2d(1.6, 4.4, Rotation2d.fromRadians(2.8)), // needs to be set based on auto path
-        VecBuilder.fill(1, 1, 1),
-        VecBuilder.fill(0.1, 0.1, 0.1)
+        new Pose2d(0, 0, Rotation2d.fromRadians(0)), // needs to be set based on auto path
+        VecBuilder.fill(0.1, 0.1, 0.1),
+        VecBuilder.fill(0.5, 0.5, 0.5)
     );
 
     private Field2d field = new Field2d();
@@ -115,16 +115,19 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         );
         
         // update with visions data from these cameras ids:
-        for (int i : new int[]{0, 2, 4}) if (NetworkTableWrapper.getData(i, "ntags") != 0) {
-            poseEstimator.addVisionMeasurement(
-                new Pose2d(
-                    NetworkTableWrapper.getData(i, "rx"),
-                    NetworkTableWrapper.getData(i, "ry"),
-                    Rotation2d.fromRadians(NetworkTableWrapper.getData(i, "theta"))
-                ),
-                Timer.getFPGATimestamp(), // needs to be tested and calibrated
-                VecBuilder.fill(0.05, 0.05, 0.05) // needs to be calibrated
-            );
+        for (int i : new int[]{0, 2, 4}) {
+            if (NetworkTableWrapper.getData(i, "ntags") != 0) {
+                poseEstimator.addVisionMeasurement(
+                    new Pose2d(
+                        NetworkTableWrapper.getData(i, "rx"),
+                        NetworkTableWrapper.getData(i, "ry"),
+                        Rotation2d.fromRadians(NetworkTableWrapper.getData(i, "theta"))
+                    ),
+                    Timer.getFPGATimestamp(), // needs to be tested and calibrated
+                    VecBuilder.fill(0.8, 0.8, 0.8) // needs to be calibrated
+                );
+            }
+            SmartDashboard.putNumber(i + "Theta", NetworkTableWrapper.getData(i, "theta") * 180 / Math.PI);
         }
 
         // field
@@ -132,9 +135,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         // SmartDashboard.putData(odoField);
         field.setRobotPose(getPose());
         SmartDashboard.putData(field);
-        SmartDashboard.putNumber("odoY", odometry.getPoseMeters().getY());
-
-        SmartDashboard.putNumber("posex", poseEstimator.getEstimatedPosition().getX());
+        SmartDashboard.putNumber("odoTheta", odoField.getRobotPose().getRotation().getDegrees());
     }
 
     /**

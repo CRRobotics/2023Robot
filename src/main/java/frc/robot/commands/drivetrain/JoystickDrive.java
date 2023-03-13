@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.misc.Constants;
 import frc.robot.misc.SwerveModule;
@@ -66,6 +67,10 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
         double rotation = -MathUtil.applyDeadband(controller.getRightX(), driveDeadBand);
         boolean fieldRelative = false;
 
+        SmartDashboard.putNumber("xspeed", -controller.getLeftY());
+        SmartDashboard.putNumber("ySpeed", -controller.getLeftX());
+        SmartDashboard.putNumber("rotation", -controller.getRightX());
+
         double xSpeedCommanded;
         double ySpeedCommanded;
 
@@ -78,6 +83,7 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
             inputDirection = Math.atan2(ySpeed, xSpeed);
         }
         double inputMagnitude = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
+        SmartDashboard.putNumber("inputmagnitude", inputMagnitude);
 
         // Calculate the direction slew rate based on an estimate of the lateral acceleration
         double directionSlewRate;
@@ -116,6 +122,9 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
         double xSpeedDelivered = xSpeedCommanded * maxSpeed;
         double ySpeedDelivered = ySpeedCommanded * maxSpeed;
         double rotDelivered = currentRotation * maxAngularSpeed;
+        SmartDashboard.putNumber("xSpeedCommanded", xSpeedCommanded);
+        SmartDashboard.putNumber("ySpeedCommanded", ySpeedCommanded);
+        SmartDashboard.putNumber("ground Speed", Math.sqrt(Math.pow(xSpeedDelivered, 2) + Math.pow(ySpeedDelivered, 2)));
 
         SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(
             fieldRelative

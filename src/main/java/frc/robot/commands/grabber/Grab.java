@@ -28,7 +28,7 @@ public class Grab extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        grabber.setSpeed(0);
+        // grabber.setSpeed(0);
     }
 
     @Override

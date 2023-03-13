@@ -12,7 +12,7 @@ public class FoldIn extends SequentialCommandGroup{
     public FoldIn(Elevator elevator){
         addCommands(
             new SetArmPosition(elevator, 0.33, -90, 0).withTimeout(5),
-            new SetArmPosition(elevator, 0.33, -162.999890, -7.498458).withTimeout(5)
+            new SetArmPosition(elevator, 0.1, -162.999890, 10).withTimeout(5)
         );
     }
 }
