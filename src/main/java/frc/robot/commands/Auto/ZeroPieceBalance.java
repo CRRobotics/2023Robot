@@ -12,7 +12,7 @@ public class ZeroPieceBalance extends SequentialCommandGroup {
         addCommands(
             driveTrain.followTrajectoryCommand(
                 PathPlanner.loadPath("1PieceBalance", Constants.Auto.constraints),
-                false
+                true
             ),
             new Balance(driveTrain)
         );

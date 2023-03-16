@@ -15,7 +15,7 @@ public class TwoPieceBalance extends SequentialCommandGroup {
             new TwoPiece(driveTrain, elevator, grabber),
             driveTrain.followTrajectoryCommand(
                 PathPlanner.loadPath("2PieceBalance", Constants.Auto.constraints),
-                false
+                true
             ),
             new Balance(driveTrain)
         );

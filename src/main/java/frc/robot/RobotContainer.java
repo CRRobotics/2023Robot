@@ -4,47 +4,30 @@
 
 package frc.robot;
 
-import java.util.List;
-
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPoint;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Auto.OnePieceBalance;
 import frc.robot.commands.Auto.OnePieceOnePickupBalance;
-import frc.robot.commands.Auto.PlaceTopDriveBackwards;
 import frc.robot.commands.Auto.TwoPiece;
 import frc.robot.commands.Auto.TwoPieceBalance;
 import frc.robot.commands.Auto.ZeroPiece;
 import frc.robot.commands.Auto.ZeroPieceBalance;
 import frc.robot.commands.Elevator.AcquireDoubleSub;
 import frc.robot.commands.Elevator.FoldIn;
+import frc.robot.commands.Elevator.GroundPickup;
 import frc.robot.commands.Elevator.PlaceBottom;
 import frc.robot.commands.Elevator.PlaceMid;
 import frc.robot.commands.Elevator.PlaceTop;
-import frc.robot.commands.Elevator.ResetArmEncoders;
 import frc.robot.commands.Elevator.SetArmPosition;
 import frc.robot.commands.drivetrain.JoystickDrive;
+import frc.robot.commands.drivetrain.Balance;
+import frc.robot.commands.drivetrain.BalanceRoutine;
 import frc.robot.commands.drivetrain.DriveToPiece;
 import frc.robot.commands.drivetrain.DriveToScoring;
-import frc.robot.commands.drivetrain.TestModule;
 import frc.robot.commands.grabber.Grab;
 import frc.robot.commands.grabber.Ungrab;
 import frc.robot.misc.Constants;
@@ -63,6 +46,9 @@ public class RobotContainer {
   XboxController controller = new XboxController(1);
 
   public static SendableChooser<String> autoMode = new SendableChooser<>();
+  public Elevator getElevator(){
+    return elevator;
+  }
 
   static {
     autoMode.setDefaultOption("1PieceBalance", "1PieceBalance");
@@ -85,35 +71,25 @@ public class RobotContainer {
 
     // Configure default commands
     driveTrain.setDefaultCommand(
-        new JoystickDrive(driveTrain));
+      new JoystickDrive(driveTrain));
+
+    SmartDashboard.putNumber("grabber/speed", 0.2);
+    SmartDashboard.putNumber("grabber/current limit", 10);
+    
+    SmartDashboard.putNumber("drivetrain/xP", 0);
+    SmartDashboard.putNumber("drivetrain/xI", 0);
+    SmartDashboard.putNumber("drivetrain/xD", 0);
+    SmartDashboard.putNumber("drivetrain/thetaP", 0);
+    SmartDashboard.putNumber("drivetrain/thetaI", 0);
+    SmartDashboard.putNumber("drivetrain/thetaD", 0);
+
+    SmartDashboard.putNumber("drivetrain/balanceP", 0);
+    SmartDashboard.putNumber("drivetrain/balanceI", 0);
+    SmartDashboard.putNumber("drivetrain/balanceD", 0);
 
     SmartDashboard.putNumber("elevator/elevator setpoint", 0);
-    SmartDashboard.putNumber("elevator/elevator P", 0.003);
-    SmartDashboard.putNumber("elevator/elevator I", 0);
-    SmartDashboard.putNumber("elevator/elevator D", 0);
-    SmartDashboard.putNumber("elevator/kg", 0.03);
-
-    SmartDashboard.putNumber("elbow/elbow setpoint", 0);
-    SmartDashboard.putNumber("elbow/elbow P", 0.04);
-    SmartDashboard.putNumber("elbow/elbow I", 0);
-    SmartDashboard.putNumber("elbow/elbow D", 0);
-
-    SmartDashboard.putNumber("elbow/elbow position", 0);
-    SmartDashboard.putNumber("elbow/elbow voltage", 0);
-    SmartDashboard.putNumber("elbow/kg", 0);
-
-    SmartDashboard.putNumber("wrist/wrist setpoint", 0);
-    SmartDashboard.putNumber("wrist/wrist P", 0.08);
-    SmartDashboard.putNumber("wrist/wrist I", 0);
-    SmartDashboard.putNumber("wrist/wrist D", 0);
-
-    SmartDashboard.putNumber("wrist/wrist position", 0);
-    SmartDashboard.putNumber("wrist/wrist voltage", 0);
-    SmartDashboard.putNumber("wrist/kg", 0.01);
-
-    SmartDashboard.putNumber("grabber/speed", 1);
-    
-
+    SmartDashboard.putNumber("elevator/elbow setpoint", 0);
+    SmartDashboard.putNumber("elevator/arm setpoint", 0);
   }
 
   /**
@@ -132,16 +108,25 @@ public class RobotContainer {
     new JoystickButton(controller, XboxController.Button.kA.value).onTrue(new PlaceBottom(elevator, grabber));
     new JoystickButton(controller, XboxController.Button.kB.value).onTrue(new AcquireDoubleSub(elevator));
     new JoystickButton(controller, XboxController.Button.kStart.value).onTrue(new FoldIn(elevator));
+    new JoystickButton(controller, XboxController.Button.kBack.value).onTrue(new GroundPickup(elevator, grabber));
+    new JoystickButton(controller, XboxController.Button.kLeftStick.value).onTrue(new SetArmPosition(elevator,
+      SmartDashboard.getNumber("elevator/elevator setpoint", 0),
+      SmartDashboard.getNumber("elevator/elevator setpoint", 0),
+      SmartDashboard.getNumber("elevator/elevator setpoint", 0)));
 
     new JoystickButton(controller, XboxController.Button.kLeftBumper.value)
       .whileTrue(new Grab(grabber));
     new JoystickButton(controller, XboxController.Button.kRightBumper.value)
       .whileTrue(new Ungrab(grabber));
+    new JoystickButton(controller, XboxController.Button.kRightStick.value)
+      .onTrue(new InstantCommand(() -> {Robot.togglePieceType();}));
 
     new JoystickButton(driver, XboxController.Button.kA.value)
       .whileTrue(new DriveToScoring(driveTrain));
     new JoystickButton(driver, XboxController.Button.kB.value)
       .whileTrue(new DriveToPiece(driveTrain));
+    new JoystickButton(driver, XboxController.Button.kX.value)
+      .whileTrue(new BalanceRoutine(driveTrain));
   }
 
   /**

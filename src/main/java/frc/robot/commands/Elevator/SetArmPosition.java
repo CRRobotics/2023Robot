@@ -2,7 +2,6 @@ package frc.robot.commands.Elevator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.misc.Constants;
@@ -44,7 +43,15 @@ public class SetArmPosition extends CommandBase implements Constants.Elevator {
     }
 
     public SetArmPosition(Elevator elevator, double elevatorPosition, double elbowPosition, double wristPosition) {
-        this(elevator, elevatorPosition, 0, elbowPosition, 0, wristPosition, 0);
+    // this(elevator, elevatorPosition, 0, elbowPosition, 0, wristPosition, 0);
+    this.elevator = elevator;
+    this.elevatorPosition = elevatorPosition;
+    this.elbowPosition = elbowPosition * (Math.PI / 180);
+    this.wristPosition = wristPosition * (Math.PI / 180);
+    this.elevatorVelocity = 0;
+    this.elbowVelocity = 0;
+    this.wristVelocity = 0;
+
     }
 
     @Override
@@ -52,25 +59,24 @@ public class SetArmPosition extends CommandBase implements Constants.Elevator {
         startTime = Timer.getFPGATimestamp();
         elevator.setPosition();
         PieceType pieceType = Robot.getPieceType();
-        double typeModifier;
-        if (pieceType == PieceType.Cone) typeModifier = 30; // degrees to change if we're picking up a cone
-        else typeModifier = 0;
+        double coneModifier;
+        // if (pieceType == PieceType.Cone) coneModifier = 30; // degrees to change if we're picking up a cone
+        // else coneModifier = 0;
+        coneModifier = 0;
 
         elevatorGoal = new TrapezoidProfile.State(elevatorPosition, elevatorVelocity);
         elbowGoal = new TrapezoidProfile.State(elbowPosition, elbowVelocity);
-        wristGoal = new TrapezoidProfile.State(wristPosition + typeModifier, wristVelocity);
+        wristGoal = new TrapezoidProfile.State(wristPosition + coneModifier, wristVelocity);
 
-        elevator.getElbowMotor().config_kP(0, SmartDashboard.getNumber("elbow/elbow P", 0));
-        elevator.getElbowMotor().config_kI(0, SmartDashboard.getNumber("elbow/elbow I", 0));
-        elevator.getElbowMotor().config_kD(0, SmartDashboard.getNumber("elbow/elbow D", 0));
-
-        elevator.getWristMotor().config_kP(0, SmartDashboard.getNumber("wrist/wrist P", 0.08));
-        elevator.getWristMotor().config_kI(0, SmartDashboard.getNumber("wrist/wrist I", 0));
-        elevator.getWristMotor() .config_kD(0, SmartDashboard.getNumber("wrist/wrist D", 0));
+        elevator.getElbowMotor().config_kP(0, elbowMotorP);
+        elevator.getWristMotor().config_kP(0, wristMotorP);
 
         elevatorSetpoint = new TrapezoidProfile.State(elevator.getElevatorPosition(), elevator.getElevatorVelocity());
         elbowSetpoint = new TrapezoidProfile.State(elevator.getElbowPosition(), elevator.getElbowVelocity());
         wristSetpoint = new TrapezoidProfile.State(elevator.getWristPosition(), elevator.getWristVelocity());
+        
+        System.out.println(elbowGoal.position);
+        System.out.println(elevator.getElbowPosition());
         
         elevatorProfile = new TrapezoidProfile(
             new TrapezoidProfile.Constraints(elevatorMaxVelocity, elevatorMaxAcceleration), elevatorGoal, elevatorSetpoint);

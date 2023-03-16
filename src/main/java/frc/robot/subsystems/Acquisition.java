@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.robot.misc.Constants;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Acquisition extends SubsystemBase implements Constants.Acquisition {
     // private VictorSPX lowerMotor;

@@ -13,7 +13,7 @@ public class ZeroPiece extends SequentialCommandGroup {
         addCommands(
             driveTrain.followTrajectoryCommand(PathPlanner.loadPath(
                 "0Piece", Constants.Auto.constraints),
-                false
+                true
             )
         );
     }

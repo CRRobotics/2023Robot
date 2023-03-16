@@ -6,32 +6,23 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.misc.Constants;
 import frc.robot.misc.NetworkTableWrapper;
 import frc.robot.misc.SwerveModule;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -117,6 +108,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         // update with visions data from these cameras ids:
         for (String i : new String[]{"0", "2", "4"}) {
             if (NetworkTableWrapper.getDouble(i, "ntags") != 0) {
+                double distance = getPose().getTranslation().getDistance(new Translation2d(NetworkTableWrapper.getDouble(i, "rx"), NetworkTableWrapper.getDouble(i, "ry")));
                 poseEstimator.addVisionMeasurement(
                     new Pose2d(
                         NetworkTableWrapper.getDouble(i, "rx"),
@@ -124,7 +116,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
                         Rotation2d.fromRadians(NetworkTableWrapper.getDouble(i, "theta"))
                     ),
                     Timer.getFPGATimestamp(), // needs to be tested and calibrated
-                    VecBuilder.fill(0.8, 0.8, 0.8) // needs to be calibrated
+                    VecBuilder.fill(0.8 * distance, 0.8 * distance, 0.8 * distance) // needs to be calibrated
                 );
             }
             SmartDashboard.putNumber(i + "Theta", NetworkTableWrapper.getDouble(i, "theta") * 180 / Math.PI);
@@ -237,24 +229,30 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         return gyro.getRate() * (Constants.Drive.gyroReversed ? -1.0 : 1.0);
     }
 
-    public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+    public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean mirrorPath) {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> {
-                       // Reset odometry for the first path you run during auto
-                       if(isFirstPath){
-                           resetOdometry(traj.getInitialHolonomicPose());
-                       }
-                     }),
                      new PPSwerveControllerCommand(
-                         traj, 
-                         this::getPose, // Pose supplier
-                         driveKinematics, // SwerveDriveKinematics
-                         new PIDController(0, 0, 0), // X PID controller
-                         new PIDController(0, 0, 0), // Y PID controller, probably the same as X controller
-                         new PIDController(0, 0, 0), // Rotation PID controller
-                         this::setModuleStates, // Module states consumer
-                         true, // mirrors path based on alliance
-                         this // Requires this drive subsystem
+                        traj, 
+                        this::getPose, // Pose supplier
+                        driveKinematics, // SwerveDriveKinematics
+                        new PIDController(
+                            SmartDashboard.getNumber("drivetrain/xP", 0),
+                            SmartDashboard.getNumber("drivetrain/xI", 0),
+                            SmartDashboard.getNumber("drivetrain/xD", 0)
+                        ), // X PID controller
+                        new PIDController(
+                            SmartDashboard.getNumber("drivetrain/xP", 0),
+                            SmartDashboard.getNumber("drivetrain/xI", 0),
+                            SmartDashboard.getNumber("drivetrain/xD", 0)
+                        ), // Y PID controller, probably the same as X controller
+                        new PIDController(
+                            SmartDashboard.getNumber("drivetrain/thetaP", 0),
+                            SmartDashboard.getNumber("drivetrain/thetaI", 0),
+                            SmartDashboard.getNumber("drivetrain/thetaD", 0)
+                        ), // Rotation PID controller
+                        this::setModuleStates, // Module states consumer
+                        mirrorPath, // mirrors path based on alliance
+                        this // Requires this drive subsystem
                      )
         );
     }

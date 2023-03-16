@@ -25,3 +25,27 @@ Note:
 - singularity filtering
 
 Combined equation:
+
+Cone:
+Medium:
+    Elevator: 0.32
+    Elbow: -56.1
+    Wrist: -5.2
+
+High:
+    Elevator: 0.78
+    Elbow: -18.4
+    Wrist: -6.1
+
+Cube:
+High:
+    Elevator: 0.77
+    Elbow: 0
+    Wrist: 29
+Mid:
+    Elevator: 0
+    Elbow: -33
+    Wrist: 9.3
+Bottom: 0
+Elbow: -69
+Wrist: -53

@@ -6,31 +6,22 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.misc.Constants;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
-
-import javax.print.CancelablePrintJob;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 /**
  * Contains the arm and elevator assemblies
@@ -78,7 +69,7 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         elbowMotor.setNeutralMode(NeutralMode.Brake);
         elbowConfig = new TalonFXConfiguration();
         elbowConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
-        elbowMotor.setSelectedSensorPosition(-163 * elbowTicksPerDegree);
+        elbowMotor.setSelectedSensorPosition(elbowOffset * elbowTicksPerDegree);
         elbowMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
             true, elbowMotorCurrentLimit, elbowMotorCurrentLimit, 0));
         elbowConfig.slot0.allowableClosedloopError = 0;
@@ -92,7 +83,7 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         wristMotor.setNeutralMode(NeutralMode.Brake);
         wristConfig = new TalonFXConfiguration();
         wristConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice();
-        wristMotor.setSelectedSensorPosition(-7.5 * wristTicksPerDegree);
+        wristMotor.setSelectedSensorPosition(wristOffset * wristTicksPerDegree);
         wristMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
             true, wristMotorCurrentLimit, wristMotorCurrentLimit, 0));
         wristConfig.slot0.allowableClosedloopError = 0;

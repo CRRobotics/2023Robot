@@ -1,7 +1,6 @@
 package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Elevator;
 
 public class ResetArmEncoders extends CommandBase {

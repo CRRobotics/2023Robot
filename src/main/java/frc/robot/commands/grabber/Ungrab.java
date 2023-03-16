@@ -19,7 +19,7 @@ public class Ungrab extends CommandBase{
 
     @Override
     public void initialize() {
-        grabber.setCurrentLimit(10);
+        // grabber.setCurrentLimit(10);
     }
 
     @Override

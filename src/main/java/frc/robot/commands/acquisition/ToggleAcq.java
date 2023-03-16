@@ -1,6 +1,5 @@
 package frc.robot.commands.acquisition;
 
-import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.Acquisition;

@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public interface Constants {
     interface Indexer {
@@ -108,7 +107,7 @@ public interface Constants {
         double balanceP = 0;
         double balanceI = 0;
         double balanceD = 0;
-        double balanceTolerance = 0;
+        double balanceTolerance = 5;
     }
 
     interface Elevator {
@@ -126,7 +125,7 @@ public interface Constants {
         double elevatorMaxAcceleration = 1;
 
         int elbowMotorID = 16;
-        double elbowMotorP = 0.004;
+        double elbowMotorP = 0.04;
         double elbowMotorI = 0;
         double elbowMotorD = 0;
         double elbowKG = 0.01;
@@ -134,21 +133,23 @@ public interface Constants {
         double elbowMotorVoltageLimit = 6;
         double elbowTicksPerDegree = 1422.639;
         double elbowTicksPerRadian = elbowTicksPerDegree * (180 / Math.PI);
+        double elbowOffset = -158.7; // degrees
 
-        double elbowMaxVelocity = 15;
+        double elbowMaxVelocity = 5;
         double elbowMaxAcceleration = 15;
 
         int wristMotorID = 17;
-        double wristMotorP = 0.008;
+        double wristMotorP = 0.08;
         double wristMotorI = 0;
         double wristMotorD = 0;
-        double wristKG = 0.01;
+        double wristKG = 0.015;
         double wristMotorCurrentLimit = 15;
         double wristMotorVoltageLimit = 6;
         double wristTicksPerDegree = 189.639;
         double wristTicksPerRadian = wristTicksPerDegree * (180 / Math.PI);
-        double wristMaxVelocity = 15;
+        double wristMaxVelocity = 5;
         double wristMaxAcceleration = 15;
+        double wristOffset = 20.3; // degrees
 
         double highElevator = 0;
         double highElbow = 0;

@@ -19,7 +19,6 @@ public class Grab extends CommandBase {
 
     @Override
     public void initialize() {
-        grabber.setCurrentLimit(10);
     }
 
     @Override
@@ -34,7 +33,7 @@ public class Grab extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        // grabber.setSpeed(0);
+        grabber.setSpeed(0);
     }
 
     @Override

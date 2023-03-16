@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.misc.Constants;
 
@@ -13,7 +12,6 @@ public class Indexer extends SubsystemBase {
     private final PIDController indexerPID;
     //The current angle of the
     private double currentAngle;
-    private XboxController controller;
 
     /**
      * Creates an indexer object given a motor id as an int.
@@ -23,7 +21,6 @@ public class Indexer extends SubsystemBase {
         indexerMotor = new VictorSPX(indexerMotorID);
         indexerMotor.setNeutralMode(NeutralMode.Brake);
         indexerMotor.setInverted(true);
-        controller = new XboxController(0);
         indexerPID = new PIDController(Constants.Indexer.indexerP, Constants.Indexer.indexerI, Constants.Indexer.indexerD);
     }
 

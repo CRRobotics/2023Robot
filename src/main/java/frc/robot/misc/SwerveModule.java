@@ -1,7 +1,6 @@
 package frc.robot.misc;
 
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;

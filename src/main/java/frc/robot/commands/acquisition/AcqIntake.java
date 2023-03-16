@@ -1,12 +1,8 @@
 package frc.robot.commands.acquisition;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.Acquisition;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
  /**
   * Runs the acquisition inward

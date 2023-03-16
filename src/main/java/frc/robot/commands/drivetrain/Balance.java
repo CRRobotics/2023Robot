@@ -12,7 +12,10 @@ public class Balance extends CommandBase implements Constants.Auto {
     public Balance(DriveTrain driveTrain) {
         this.driveTrain = driveTrain;
         addRequirements(driveTrain);
+    }
 
+    @Override
+    public void initialize() {
         pidController = new PIDController(balanceP, balanceI, balanceD);
         pidController.setTolerance(balanceTolerance);
     }
