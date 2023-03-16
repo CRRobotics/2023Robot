@@ -235,12 +235,20 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         return elevatorEncoder.getDistance() / elevatorTicksPerMeter;
     }
 
+    public double getElevatorVelocity() {
+        return elevatorEncoder.getRate() / elevatorTicksPerMeter;
+    }
+
     /**
      * elbow position in radians
      * @return position in radians
      */
     public double getElbowPosition() {
         return elbowMotor.getSelectedSensorPosition() / elbowTicksPerRadian;
+    }
+
+    public double getElbowVelocity() {
+        return elbowMotor.getSelectedSensorVelocity() / elbowTicksPerRadian / 10;
     }
 
     /**
@@ -250,6 +258,11 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     public double getWristPosition() {
         return wristMotor.getSelectedSensorPosition() / wristTicksPerRadian;
     }
+
+    public double getWristVelocity() {
+        return wristMotor.getSelectedSensorVelocity() / elbowTicksPerRadian / 10;
+    }
+
     public void setArmCoast(){
         elbowMotor.setNeutralMode(NeutralMode.Coast);
         wristMotor.setNeutralMode(NeutralMode.Coast);
