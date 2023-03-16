@@ -53,11 +53,8 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     XboxController controller = new XboxController(0);
 
     private TrapezoidProfile.State elevatorSetpoint;
-    private TrapezoidProfile.State elevatorGoal;
     private TrapezoidProfile.State elbowSetpoint;
-    private TrapezoidProfile.State elbowGoal;
     private TrapezoidProfile.State wristSetpoint;
-    private TrapezoidProfile.State wristGoal;
 
     /**
      * Constructs an <code>Elevator</code> using motor ID's in <code>Contants.java</code>
@@ -147,10 +144,9 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
      */
     public void setElevatorPosition(double elevatorPos)
     {
-        elevatorPID.setP(SmartDashboard.getNumber("elevator/elevator P", 0));
+        elevatorPID.setP(elevatorP);
         elevatorPID.setSetpoint(elevatorPos * elevatorTicksPerMeter);
-        elevatorMotor.set(SmartDashboard.getNumber("elevator/kg", 0.03)
-            + elevatorPID.calculate(getElevatorPosition() * elevatorTicksPerMeter));
+        elevatorMotor.set(elevatorKG + elevatorPID.calculate(getElevatorPosition() * elevatorTicksPerMeter));
     }
 
     
@@ -160,19 +156,13 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     *@param wristPos joint position for wrist
      */
     public void setArmPosition(double elbowPos, double wristPos){
-        
-
         elbowMotor.set(TalonFXControlMode.Position,
-            elbowPos * elbowTicksPerRadian,
-            DemandType.ArbitraryFeedForward,
-            SmartDashboard.getNumber("elbow/kg", 0.01)
-            * Math.cos(elbowMotor.getSelectedSensorPosition() / (elbowTicksPerRadian)));
+            elbowPos * elbowTicksPerRadian, DemandType.ArbitraryFeedForward,
+            elbowKG * Math.cos(elbowMotor.getSelectedSensorPosition() / (elbowTicksPerRadian)));
 
         wristMotor.set(TalonFXControlMode.Position,
-            wristPos * wristTicksPerRadian,
-            DemandType.ArbitraryFeedForward,
-            SmartDashboard.getNumber("wrist/kg", 0.01)
-            * Math.cos(wristMotor.getSelectedSensorPosition() / (wristTicksPerRadian)));
+            wristPos * wristTicksPerRadian, DemandType.ArbitraryFeedForward,
+            wristKG * Math.cos(wristMotor.getSelectedSensorPosition() / (wristTicksPerRadian)));
     }
 
     public void stopArmMotors() {
@@ -263,7 +253,5 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
     public void setArmCoast(){
         elbowMotor.setNeutralMode(NeutralMode.Coast);
         wristMotor.setNeutralMode(NeutralMode.Coast);
-    }
-
-    
+    }    
 }

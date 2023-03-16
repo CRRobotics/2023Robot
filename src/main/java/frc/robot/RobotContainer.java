@@ -21,12 +21,19 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.Auto.OnePieceBalance;
+import frc.robot.commands.Auto.OnePieceOnePickupBalance;
 import frc.robot.commands.Auto.PlaceTopDriveBackwards;
+import frc.robot.commands.Auto.TwoPiece;
+import frc.robot.commands.Auto.TwoPieceBalance;
+import frc.robot.commands.Auto.ZeroPiece;
+import frc.robot.commands.Auto.ZeroPieceBalance;
 import frc.robot.commands.Elevator.AcquireDoubleSub;
 import frc.robot.commands.Elevator.FoldIn;
 import frc.robot.commands.Elevator.PlaceBottom;
@@ -35,6 +42,7 @@ import frc.robot.commands.Elevator.PlaceTop;
 import frc.robot.commands.Elevator.ResetArmEncoders;
 import frc.robot.commands.Elevator.SetArmPosition;
 import frc.robot.commands.drivetrain.JoystickDrive;
+import frc.robot.commands.drivetrain.DriveToPiece;
 import frc.robot.commands.drivetrain.DriveToScoring;
 import frc.robot.commands.drivetrain.TestModule;
 import frc.robot.commands.grabber.Grab;
@@ -49,17 +57,23 @@ public class RobotContainer {
   private final DriveTrain driveTrain = new DriveTrain();
   private final Elevator elevator = new Elevator();
   private final Grabber grabber = new Grabber();
-  XboxController controller = new XboxController(1);
 
   // The driver's controller
   XboxController driver = new XboxController(Constants.Controller.driveControllerPort);
+  XboxController controller = new XboxController(1);
 
-  // public DriveTrain getDriveTrain() {
-  //     return driveTrain;
-  // }
+  public static SendableChooser<String> autoMode = new SendableChooser<>();
 
-  public Elevator getElevator(){
-    return elevator;
+  static {
+    autoMode.setDefaultOption("1PieceBalance", "1PieceBalance");
+    autoMode.addOption("OnePiece", "OnePiece");
+    autoMode.addOption("OnePieceBalance", "OnePieceBalance");
+    autoMode.addOption("OnePieceOnePickupBalance", "OnePieceOnePickupBalance");
+    autoMode.addOption("TwoPiece", "TwoPiece");
+    autoMode.addOption("TwoPieceBalance", "TwoPieceBalance");
+    autoMode.addOption("ZeroPiece", "ZeroPiece");
+    autoMode.addOption("ZeroPieceBalance", "ZeroPieceBalance");
+    SmartDashboard.putData("Auto Mode", autoMode);
   }
 
   /**
@@ -126,15 +140,8 @@ public class RobotContainer {
 
     new JoystickButton(driver, XboxController.Button.kA.value)
       .whileTrue(new DriveToScoring(driveTrain));
-
-      System.out.println(driveTrain.getPose().getRotation().getDegrees());
-
-    // new JoystickButton(driver, XboxController.Button.kA.value)
-    // .whileTrue(driveTrain.followTrajectoryCommand(PathPlanner.generatePath(
-    // new PathConstraints(1, 1),
-    // new PathPoint(new Translation2d(0,0), Rotation2d.fromDegrees(45), Rotation2d.fromDegrees(0)),
-    // new PathPoint(new Translation2d(1,1), Rotation2d.fromDegrees(45), Rotation2d.fromDegrees(45))),
-    // true));
+    new JoystickButton(driver, XboxController.Button.kB.value)
+      .whileTrue(new DriveToPiece(driveTrain));
   }
 
   /**
@@ -144,6 +151,30 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Create config for trajectory
-    return new PlaceTopDriveBackwards(elevator, grabber, driveTrain);
+    Command auto;
+    switch (autoMode.getSelected()) {
+      default:
+        auto = new OnePieceBalance(driveTrain, elevator, grabber);
+        break;
+      case "OnePiece":
+        auto = new OnePieceBalance(driveTrain, elevator, grabber);
+        break;
+      case "OnePieceOnePickupBalance":
+        auto = new OnePieceOnePickupBalance(driveTrain, elevator, grabber);
+        break;
+      case "TwoPiece":
+        auto = new TwoPiece(driveTrain, elevator, grabber);
+        break;
+      case "TwoPieceBalance":
+        auto = new TwoPieceBalance(driveTrain, elevator, grabber);
+        break;
+      case "ZeroPiece":
+        auto = new ZeroPiece(driveTrain, elevator, grabber);
+        break;
+      case "ZeroPieceBalance":
+        auto = new ZeroPieceBalance(driveTrain);
+        break;
+    }
+    return auto;
   }
 }

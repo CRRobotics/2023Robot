@@ -74,17 +74,17 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     
     // Kalman filter for tracking robot pose
     SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
-        Constants.Drive.driveKinematics,
-        Rotation2d.fromDegrees(gyro.getAngle()),
-        new SwerveModulePosition[] {
+        Constants.Drive.driveKinematics, // kinematics
+        Rotation2d.fromDegrees(gyro.getAngle()), // initial angle
+        new SwerveModulePosition[] { // initial module positions
             frontLeft.getPosition(),
             frontRight.getPosition(),
             backLeft.getPosition(),
             backRight.getPosition()
         },
-        new Pose2d(0, 0, Rotation2d.fromRadians(0)), // needs to be set based on auto path
-        VecBuilder.fill(0.1, 0.1, 0.1),
-        VecBuilder.fill(0.5, 0.5, 0.5)
+        new Pose2d(0, 0, Rotation2d.fromRadians(0)), // initial pose
+        VecBuilder.fill(0.1, 0.1, 0.1), // odometry standard deviation for x, y, theta
+        VecBuilder.fill(0.5, 0.5, 0.5) // visions standard deviation for x, y, theta
     );
 
     private Field2d field = new Field2d();
@@ -189,6 +189,15 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         backRight.setDesiredState(desiredStates[3]);
     }
 
+    public void setMotorSpeeds(double speed) {
+        setModuleStates(new SwerveModuleState[]{
+            new SwerveModuleState(speed, new Rotation2d(0)),
+            new SwerveModuleState(speed, new Rotation2d(0)),
+            new SwerveModuleState(speed, new Rotation2d(0)),
+            new SwerveModuleState(speed, new Rotation2d(0))
+        });
+    }
+
     /** Resets the drive encoders to currently read a position of 0. */
     public void resetEncoders() {
         frontLeft.resetEncoders();
@@ -209,6 +218,14 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
      */
     public double getHeading() {
         return poseEstimator.getEstimatedPosition().getRotation().getDegrees();
+    }
+
+    public double getPitch() {
+        return gyro.getPitch();
+    }
+
+    public double getRoll() {
+        return gyro.getRoll();
     }
 
     /**
@@ -232,11 +249,11 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
                          traj, 
                          this::getPose, // Pose supplier
                          driveKinematics, // SwerveDriveKinematics
-                         new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-                         new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
-                         new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                         new PIDController(0, 0, 0), // X PID controller
+                         new PIDController(0, 0, 0), // Y PID controller, probably the same as X controller
+                         new PIDController(0, 0, 0), // Rotation PID controller
                          this::setModuleStates, // Module states consumer
-                         true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+                         true, // mirrors path based on alliance
                          this // Requires this drive subsystem
                      )
         );

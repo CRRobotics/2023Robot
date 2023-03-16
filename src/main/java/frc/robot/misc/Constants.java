@@ -1,5 +1,6 @@
 package frc.robot.misc;
 
+import com.pathplanner.lib.PathConstraints;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -95,7 +96,8 @@ public interface Constants {
 
     interface Auto {
         double maxSpeed = 3; // meters per second
-        double maxAcceleration = 3; // meters per second squared
+        double maxAcceleration = 4; // meters per second squared
+        PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration);
         double maxAngularSpeed = Math.PI; // radians per second
         double maxAngularAcceleration = Math.PI; // radians per second squared
         double thetaP = 1; // pids for auto
@@ -103,15 +105,20 @@ public interface Constants {
         double yP = 1;
         TrapezoidProfile.Constraints thetaPIDConstraints = new TrapezoidProfile.Constraints(
             maxAngularSpeed, maxAngularAcceleration);
+        double balanceP = 0;
+        double balanceI = 0;
+        double balanceD = 0;
+        double balanceTolerance = 0;
     }
 
     interface Elevator {
         double allowableAngleError = 0.035;
         double allowableElevatorError = 0.02;
         int elevatorMotorID = 62;
-        double elevatorP = 0.001;
+        double elevatorP = 0.003;
         double elevatorI = 0;
         double elevatorD = 0;
+        double elevatorKG = 0.03;
         double elevatorTicksPerMeter = 13434.639;
         int elevatorCurrentLimit = 40;
         double elevatorCalibrationSpeed = 0.01;
@@ -119,9 +126,10 @@ public interface Constants {
         double elevatorMaxAcceleration = 1;
 
         int elbowMotorID = 16;
-        double elbowMotorP = 0.005;
+        double elbowMotorP = 0.004;
         double elbowMotorI = 0;
         double elbowMotorD = 0;
+        double elbowKG = 0.01;
         double elbowMotorCurrentLimit = 15;
         double elbowMotorVoltageLimit = 6;
         double elbowTicksPerDegree = 1422.639;
@@ -131,9 +139,10 @@ public interface Constants {
         double elbowMaxAcceleration = 15;
 
         int wristMotorID = 17;
-        double wristMotorP = 0.005;
+        double wristMotorP = 0.008;
         double wristMotorI = 0;
         double wristMotorD = 0;
+        double wristKG = 0.01;
         double wristMotorCurrentLimit = 15;
         double wristMotorVoltageLimit = 6;
         double wristTicksPerDegree = 189.639;
