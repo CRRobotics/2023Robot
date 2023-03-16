@@ -73,7 +73,7 @@ public interface Constants {
                 new Translation2d(wheelBase / 2, -trackWidth / 2),
                 new Translation2d(-wheelBase / 2, trackWidth / 2),
                 new Translation2d(-wheelBase / 2, -trackWidth / 2));//Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
-        double maxSpeed = 4.8; // meters per second
+        double maxSpeed = 3; // meters per second
         double maxAngularSpeed = 2 * Math.PI; // radians per second;
         boolean gyroReversed = true; //Determines whether the gyro is reversed (I think)
 
@@ -111,18 +111,18 @@ public interface Constants {
     }
 
     interface Elevator {
-        double allowableAngleError = 0.035;
-        double allowableElevatorError = 0.02;
+        double allowableAngleError = 0.07;
+        double allowableElevatorError = 0.04;
         int elevatorMotorID = 62;
         double elevatorP = 0.003;
         double elevatorI = 0;
         double elevatorD = 0;
         double elevatorKG = 0.03;
         double elevatorTicksPerMeter = 13434.639;
-        int elevatorCurrentLimit = 40;
+        int elevatorCurrentLimit = 15;
         double elevatorCalibrationSpeed = 0.01;
-        double elevatorMaxVelocity = 1;
-        double elevatorMaxAcceleration = 1;
+        double elevatorMaxVelocity = 0.6;
+        double elevatorMaxAcceleration = 0.6;
 
         int elbowMotorID = 16;
         double elbowMotorP = 0.04;
@@ -133,10 +133,11 @@ public interface Constants {
         double elbowMotorVoltageLimit = 6;
         double elbowTicksPerDegree = 1422.639;
         double elbowTicksPerRadian = elbowTicksPerDegree * (180 / Math.PI);
-        double elbowOffset = -158.7; // degrees
+        double elbowOffset = -161.6; // degrees
+        double elbowCloseToHome = -159;
 
-        double elbowMaxVelocity = 5;
-        double elbowMaxAcceleration = 15;
+        double elbowMaxVelocity = 4;
+        double elbowMaxAcceleration = 4;
 
         int wristMotorID = 17;
         double wristMotorP = 0.08;
@@ -147,9 +148,10 @@ public interface Constants {
         double wristMotorVoltageLimit = 6;
         double wristTicksPerDegree = 189.639;
         double wristTicksPerRadian = wristTicksPerDegree * (180 / Math.PI);
-        double wristMaxVelocity = 5;
-        double wristMaxAcceleration = 15;
+        double wristMaxVelocity = 4;
+        double wristMaxAcceleration = 4;
         double wristOffset = 20.3; // degrees
+        double wristCloseToHome = 22; 
 
         double highElevator = 0;
         double highElbow = 0;

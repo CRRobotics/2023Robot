@@ -41,7 +41,6 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
 
 
     private boolean coneOrCube; //True for cone, false for cube
-    XboxController controller = new XboxController(0);
 
     private TrapezoidProfile.State elevatorSetpoint;
     private TrapezoidProfile.State elbowSetpoint;

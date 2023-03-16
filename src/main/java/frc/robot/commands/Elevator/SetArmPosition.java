@@ -51,29 +51,24 @@ public class SetArmPosition extends CommandBase implements Constants.Elevator {
     this.elevatorVelocity = 0;
     this.elbowVelocity = 0;
     this.wristVelocity = 0;
-
+    addRequirements(elevator);
     }
 
     @Override
     public void initialize() {
         startTime = Timer.getFPGATimestamp();
         elevator.setPosition();
-        PieceType pieceType = Robot.getPieceType();
-        double coneModifier;
-        // if (pieceType == PieceType.Cone) coneModifier = 30; // degrees to change if we're picking up a cone
-        // else coneModifier = 0;
-        coneModifier = 0;
 
         elevatorGoal = new TrapezoidProfile.State(elevatorPosition, elevatorVelocity);
         elbowGoal = new TrapezoidProfile.State(elbowPosition, elbowVelocity);
-        wristGoal = new TrapezoidProfile.State(wristPosition + coneModifier, wristVelocity);
+        wristGoal = new TrapezoidProfile.State(wristPosition, wristVelocity);
 
         elevator.getElbowMotor().config_kP(0, elbowMotorP);
         elevator.getWristMotor().config_kP(0, wristMotorP);
 
-        elevatorSetpoint = new TrapezoidProfile.State(elevator.getElevatorPosition(), elevator.getElevatorVelocity());
-        elbowSetpoint = new TrapezoidProfile.State(elevator.getElbowPosition(), elevator.getElbowVelocity());
-        wristSetpoint = new TrapezoidProfile.State(elevator.getWristPosition(), elevator.getWristVelocity());
+        elevatorSetpoint = new TrapezoidProfile.State(elevator.getElevatorPosition(), 0);
+        elbowSetpoint = new TrapezoidProfile.State(elevator.getElbowPosition(), 0);
+        wristSetpoint = new TrapezoidProfile.State(elevator.getWristPosition(), 0);
         
         System.out.println(elbowGoal.position);
         System.out.println(elevator.getElbowPosition());

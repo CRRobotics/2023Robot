@@ -73,7 +73,7 @@ public class RobotContainer {
     driveTrain.setDefaultCommand(
       new JoystickDrive(driveTrain));
 
-    SmartDashboard.putNumber("grabber/speed", 0.2);
+    SmartDashboard.putNumber("grabber/speed", 0.4);
     SmartDashboard.putNumber("grabber/current limit", 10);
     
     SmartDashboard.putNumber("drivetrain/xP", 0);
@@ -109,10 +109,6 @@ public class RobotContainer {
     new JoystickButton(controller, XboxController.Button.kB.value).onTrue(new AcquireDoubleSub(elevator));
     new JoystickButton(controller, XboxController.Button.kStart.value).onTrue(new FoldIn(elevator));
     new JoystickButton(controller, XboxController.Button.kBack.value).onTrue(new GroundPickup(elevator, grabber));
-    new JoystickButton(controller, XboxController.Button.kLeftStick.value).onTrue(new SetArmPosition(elevator,
-      SmartDashboard.getNumber("elevator/elevator setpoint", 0),
-      SmartDashboard.getNumber("elevator/elevator setpoint", 0),
-      SmartDashboard.getNumber("elevator/elevator setpoint", 0)));
 
     new JoystickButton(controller, XboxController.Button.kLeftBumper.value)
       .whileTrue(new Grab(grabber));
@@ -154,7 +150,7 @@ public class RobotContainer {
         auto = new TwoPieceBalance(driveTrain, elevator, grabber);
         break;
       case "ZeroPiece":
-        auto = new ZeroPiece(driveTrain, elevator, grabber);
+        auto = new ZeroPiece(driveTrain);
         break;
       case "ZeroPieceBalance":
         auto = new ZeroPieceBalance(driveTrain);
