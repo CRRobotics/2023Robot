@@ -6,12 +6,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.DriveTrain;
 
-public class ZeroPiece extends SequentialCommandGroup {
-    public ZeroPiece(DriveTrain driveTrain) {
+public class ZeroPiece2 extends SequentialCommandGroup {
+    public ZeroPiece2(DriveTrain driveTrain) {
         addCommands(
             driveTrain.followTrajectoryCommand(PathPlanner.loadPath(
-                "0Piece", Constants.Auto.constraints, false),
-                true
+                "0Piece Copy", Constants.Auto.constraints, false),
+                false
             )
         );
     }

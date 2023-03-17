@@ -26,9 +26,9 @@ public class Ungrab extends CommandBase{
     public void execute()
     {
         if (Robot.getPieceType() == PieceType.Cone) {
-            grabber.setSpeed(-SmartDashboard.getNumber("grabber/speed", 0));
+            grabber.setSpeed(-1);
         } else if (Robot.getPieceType() == PieceType.Cube) {
-            grabber.setSpeed(SmartDashboard.getNumber("grabber/speed", 0));
+            grabber.setSpeed(1);
         }
     }
 

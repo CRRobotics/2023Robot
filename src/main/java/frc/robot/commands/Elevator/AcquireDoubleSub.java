@@ -7,8 +7,8 @@ import frc.robot.subsystems.Elevator;
 public class AcquireDoubleSub extends SequentialCommandGroup{
     public AcquireDoubleSub(Elevator elevator){
         addCommands(
-            new SetArmPosition(elevator, 0.292, Constants.Elevator.elbowOffset, Constants.Elevator.wristOffset).withTimeout(5),
-            new SetArmPosition(elevator, 0.292, -100, 0).withTimeout(5)
+            new SetArmPosition(elevator, 0.2, Constants.Elevator.elbowSafe, Constants.Elevator.wristSafe).withTimeout(5),
+            new SetArmPosition(elevator, 0.21, -93.5, 28).withTimeout(5)
         );
     }
 }

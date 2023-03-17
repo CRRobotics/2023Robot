@@ -25,7 +25,10 @@ import frc.robot.misc.NetworkTableWrapper;
 import frc.robot.misc.SwerveModule;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 public class DriveTrain extends SubsystemBase implements Constants.Drive {
     // Create MAXSwerveModules
@@ -227,6 +230,54 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
      */
     public double getTurnRate() {
         return gyro.getRate() * (Constants.Drive.gyroReversed ? -1.0 : 1.0);
+    }
+
+    public Command closestScoringCommand() {
+        double[] scoringPositions = {
+            0.46, 1.07, 1.64, 2.2, 2.74, 1.81, 3.87, 4.42, 5.07 // y positions in m of 9 scoring positions
+        };
+        Translation2d robotPosition = getPose().getTranslation(); // current position
+
+        // calculates which position is closest
+        double[] distances = new double[9];
+        int minDistanceIndex = 0;
+        for (int i = 0; i < distances.length; i++) {
+            distances[i] = robotPosition.getDistance(new Translation2d(14.73, scoringPositions[i]));
+            if (distances[i] < distances[minDistanceIndex]) {
+                minDistanceIndex = i;
+            }
+        }
+        SmartDashboard.putNumber("closest scoring position", minDistanceIndex);
+
+        Pose2d targetPose = new Pose2d(new Translation2d(1.78, scoringPositions[minDistanceIndex]), Rotation2d.fromDegrees(0)); // top node on red
+        Translation2d translationDifference = targetPose.getTranslation().minus(robotPosition); // difference between target and current
+        // calculates wheel angle needed to target from x and y components
+        Rotation2d translationRotation = new Rotation2d(translationDifference.getX(), translationDifference.getY());
+        Command driveCommand = followTrajectoryCommand(PathPlanner.generatePath(
+            new PathConstraints(0.25, 0.25),
+            new PathPoint(robotPosition, translationRotation, getPose().getRotation()), // starting pose
+            new PathPoint(targetPose.getTranslation(), translationRotation, targetPose.getRotation())), // ending pose
+            false);
+        return driveCommand;
+    }
+
+    public Command driveToPieceCommand() {
+        double[] pieceData;
+        if (NetworkTableWrapper.getArray("Detector", "Cone")[0] == 1) {
+            pieceData = NetworkTableWrapper.getArray("Detector", "Cone");
+        } else {
+            pieceData = NetworkTableWrapper.getArray("Detector", "Cube");
+        }
+        Translation2d pieceDifference = new Translation2d(pieceData[1], pieceData[3]);
+        Translation2d currentPosition = getPose().getTranslation();
+        Translation2d targetPosition = currentPosition.plus(pieceDifference.rotateBy(currentPosition.getAngle())); // bruh this won't work
+        Rotation2d translationRotation = new Rotation2d(pieceDifference.getX(), pieceDifference.getY());
+        Command driveCommand = followTrajectoryCommand(PathPlanner.generatePath(
+            Constants.Auto.constraints,
+            new PathPoint(currentPosition, translationRotation, getPose().getRotation()),
+            new PathPoint(targetPosition, translationRotation, Rotation2d.fromDegrees(0))),
+            false);
+        return driveCommand;
     }
 
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean mirrorPath) {

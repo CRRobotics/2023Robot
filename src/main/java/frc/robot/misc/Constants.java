@@ -134,7 +134,7 @@ public interface Constants {
         double elbowTicksPerDegree = 1422.639;
         double elbowTicksPerRadian = elbowTicksPerDegree * (180 / Math.PI);
         double elbowOffset = -161.6; // degrees
-        double elbowCloseToHome = -159;
+        double elbowSafe = -159;
 
         double elbowMaxVelocity = 4;
         double elbowMaxAcceleration = 4;
@@ -151,7 +151,7 @@ public interface Constants {
         double wristMaxVelocity = 4;
         double wristMaxAcceleration = 4;
         double wristOffset = 20.3; // degrees
-        double wristCloseToHome = 22; 
+        double wristSafe = 22; 
 
         double highElevator = 0;
         double highElbow = 0;

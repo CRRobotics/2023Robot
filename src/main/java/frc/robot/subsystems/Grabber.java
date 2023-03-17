@@ -21,8 +21,8 @@ public class Grabber extends SubsystemBase implements Constants{
         motor.configFactoryDefault();
         motor.setNeutralMode(NeutralMode.Brake);
         motor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(
-            true, SmartDashboard.getNumber("grabber/current limit", 0),
-            SmartDashboard.getNumber("grabber/current limit", 0), 0));
+            true, 7,
+            7, 0));
     }
 
     /**
