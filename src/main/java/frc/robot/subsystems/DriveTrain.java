@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.misc.Constants;
+import frc.robot.misc.GetGlobalCoordinates;
 import frc.robot.misc.NetworkTableWrapper;
 import frc.robot.misc.SwerveModule;
 
@@ -274,15 +275,21 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         } else {
             pieceData = NetworkTableWrapper.getArray("Detector", "Cube");
         }
-        
         Translation2d differenceRelative = new Translation2d(pieceData[1], pieceData[3]);
         Translation2d currentPosition = getPose().getTranslation();
         Translation2d targetPosition = currentPosition.plus(differenceRelative.rotateBy(currentPosition.getAngle())); // bruh this won't work
         Rotation2d translationRotation = new Rotation2d(differenceRelative.getX(), differenceRelative.getY());
+
+        double xCoordinateOfRobot = getPose().getTranslation().getX();
+        double yCoordinateOfRobot = getPose().getTranslation().getY();
+        double rotationAngleOfRobot = getPose().getRotation().getRadians();
+        GetGlobalCoordinates myGlobalCoordinates = new GetGlobalCoordinates(xCoordinateOfRobot, yCoordinateOfRobot, rotationAngleOfRobot, pieceData);
+        double targetGlobolX = myGlobalCoordinates.globalX;
+        double targetGloboly = myGlobalCoordinates.globalY;
         Command driveCommand = followTrajectoryCommand(PathPlanner.generatePath(
-            Constants.Auto.constraints,
-            new PathPoint(currentPosition, translationRotation, getPose().getRotation()),
-            new PathPoint(targetPosition, translationRotation, Rotation2d.fromDegrees(0))),
+            new PathConstraints(1, 1),
+            new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation()),
+            new PathPoint(new Translation2d(targetGlobolX, targetGloboly), translationRotation, Rotation2d.fromDegrees(0))),
             false);
         return driveCommand;
     }

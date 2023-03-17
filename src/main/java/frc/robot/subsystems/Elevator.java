@@ -258,3 +258,4 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         wristMotor.setNeutralMode(NeutralMode.Coast);
     }    
 }
+
