@@ -13,10 +13,15 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.DriveTrain;
 
-public class DriveToScoring extends SequentialCommandGroup implements Constants.Auto{
+public class DriveToScoring extends CommandBase {
+    DriveTrain driveTrain;
     public DriveToScoring(DriveTrain driveTrain) {
-        addCommands(
-            driveTrain.closestScoringCommand()
-        );
+        this.driveTrain = driveTrain;
+        addRequirements(driveTrain);
+    }
+
+    @Override
+    public void execute() {
+        driveTrain.closestScoringCommand().schedule();
     }
 }

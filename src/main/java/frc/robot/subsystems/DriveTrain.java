@@ -275,22 +275,24 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         } else {
             pieceData = NetworkTableWrapper.getArray("Detector", "Cube");
         }
-        Translation2d differenceRelative = new Translation2d(pieceData[1], pieceData[3]);
         Translation2d currentPosition = getPose().getTranslation();
-        Translation2d targetPosition = currentPosition.plus(differenceRelative.rotateBy(currentPosition.getAngle())); // bruh this won't work
-        Rotation2d translationRotation = new Rotation2d(differenceRelative.getX(), differenceRelative.getY());
 
-        double xCoordinateOfRobot = getPose().getTranslation().getX();
-        double yCoordinateOfRobot = getPose().getTranslation().getY();
+        double xCoordinateOfRobot = currentPosition.getX();
+        double yCoordinateOfRobot = currentPosition.getY();
         double rotationAngleOfRobot = getPose().getRotation().getRadians();
         GetGlobalCoordinates myGlobalCoordinates = new GetGlobalCoordinates(xCoordinateOfRobot, yCoordinateOfRobot, rotationAngleOfRobot, pieceData);
-        double targetGlobolX = myGlobalCoordinates.globalX;
-        double targetGloboly = myGlobalCoordinates.globalY;
+        double targetX = myGlobalCoordinates.globalX;
+        double targetY = myGlobalCoordinates.globalY;
+        Rotation2d translationRotation = new Rotation2d(targetX, targetY);
+        SmartDashboard.putNumber("target X", targetX);
+        SmartDashboard.putNumber("target Y", targetY);
         Command driveCommand = followTrajectoryCommand(PathPlanner.generatePath(
-            new PathConstraints(1, 1),
+            new PathConstraints(0.25, 0.25),
             new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation()),
-            new PathPoint(new Translation2d(targetGlobolX, targetGloboly), translationRotation, Rotation2d.fromDegrees(0))),
-            false);
+            new PathPoint(new Translation2d(xCoordinateOfRobot, targetY), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180))
+            // new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation())
+            ),
+            gyroReversed);
         return driveCommand;
     }
 

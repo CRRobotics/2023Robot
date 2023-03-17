@@ -24,19 +24,7 @@
         "Field": {
           "open": true
         },
-        "elbow": {
-          "open": true
-        },
-        "elevator": {
-          "open": true
-        },
-        "grabber": {
-          "open": true
-        },
-        "open": true,
-        "wrist": {
-          "open": true
-        }
+        "open": true
       }
     },
     "types": {

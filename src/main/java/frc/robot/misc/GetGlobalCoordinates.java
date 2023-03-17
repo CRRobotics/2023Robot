@@ -12,11 +12,11 @@ public class GetGlobalCoordinates {
     //input x and input z are coordinates reletive to bot
     //x axis point to right, z axis point to font
     public  double[] pieceData;
-    public  double inputX = pieceData[1] ;
-    public  double inputZ = pieceData[3] ;
-    public  double xAxisDirection = rotationAngle -pi/2;
+    public  double inputX;
+    public  double inputZ;
+    public  double xAxisDirection;
     //this is the radius of polar
-    public  double targetDistanceToBot = Math.pow(Math.pow(inputX,2)+Math.pow(inputZ,2),1/2);
+    public  double targetDistanceToBot;
     public  double targetToRobotAngle;//target angle reletive to the x-axis of the robot
     public  double globalAngleOfTarget;
     //these are the global coordinates of gamepieces
@@ -24,6 +24,10 @@ public class GetGlobalCoordinates {
     public double globalY;
 
     public GetGlobalCoordinates(double robotX, double robotY, double rotationAngle, double[] pieceData){
+        inputX = pieceData[1];
+        inputZ = pieceData[3];
+        xAxisDirection = rotationAngle - pi/2;
+        targetDistanceToBot = Math.pow(Math.pow(inputX,2)+Math.pow(inputZ,2),1/2);
         this.robotX = robotX;
         this.robotY = robotY;
         this.rotationAngle = rotationAngle;
