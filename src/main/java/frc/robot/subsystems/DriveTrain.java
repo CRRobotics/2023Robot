@@ -3,9 +3,12 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.CoordinateAxis;
+import edu.wpi.first.math.geometry.CoordinateSystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -13,8 +16,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -233,6 +238,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     }
 
     public Command closestScoringCommand() {
+        double xTarget = DriverStation.getAlliance().equals(Alliance.Red) ? 14.73 : 1.82;
         double[] scoringPositions = {
             0.46, 1.07, 1.64, 2.2, 2.74, 1.81, 3.87, 4.42, 5.07 // y positions in m of 9 scoring positions
         };
@@ -242,14 +248,14 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         double[] distances = new double[9];
         int minDistanceIndex = 0;
         for (int i = 0; i < distances.length; i++) {
-            distances[i] = robotPosition.getDistance(new Translation2d(14.73, scoringPositions[i]));
+            distances[i] = robotPosition.getDistance(new Translation2d(xTarget, scoringPositions[i]));
             if (distances[i] < distances[minDistanceIndex]) {
                 minDistanceIndex = i;
             }
         }
         SmartDashboard.putNumber("closest scoring position", minDistanceIndex);
 
-        Pose2d targetPose = new Pose2d(new Translation2d(1.78, scoringPositions[minDistanceIndex]), Rotation2d.fromDegrees(0)); // top node on red
+        Pose2d targetPose = new Pose2d(new Translation2d(xTarget, scoringPositions[minDistanceIndex]), Rotation2d.fromDegrees(0)); // top node on red
         Translation2d translationDifference = targetPose.getTranslation().minus(robotPosition); // difference between target and current
         // calculates wheel angle needed to target from x and y components
         Rotation2d translationRotation = new Rotation2d(translationDifference.getX(), translationDifference.getY());
@@ -268,10 +274,11 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         } else {
             pieceData = NetworkTableWrapper.getArray("Detector", "Cube");
         }
-        Translation2d pieceDifference = new Translation2d(pieceData[1], pieceData[3]);
+        
+        Translation2d differenceRelative = new Translation2d(pieceData[1], pieceData[3]);
         Translation2d currentPosition = getPose().getTranslation();
-        Translation2d targetPosition = currentPosition.plus(pieceDifference.rotateBy(currentPosition.getAngle())); // bruh this won't work
-        Rotation2d translationRotation = new Rotation2d(pieceDifference.getX(), pieceDifference.getY());
+        Translation2d targetPosition = currentPosition.plus(differenceRelative.rotateBy(currentPosition.getAngle())); // bruh this won't work
+        Rotation2d translationRotation = new Rotation2d(differenceRelative.getX(), differenceRelative.getY());
         Command driveCommand = followTrajectoryCommand(PathPlanner.generatePath(
             Constants.Auto.constraints,
             new PathPoint(currentPosition, translationRotation, getPose().getRotation()),

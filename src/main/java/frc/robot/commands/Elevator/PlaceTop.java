@@ -15,7 +15,7 @@ public class PlaceTop extends SequentialCommandGroup{
             new SetArmPosition(elevator, 0.34, -75, 0).withTimeout(5),
             new SetArmPosition(elevator, 0.755, -75, 0).withTimeout(5),
             new SetArmPosition(elevator, 0.755, -10, 0).withTimeout(5),
-            new Ungrab(grabber).withTimeout(1.5),
+            new Ungrab(grabber).withTimeout(1.25),
             new SetArmPosition(elevator, 0.755, -75, 0).withTimeout(5),
             new SetArmPosition(elevator, 0.34, -75, 0).withTimeout(5),
             new SetArmPosition(elevator, 0.1, Constants.Elevator.elbowSafe, Constants.Elevator.wristSafe).withTimeout(5)

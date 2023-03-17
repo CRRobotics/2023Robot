@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.Auto.OnePiece;
 import frc.robot.commands.Auto.OnePiece2;
 import frc.robot.commands.Auto.OnePieceBalance;
 import frc.robot.commands.Auto.OnePieceOnePickupBalance;
@@ -50,6 +51,10 @@ public class RobotContainer {
   public static SendableChooser<String> autoMode = new SendableChooser<>();
   public Elevator getElevator(){
     return elevator;
+  }
+
+  public Grabber getGrabber() {
+    return grabber;
   }
 
   static {
@@ -146,7 +151,7 @@ public class RobotContainer {
         auto = new OnePieceBalance(driveTrain, elevator, grabber);
         break;
       case "OnePiece":
-        auto = new OnePieceBalance(driveTrain, elevator, grabber);
+        auto = new OnePiece(driveTrain, elevator, grabber);
         break;
       case "OnePieceOnePickupBalance":
         auto = new OnePieceOnePickupBalance(driveTrain, elevator, grabber);
