@@ -41,7 +41,7 @@ public class GetGlobalCoordinates {
              targetAngle = Math.atan2(zToRobot, xToRobot);
         }
         else if (xToRobot <0 && zToRobot >0){
-             targetAngle = Math.atan2(zToRobot, xToRobot)+pi;
+             targetAngle = Math.atan2(zToRobot, xToRobot);
         }
         return targetAngle;
     }
