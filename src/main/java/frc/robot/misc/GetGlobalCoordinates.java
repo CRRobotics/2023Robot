@@ -1,5 +1,3 @@
-package frc.robot.misc;
-
 public class GetGlobalCoordinates {
     //robotX and robotY is the global coordinates of the robot
     //rotationAngle is the rotation angle of the robot
@@ -13,8 +11,8 @@ public class GetGlobalCoordinates {
     //x axis point to right, z axis point to font
     public  double[] pieceData;
     public  double inputX;
-    public  double inputZ;
-    public  double xAxisDirection;
+    public  double inputZ ;
+    public  double xAxisDirection = rotationAngle -pi/2;
     //this is the radius of polar
     public  double targetDistanceToBot;
     public  double targetToRobotAngle;//target angle reletive to the x-axis of the robot
@@ -24,14 +22,13 @@ public class GetGlobalCoordinates {
     public double globalY;
 
     public GetGlobalCoordinates(double robotX, double robotY, double rotationAngle, double[] pieceData){
-        inputX = pieceData[1];
-        inputZ = pieceData[3];
-        xAxisDirection = rotationAngle - pi/2;
-        targetDistanceToBot = Math.pow(Math.pow(inputX,2)+Math.pow(inputZ,2),1/2);
         this.robotX = robotX;
         this.robotY = robotY;
         this.rotationAngle = rotationAngle;
         this.pieceData = pieceData;
+        this.inputX = pieceData[1];
+        this.inputZ = pieceData[3];
+        this.targetDistanceToBot = Math.pow(Math.pow(inputX,2)+Math.pow(inputZ,2),1/2);
         this.targetToRobotAngle = getTargetAngleToRobot(this.inputX,this.inputZ);
         this.globalAngleOfTarget = this.rotationAngle + this.targetToRobotAngle-pi/2;
         this.globalX = this.targetDistanceToBot * Math.cos(globalAngleOfTarget)+this.robotX;
@@ -52,4 +49,10 @@ public class GetGlobalCoordinates {
         }
         return targetAngle;
     }
+    
+   
+
 }
+
+  
+    
