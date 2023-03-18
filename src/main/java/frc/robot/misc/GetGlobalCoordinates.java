@@ -1,3 +1,4 @@
+package frc.robot.misc;
 public class GetGlobalCoordinates {
     //robotX and robotY is the global coordinates of the robot
     //rotationAngle is the rotation angle of the robot
