@@ -26,9 +26,9 @@ public class Ungrab extends CommandBase{
     public void execute()
     {
         if (Robot.getPieceType() == PieceType.Cone) {
-            grabber.setSpeed(-1);
-        } else if (Robot.getPieceType() == PieceType.Cube) {
             grabber.setSpeed(1);
+        } else if (Robot.getPieceType() == PieceType.Cube) {
+            grabber.setSpeed(-1);
         }
     }
 

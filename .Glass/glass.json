@@ -24,7 +24,19 @@
         "Field": {
           "open": true
         },
-        "open": true
+        "drivetrain": {
+          "open": true
+        },
+        "elbow": {
+          "open": true
+        },
+        "elevator": {
+          "open": true
+        },
+        "open": true,
+        "wrist": {
+          "open": true
+        }
       }
     },
     "types": {
@@ -140,7 +152,7 @@
     "Plot <3>": {
       "plots": [
         {
-          "height": 332,
+          "height": 242,
           "series": [
             {
               "color": [
@@ -162,10 +174,7 @@
             }
           ]
         }
-      ],
-      "window": {
-        "visible": false
-      }
+      ]
     },
     "Plot <4>": {
       "plots": [
@@ -244,7 +253,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }

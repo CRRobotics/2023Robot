@@ -261,9 +261,9 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         // calculates wheel angle needed to target from x and y components
         Rotation2d translationRotation = new Rotation2d(translationDifference.getX(), translationDifference.getY());
         Command driveCommand = followTrajectoryCommand(PathPlanner.generatePath(
-            new PathConstraints(0.25, 0.25),
+            new PathConstraints(0.5, 0.5),
             new PathPoint(robotPosition, translationRotation, getPose().getRotation()), // starting pose
-            new PathPoint(targetPose.getTranslation(), translationRotation, targetPose.getRotation())), // ending pose
+            new PathPoint(targetPose.getTranslation(), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Red ? 0 : 180))), // ending pose
             false);
         return driveCommand;
     }

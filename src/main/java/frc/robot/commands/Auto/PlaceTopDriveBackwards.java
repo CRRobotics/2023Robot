@@ -6,7 +6,7 @@ import com.pathplanner.lib.PathPoint;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.Elevator.PlaceTop;
+import frc.robot.commands.Elevator.AutoTop;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
@@ -14,7 +14,7 @@ import frc.robot.subsystems.Grabber;
 public class PlaceTopDriveBackwards extends SequentialCommandGroup {
     public PlaceTopDriveBackwards(Elevator elevator, Grabber grabber, DriveTrain driveTrain) {
         addCommands(
-            new PlaceTop(elevator, grabber),
+            new AutoTop(elevator, grabber),
             driveTrain.followTrajectoryCommand(PathPlanner.generatePath(
             new PathConstraints(1, 1),
             new PathPoint(driveTrain.getPose().getTranslation(), driveTrain.getPose().getRotation()),

@@ -1,6 +1,7 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.DriveTrain;
@@ -22,6 +23,9 @@ public class Balance extends CommandBase implements Constants.Auto {
 
     @Override
     public void execute() {
+        pidController.setPID(SmartDashboard.getNumber("drivetrain/balanceP", 0),
+        SmartDashboard.getNumber("drivetrain/balanceI", 0),
+        SmartDashboard.getNumber("drivetrain/balance", 0));
         driveTrain.setMotorSpeeds(pidController.calculate(driveTrain.getPitch()));
     }
 

@@ -9,6 +9,7 @@ import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.DriveTrain;
 
@@ -24,6 +25,7 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
     SlewRateLimiter rotationLimiter;
     double previousTime;
     XboxController controller = new XboxController(0);
+    private double speedAdjustedMaxSpeed;
 
     public JoystickDrive(DriveTrain driveTrain) 
     {
@@ -33,6 +35,7 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
 
     @Override
     public void initialize() {
+        speedAdjustedMaxSpeed = maxSpeed;
         currentRotation = 0.0;
         currentTranslationDir = 0.0;
         currentTranslationMag = 0.0;
@@ -44,6 +47,17 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
 
     @Override
     public void execute() {
+        SmartDashboard.putString("Drive State", RobotContainer.driveStates.toString());
+        switch(RobotContainer.driveStates)
+        {
+            case speeed: speedAdjustedMaxSpeed = maxSpeed * 1.4;
+            break;
+            case normal: speedAdjustedMaxSpeed = maxSpeed;
+            break;
+            case slow: speedAdjustedMaxSpeed = maxSpeed * .4;
+            break;
+        }
+        SmartDashboard.putNumber("adjusted max speed", speedAdjustedMaxSpeed);
         //drive code without slew rate limiting
         
         // double xSpeed = MathUtil.applyDeadband(controller.getLeftY(), 0.06);
@@ -117,8 +131,9 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
         currentRotation = rotationLimiter.calculate(rotation);
 
         // Convert the commanded speeds into the correct units for the drivetrain
-        double xSpeedDelivered = xSpeedCommanded * maxSpeed;
-        double ySpeedDelivered = ySpeedCommanded * maxSpeed;
+        
+        double xSpeedDelivered = xSpeedCommanded * speedAdjustedMaxSpeed;
+        double ySpeedDelivered = ySpeedCommanded * speedAdjustedMaxSpeed;
         double rotDelivered = currentRotation * maxAngularSpeed;
         SmartDashboard.putNumber("xSpeedCommanded", xSpeedCommanded);
         SmartDashboard.putNumber("ySpeedCommanded", ySpeedCommanded);

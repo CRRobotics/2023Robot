@@ -121,8 +121,10 @@ public interface Constants {
         double elevatorTicksPerMeter = 13434.639;
         int elevatorCurrentLimit = 15;
         double elevatorCalibrationSpeed = 0.01;
-        double elevatorMaxVelocity = 0.6;
-        double elevatorMaxAcceleration = 0.6;
+        // double elevatorMaxVelocity = 1.3;
+        // double elevatorMaxAcceleration = 1.3;
+        double elevatorMaxVelocity = .4;
+        double elevatorMaxAcceleration = .4;
 
         int elbowMotorID = 16;
         double elbowMotorP = 0.04;
@@ -136,8 +138,10 @@ public interface Constants {
         double elbowOffset = -161.6; // degrees
         double elbowSafe = -159;
 
-        double elbowMaxVelocity = 4;
-        double elbowMaxAcceleration = 4;
+        // double elbowMaxVelocity = 12;
+        // double elbowMaxAcceleration = 12;
+        double elbowMaxVelocity = 2;
+        double elbowMaxAcceleration = 2;
 
         int wristMotorID = 17;
         double wristMotorP = 0.08;
@@ -148,6 +152,8 @@ public interface Constants {
         double wristMotorVoltageLimit = 6;
         double wristTicksPerDegree = 189.639;
         double wristTicksPerRadian = wristTicksPerDegree * (180 / Math.PI);
+        // double wristMaxVelocity = 12;
+        // double wristMaxAcceleration = 12;
         double wristMaxVelocity = 4;
         double wristMaxAcceleration = 4;
         double wristOffset = 20.3; // degrees

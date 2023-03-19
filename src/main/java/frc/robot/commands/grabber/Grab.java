@@ -25,9 +25,9 @@ public class Grab extends CommandBase {
     public void execute()
     {
         if (Robot.getPieceType() == PieceType.Cone) {
-            grabber.setSpeed(0.6);
-        } else if (Robot.getPieceType() == PieceType.Cube) {
             grabber.setSpeed(-0.6);
+        } else if (Robot.getPieceType() == PieceType.Cube) {
+            grabber.setSpeed(0.6);
         }
     }
 

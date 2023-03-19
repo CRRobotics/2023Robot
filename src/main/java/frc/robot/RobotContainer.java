@@ -20,8 +20,9 @@ import frc.robot.commands.Auto.ZeroPiece;
 import frc.robot.commands.Auto.ZeroPiece2;
 import frc.robot.commands.Auto.ZeroPieceBalance;
 import frc.robot.commands.Elevator.AcquireDoubleSub;
+import frc.robot.commands.Elevator.AutoTop;
 import frc.robot.commands.Elevator.FoldIn;
-import frc.robot.commands.Elevator.GroundPickup;
+import frc.robot.commands.Elevator.GroundPickupCube;
 import frc.robot.commands.Elevator.PlaceBottom;
 import frc.robot.commands.Elevator.PlaceMid;
 import frc.robot.commands.Elevator.PlaceTop;
@@ -29,6 +30,9 @@ import frc.robot.commands.Elevator.SetArmPosition;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.drivetrain.Balance;
 import frc.robot.commands.drivetrain.BalanceRoutine;
+import frc.robot.commands.drivetrain.DriveFast;
+import frc.robot.commands.drivetrain.DriveSlow;
+import frc.robot.commands.drivetrain.DriveStates;
 import frc.robot.commands.drivetrain.DriveToPiece;
 import frc.robot.commands.drivetrain.DriveToScoring;
 import frc.robot.commands.grabber.Grab;
@@ -45,8 +49,12 @@ public class RobotContainer {
   private final Grabber grabber = new Grabber();
 
   // The driver's controller
+  public static DriveStates driveStates = DriveStates.normal;
+
   XboxController driver = new XboxController(Constants.Controller.driveControllerPort);
   XboxController controller = new XboxController(1);
+
+  
 
   public static SendableChooser<String> autoMode = new SendableChooser<>();
   public Elevator getElevator(){
@@ -103,6 +111,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("elevator/elevator setpoint", 0);
     SmartDashboard.putNumber("elevator/elbow setpoint", 0);
     SmartDashboard.putNumber("elevator/arm setpoint", 0);
+  
   }
 
   /**
@@ -116,12 +125,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    new JoystickButton(controller, XboxController.Button.kY.value).onTrue(new PlaceTop(elevator, grabber));
-    new JoystickButton(controller, XboxController.Button.kX.value).onTrue(new PlaceMid(elevator, grabber));
-    new JoystickButton(controller, XboxController.Button.kA.value).onTrue(new PlaceBottom(elevator, grabber));
+    new JoystickButton(controller, XboxController.Button.kY.value).onTrue(new PlaceTop(elevator));
+    new JoystickButton(controller, XboxController.Button.kX.value).onTrue(new PlaceMid(elevator));
+    new JoystickButton(controller, XboxController.Button.kA.value).onTrue(new GroundPickupCube(elevator, grabber));
     new JoystickButton(controller, XboxController.Button.kB.value).onTrue(new AcquireDoubleSub(elevator));
     new JoystickButton(controller, XboxController.Button.kStart.value).onTrue(new FoldIn(elevator));
-    new JoystickButton(controller, XboxController.Button.kBack.value).onTrue(new GroundPickup(elevator, grabber));
+    new JoystickButton(controller, XboxController.Button.kBack.value).onTrue(new GroundPickupCube(elevator, grabber));
 
     new JoystickButton(controller, XboxController.Button.kLeftBumper.value)
       .whileTrue(new Grab(grabber));
@@ -130,12 +139,14 @@ public class RobotContainer {
     new JoystickButton(controller, XboxController.Button.kRightStick.value)
       .onTrue(new InstantCommand(() -> {Robot.togglePieceType();}));
 
-    new JoystickButton(driver, XboxController.Button.kA.value)
-      .whileTrue(new DriveToScoring(driveTrain));
-    new JoystickButton(driver, XboxController.Button.kB.value)
-      .whileTrue(new DriveToPiece(driveTrain));
-    new JoystickButton(driver, XboxController.Button.kX.value)
-      .whileTrue(new BalanceRoutine(driveTrain));
+new JoystickButton(driver, XboxController.Button.kA.value)
+  .whileTrue(new DriveToScoring(driveTrain));
+new JoystickButton(driver, XboxController.Button.kB.value)
+  .whileTrue(new DriveToPiece(driveTrain));
+new JoystickButton(driver, XboxController.Button.kX.value)
+  .whileTrue(new BalanceRoutine(driveTrain));
+new JoystickButton(driver, 5).whileTrue(new DriveSlow());
+new JoystickButton(driver, 6).whileTrue(new DriveFast());
   }
 
   /**
@@ -148,7 +159,7 @@ public class RobotContainer {
     Command auto;
     switch (autoMode.getSelected()) {
       default:
-        auto = new OnePieceBalance(driveTrain, elevator, grabber);
+        auto = new OnePiece(driveTrain, elevator, grabber);
         break;
       case "OnePiece":
         auto = new OnePiece(driveTrain, elevator, grabber);
@@ -169,11 +180,11 @@ public class RobotContainer {
         auto = new ZeroPieceBalance(driveTrain);
         break;
       case "PlaceTop":
-        auto = new PlaceTop(elevator, grabber);
+        auto = new AutoTop(elevator, grabber);
         break;
-      case "PlaceMid":
-        auto = new PlaceMid(elevator, grabber);
-        break;
+      // case "PlaceMid":
+        // auto = new AutoMid(elevator, grabber);
+        // break;
       case "PlaceLow":
         auto = new PlaceBottom(elevator, grabber);
         break;
