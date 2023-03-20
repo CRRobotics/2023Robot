@@ -212,6 +212,10 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         gyro.reset();
     }
 
+    public double getGyroAngle() {
+        return gyro.getAngle() * Math.PI / 180;
+    }
+
     /**
      * Returns the heading of the robot.
      *

@@ -50,34 +50,22 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
         SmartDashboard.putString("Drive State", RobotContainer.driveStates.toString());
         switch(RobotContainer.driveStates)
         {
-            case speeed: speedAdjustedMaxSpeed = maxSpeed * 1.4;
-            break;
-            case normal: speedAdjustedMaxSpeed = maxSpeed;
-            break;
-            case slow: speedAdjustedMaxSpeed = maxSpeed * .4;
-            break;
+            case speeed:
+                speedAdjustedMaxSpeed = maxSpeed * 1.4;
+                break;
+            case normal:
+                speedAdjustedMaxSpeed = maxSpeed;
+                break;
+            case slow:
+                speedAdjustedMaxSpeed = maxSpeed * .4;
+                break;
         }
         SmartDashboard.putNumber("adjusted max speed", speedAdjustedMaxSpeed);
-        //drive code without slew rate limiting
-        
-        // double xSpeed = MathUtil.applyDeadband(controller.getLeftY(), 0.06);
-        // double ySpeed = MathUtil.applyDeadband(controller.getLeftX(), 0.06);
-        // double rot = MathUtil.applyDeadband(controller.getRightX(), 0.06);
-        // boolean fieldRelative = true;
-        // xSpeed *= Constants.Drive.maxSpeed;
-        // ySpeed *= Constants.Drive.maxSpeed;
-        // rot *= Constants.Drive.maxAngularSpeed;
-
-        // SwerveModuleState[] swerveModuleStates = Constants.Drive.driveKinematics.toSwerveModuleStates(
-        //         fieldRelative
-        //                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(driveTrain.getHeading()))
-        //                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
-        // driveTrain.setModuleStates(swerveModuleStates);
 
         double xSpeed = -MathUtil.applyDeadband(controller.getLeftY(), driveDeadBand);
         double ySpeed = -MathUtil.applyDeadband(controller.getLeftX(), driveDeadBand);
         double rotation = -MathUtil.applyDeadband(controller.getRightX(), driveDeadBand);
-        boolean fieldRelative = false;
+        boolean fieldRelative = true;
 
         SmartDashboard.putNumber("xspeed", -controller.getLeftY());
         SmartDashboard.putNumber("ySpeed", -controller.getLeftX());
@@ -141,7 +129,7 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
 
         SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(
             fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(driveTrain.getHeading()))
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(driveTrain.getGyroAngle()))
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
         driveTrain.setModuleStates(swerveModuleStates);
     }
