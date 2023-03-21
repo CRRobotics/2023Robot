@@ -43,28 +43,25 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
 
 public class RobotContainer {
-  // The robot's subsystems
+  
+  // SUBSYSTEMS
   private final DriveTrain driveTrain = new DriveTrain();
   private final Elevator elevator = new Elevator();
   private final Grabber grabber = new Grabber();
-
-  // The driver's controller
-  public static DriveStates driveStates = DriveStates.normal;
-
-  XboxController driver = new XboxController(Constants.Controller.driveControllerPort);
-  XboxController controller = new XboxController(1);
-
   
 
+  
+  // INPUT
+  XboxController driver = new XboxController(Constants.Controller.driveControllerPort);
+  XboxController controller = new XboxController(1);
+  
+  
+  
+  // OTHER
+  public static DriveStates driveStates = DriveStates.normal;
+  
   public static SendableChooser<String> autoMode = new SendableChooser<>();
-  public Elevator getElevator(){
-    return elevator;
-  }
-
-  public Grabber getGrabber() {
-    return grabber;
-  }
-
+  // configure sendable chooser
   static {
     autoMode.setDefaultOption("1PieceBalance", "1PieceBalance");
     autoMode.addOption("OnePiece", "OnePiece");
@@ -82,82 +79,35 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Mode", autoMode);
   }
 
+
+
+  // CONSTRUCTOR
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // Configure the button bindings
+    // KEYBINDINGS
     configureButtonBindings();
 
-    // Configure default commands
-    driveTrain.setDefaultCommand(
-      new JoystickDrive(driveTrain));
-    grabber.setDefaultCommand(new Grab(grabber));
-
-    SmartDashboard.putNumber("grabber/speed", 0.6);
-    SmartDashboard.putNumber("grabber/current limit", 10);
+    // SMART DASHBOARD
+    configureSmartDashboard();
     
-    SmartDashboard.putNumber("drivetrain/xP", 0);
-    SmartDashboard.putNumber("drivetrain/xI", 0);
-    SmartDashboard.putNumber("drivetrain/xD", 0);
-    SmartDashboard.putNumber("drivetrain/thetaP", 0);
-    SmartDashboard.putNumber("drivetrain/thetaI", 0);
-    SmartDashboard.putNumber("drivetrain/thetaD", 0);
-
-    SmartDashboard.putNumber("drivetrain/balanceP", 0);
-    SmartDashboard.putNumber("drivetrain/balanceI", 0);
-    SmartDashboard.putNumber("drivetrain/balanceD", 0);
-
-    SmartDashboard.putNumber("elevator/elevator setpoint", 0);
-    SmartDashboard.putNumber("elevator/elbow setpoint", 0);
-    SmartDashboard.putNumber("elevator/arm setpoint", 0);
+    // DEFAULT COMMANDS
+    driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
+    grabber.setDefaultCommand(new Grab(grabber));
+  }
   
-  }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
-   * subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
-   * passing it to a
-   * {@link JoystickButton}.
-   */
-  private void configureButtonBindings() {
 
-    new JoystickButton(controller, XboxController.Button.kY.value).onTrue(new PlaceTop(elevator));
-    new JoystickButton(controller, XboxController.Button.kX.value).onTrue(new PlaceMid(elevator));
-    new JoystickButton(controller, XboxController.Button.kA.value).onTrue(new GroundPickupCube(elevator, grabber));
-    new JoystickButton(controller, XboxController.Button.kB.value).onTrue(new AcquireDoubleSub(elevator));
-    new JoystickButton(controller, XboxController.Button.kStart.value).onTrue(new FoldIn(elevator));
-    new JoystickButton(controller, XboxController.Button.kBack.value).onTrue(new GroundPickupCube(elevator, grabber));
-
-    new JoystickButton(controller, XboxController.Button.kLeftBumper.value)
-      .whileTrue(new Grab(grabber));
-    new JoystickButton(controller, XboxController.Button.kRightBumper.value)
-      .whileTrue(new Ungrab(grabber));
-    new JoystickButton(controller, XboxController.Button.kRightStick.value)
-      .onTrue(new InstantCommand(() -> {Robot.togglePieceType();}));
-
-new JoystickButton(driver, XboxController.Button.kA.value)
-  .whileTrue(new DriveToScoring(driveTrain));
-new JoystickButton(driver, XboxController.Button.kB.value)
-  .whileTrue(new DriveToPiece(driveTrain));
-new JoystickButton(driver, XboxController.Button.kX.value)
-  .whileTrue(new BalanceRoutine(driveTrain));
-new JoystickButton(driver, 5).whileTrue(new DriveSlow());
-new JoystickButton(driver, 6).whileTrue(new DriveFast());
-  }
-
+  // METHODS
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // Create config for trajectory
     Command auto;
     switch (autoMode.getSelected()) {
+      // SCORES ONE PIECE
       default:
         auto = new OnePiece(driveTrain, elevator, grabber);
         break;
@@ -167,24 +117,30 @@ new JoystickButton(driver, 6).whileTrue(new DriveFast());
       case "OnePieceOnePickupBalance":
         auto = new OnePieceOnePickupBalance(driveTrain, elevator, grabber);
         break;
+
+      // SCORES TWO PIECES
       case "TwoPiece":
         auto = new TwoPiece(driveTrain, elevator, grabber);
         break;
       case "TwoPieceBalance":
         auto = new TwoPieceBalance(driveTrain, elevator, grabber);
         break;
+
+      // SCORES ZERO PIECES
       case "ZeroPiece":
         auto = new ZeroPiece(driveTrain);
         break;
       case "ZeroPieceBalance":
         auto = new ZeroPieceBalance(driveTrain);
         break;
+
+      // PLACE
       case "PlaceTop":
         auto = new AutoTop(elevator, grabber);
         break;
       // case "PlaceMid":
-        // auto = new AutoMid(elevator, grabber);
-        // break;
+      //   auto = new AutoMid(elevator, grabber);
+      //   break;
       case "PlaceLow":
         auto = new PlaceBottom(elevator, grabber);
         break;
@@ -195,5 +151,60 @@ new JoystickButton(driver, 6).whileTrue(new DriveFast());
         auto = new OnePiece2(driveTrain, grabber, elevator);
     }
     return auto;
+  }
+  
+
+
+  // HELPER METHODS
+  /**
+   * Define keybindings for commands
+   */
+  private void configureButtonBindings() {
+    // DRIVER
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToScoring(driveTrain));
+    new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToPiece(driveTrain));
+    new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new BalanceRoutine(driveTrain));
+    new JoystickButton(driver, 5).whileTrue(new DriveSlow());
+    new JoystickButton(driver, 6).whileTrue(new DriveFast());
+
+    // CONTROLLER - elevator
+    new JoystickButton(controller, XboxController.Button.kY.value).onTrue(new PlaceTop(elevator));
+    new JoystickButton(controller, XboxController.Button.kX.value).onTrue(new PlaceMid(elevator));
+    new JoystickButton(controller, XboxController.Button.kA.value).onTrue(new GroundPickupCube(elevator, grabber));
+    new JoystickButton(controller, XboxController.Button.kB.value).onTrue(new AcquireDoubleSub(elevator));
+    new JoystickButton(controller, XboxController.Button.kStart.value).onTrue(new FoldIn(elevator));
+    new JoystickButton(controller, XboxController.Button.kBack.value).onTrue(new GroundPickupCube(elevator, grabber));
+    
+    // CONTROLLER - grabber
+    new JoystickButton(controller, XboxController.Button.kRightStick.value).onTrue(new InstantCommand(() -> {Robot.togglePieceType();}));
+    new JoystickButton(controller, XboxController.Button.kLeftBumper.value).whileTrue(new Grab(grabber));
+    new JoystickButton(controller, XboxController.Button.kRightBumper.value).whileTrue(new Ungrab(grabber));
+  }
+
+  /**
+   * Push log info to Smart Dashboard
+   */
+  private void configureSmartDashboard() {
+    // GRABBER
+    SmartDashboard.putNumber("grabber/speed", 0.6);
+    SmartDashboard.putNumber("grabber/current limit", 10);
+    
+    // DRIVETRAIN
+    SmartDashboard.putNumber("drivetrain/xP", 0);
+    SmartDashboard.putNumber("drivetrain/xI", 0);
+    SmartDashboard.putNumber("drivetrain/xD", 0);
+
+    SmartDashboard.putNumber("drivetrain/thetaP", 0);
+    SmartDashboard.putNumber("drivetrain/thetaI", 0);
+    SmartDashboard.putNumber("drivetrain/thetaD", 0);
+
+    SmartDashboard.putNumber("drivetrain/balanceP", 0);
+    SmartDashboard.putNumber("drivetrain/balanceI", 0);
+    SmartDashboard.putNumber("drivetrain/balanceD", 0);
+
+    // ELEVATOR
+    SmartDashboard.putNumber("elevator/elevator setpoint", 0);
+    SmartDashboard.putNumber("elevator/elbow setpoint", 0);
+    SmartDashboard.putNumber("elevator/arm setpoint", 0);
   }
 }

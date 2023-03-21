@@ -109,10 +109,10 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
             swervePosition
         );
 
-        odometry.update(
-            Rotation2d.fromDegrees(-gyro.getAngle()),
-            swervePosition
-        );
+        // odometry.update(
+        //     Rotation2d.fromDegrees(-gyro.getAngle()),
+        //     swervePosition
+        // );
         
         // update with visions data from these cameras ids:
         for (String i : new String[]{"0", "2", "4"}) {
@@ -190,7 +190,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         backRight.setDesiredState(desiredStates[3]);
     }
 
-    public void setMotorSpeeds(double speed) {
+    // public void setMotorSpeeds(double speed) {
         setModuleStates(new SwerveModuleState[]{
             new SwerveModuleState(speed, new Rotation2d(0)),
             new SwerveModuleState(speed, new Rotation2d(0)),
