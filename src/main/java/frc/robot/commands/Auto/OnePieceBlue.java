@@ -12,10 +12,10 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
 
-public class OnePiece extends SequentialCommandGroup {
+public class OnePieceBlue extends SequentialCommandGroup {
     //orewa monkey d luffy
     // real
-    public OnePiece(DriveTrain driveTrain, Elevator elevator, Grabber grabber) {
+    public OnePieceBlue(DriveTrain driveTrain, Elevator elevator, Grabber grabber) {
         addCommands(
             new AutoTop(elevator, grabber),
             driveTrain.followTrajectoryCommand(

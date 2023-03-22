@@ -6,7 +6,6 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,89 +17,75 @@ import frc.robot.misc.PieceType;
  * This class is the iterative => timed version, meaning it operates using a command based system
  */
 public class Robot extends TimedRobot {
+  // OBJECTS
+  // Active auto command based on the Smart Dashboard Sendable Chooser
   private Command autoCommand;
-
+  // Robot container, contains keybindings to commands, subsystems, default commands, etc.
   private RobotContainer robotContainer;
+  // Piece type selector for changing actions
   public static PieceType pieceType;
 
-  public static PieceType getPieceType() {
-    return pieceType;
-  }
 
-  public static void setPieceType(PieceType setPieceType) {
-    pieceType = setPieceType;
-  }
 
-  public static void togglePieceType() {
-    if (pieceType == PieceType.Cone) setPieceType(PieceType.Cube);
-    else if (pieceType == PieceType.Cube) setPieceType(PieceType.Cone);
-  }
-
+  // ROBOT
   /**
    * Method runs once at the time of the creation of the <code>Robot</code> class
    * Never have an infinite or while loop
    */
   @Override
   public void robotInit() {
+    System.out.println("Robot initiated");
     robotContainer = new RobotContainer();
     pieceType = PieceType.Cone;
-    System.out.println("Adam says hi");
   }
 
   /**
-   * Runs once every 50 milliseconds. This is roughly 4 times faster than the blink of a human eye
+   * Runs once every 50 milliseconds in every state.
+   * This is roughly 4 times faster than the blink of a human eye.
    * Never have an infinite or while loop
    */
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
+    CommandScheduler.getInstance().run(); // Runs qued commands
     SmartDashboard.putString("PIECE MODE", pieceType == PieceType.Cone ? "CONE" : "CUBE");
   }
 
-  /**
-   * Same as <code>robotInnit</code>, but only for the disabled state
-   */
+
+
+  // DISABLED STATE
   @Override
   public void disabledInit() {}
 
-  /**
-   * Same as <code>robotPeriodic</code>, but only for the disabled state
-   */
   @Override
   public void disabledPeriodic() {}
 
-  /**
-   * Same as <code>robotExit</code>, but only for the disabled state
-   */
   @Override
   public void disabledExit() {}
 
-  /**
-   * Same as <code>robotInnit</code>, but only for the autonomous state
-   */
+
+
+  // AUTONOMOUS STATE
   @Override
   public void autonomousInit() {
+    System.out.println("Auto engaged");
     autoCommand = robotContainer.getAutonomousCommand();
     if (autoCommand != null) {
+      System.out.println("Current auto path: " + autoCommand.getName());
       autoCommand.schedule();
+    } else {
+      System.out.println("Auto path not selected");
     }
   }
 
-  /**
-   * Same as <code>robotPeriodic</code>, but only for the autonomous state
-   */
   @Override
   public void autonomousPeriodic() {}
 
-  /**
-   * Same as <code>robotExit</code>, but only for the autonomous state
-   */
   @Override
   public void autonomousExit() {}
 
-  /**
-   * Same as <code>robotInnit</code>, but only for the teleoperated state
-   */
+
+
+  // TELEOP STATE
   @Override
   public void teleopInit() {
     if (autoCommand != null) {
@@ -109,38 +94,36 @@ public class Robot extends TimedRobot {
     robotContainer.getGrabber().removeDefaultCommand();
   }
 
-  /**
-   * Same as <code>robotPeriodic</code>, but only for the teleoperated state
-   */
   @Override
   public void teleopPeriodic() {}
- 
-  /**
-   * Same as <code>robotExit</code>, but only for the teleoperated state
-   */
+
   @Override
   public void teleopExit() {
     robotContainer.getElevator().getElbowMotor().setNeutralMode(NeutralMode.Coast);
     robotContainer.getElevator().getWristMotor().setNeutralMode(NeutralMode.Coast);
   }
 
-  /**
-   * Same as <code>robotInnit</code>, but only for the testing state
-   */
-  @Override
-  public void testInit() {
-    CommandScheduler.getInstance().cancelAll();
-  }
 
-  /**
-   * Same as <code>robotPeriodic</code>, but only for the testing state
-   */
+
+  // TEST STATE
+  @Override
+  public void testInit() {CommandScheduler.getInstance().cancelAll();}
+
   @Override
   public void testPeriodic() {}
 
-  /**
-   * Same as <code>robotExit</code>, but only for the testing state
-   */
   @Override
   public void testExit() {}
+
+
+
+  // HELPER METHODS
+  public static PieceType getPieceType() {return pieceType;}
+
+  public static void setPieceType(PieceType setPieceType) {pieceType = setPieceType;}
+
+  public static void togglePieceType() {
+    if (pieceType == PieceType.Cone) setPieceType(PieceType.Cube);
+    else if (pieceType == PieceType.Cube) setPieceType(PieceType.Cone);
+  }
 }

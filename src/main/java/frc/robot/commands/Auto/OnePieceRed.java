@@ -13,8 +13,8 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
 
-public class OnePiece2 extends SequentialCommandGroup {
-    public OnePiece2(DriveTrain driveTrain, Grabber grabber, Elevator elevator) {
+public class OnePieceRed extends SequentialCommandGroup {
+    public OnePieceRed(DriveTrain driveTrain, Grabber grabber, Elevator elevator) {
         addCommands(
             new Grab(grabber).withTimeout(0.5),
             new AutoTop(elevator, grabber),

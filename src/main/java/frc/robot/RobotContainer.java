@@ -10,14 +10,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.Auto.OnePiece;
-import frc.robot.commands.Auto.OnePiece2;
-import frc.robot.commands.Auto.OnePieceBalance;
+import frc.robot.commands.Auto.OnePieceBlue;
+import frc.robot.commands.Auto.OnePieceRed;
 import frc.robot.commands.Auto.OnePieceOnePickupBalance;
 import frc.robot.commands.Auto.TwoPiece;
 import frc.robot.commands.Auto.TwoPieceBalance;
-import frc.robot.commands.Auto.ZeroPiece;
-import frc.robot.commands.Auto.ZeroPiece2;
+import frc.robot.commands.Auto.ZeroPieceBlue;
+import frc.robot.commands.Auto.ZeroPieceRed;
 import frc.robot.commands.Auto.ZeroPieceBalance;
 import frc.robot.commands.Elevator.AcquireDoubleSub;
 import frc.robot.commands.Elevator.AutoTop;
@@ -26,9 +25,7 @@ import frc.robot.commands.Elevator.GroundPickupCube;
 import frc.robot.commands.Elevator.PlaceBottom;
 import frc.robot.commands.Elevator.PlaceMid;
 import frc.robot.commands.Elevator.PlaceTop;
-import frc.robot.commands.Elevator.SetArmPosition;
 import frc.robot.commands.drivetrain.JoystickDrive;
-import frc.robot.commands.drivetrain.Balance;
 import frc.robot.commands.drivetrain.BalanceRoutine;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
@@ -46,8 +43,11 @@ public class RobotContainer {
   
   // SUBSYSTEMS
   private final DriveTrain driveTrain = new DriveTrain();
+  public DriveTrain getDriveTrain() {return driveTrain;}
   private final Elevator elevator = new Elevator();
+  public Elevator getElevator() {return elevator;}
   private final Grabber grabber = new Grabber();
+  public Grabber getGrabber() {return grabber;}
   
 
   
@@ -59,27 +59,28 @@ public class RobotContainer {
   
   // OTHER
   public static DriveStates driveStates = DriveStates.normal;
-  
+
   public static SendableChooser<String> autoMode = new SendableChooser<>();
   // configure sendable chooser
   static {
     autoMode.setDefaultOption("1PieceBalance", "1PieceBalance");
-    autoMode.addOption("OnePiece", "OnePiece");
+    autoMode.addOption("OnePieceBlue", "OnePiece");
     autoMode.addOption("OnePieceBalance", "OnePieceBalance");
     autoMode.addOption("OnePieceOnePickupBalance", "OnePieceOnePickupBalance");
     autoMode.addOption("TwoPiece", "TwoPiece");
     autoMode.addOption("TwoPieceBalance", "TwoPieceBalance");
-    autoMode.addOption("ZeroPiece", "ZeroPiece");
+    autoMode.addOption("ZeroPieceBlue", "ZeroPiece");
     autoMode.addOption("ZeroPieceBalance", "ZeroPieceBalance");
     autoMode.addOption("PlaceTop", "PlaceTop");
     autoMode.addOption("PlaceMid", "PlaceMid");
     autoMode.addOption("PlaceLow", "PlaceLow");
-    autoMode.addOption("ZeroPiece2", "ZeroPiece2");
-    autoMode.addOption("OnePiece2", "OnePiece2");
+    autoMode.addOption("ZeroPieceRed", "ZeroPieceRed");
+    autoMode.addOption("OnePieceRed", "OnePieceRed");
     SmartDashboard.putData("Auto Mode", autoMode);
   }
 
-
+  // 1 = blue
+  // 2 = red
 
   // CONSTRUCTOR
   /**
@@ -109,10 +110,10 @@ public class RobotContainer {
     switch (autoMode.getSelected()) {
       // SCORES ONE PIECE
       default:
-        auto = new OnePiece(driveTrain, elevator, grabber);
+        auto = new OnePieceBlue(driveTrain, elevator, grabber);
         break;
-      case "OnePiece":
-        auto = new OnePiece(driveTrain, elevator, grabber);
+      case "OnePieceBlue":
+        auto = new OnePieceBlue(driveTrain, elevator, grabber);
         break;
       case "OnePieceOnePickupBalance":
         auto = new OnePieceOnePickupBalance(driveTrain, elevator, grabber);
@@ -127,8 +128,8 @@ public class RobotContainer {
         break;
 
       // SCORES ZERO PIECES
-      case "ZeroPiece":
-        auto = new ZeroPiece(driveTrain);
+      case "ZeroPieceBlue":
+        auto = new ZeroPieceBlue(driveTrain);
         break;
       case "ZeroPieceBalance":
         auto = new ZeroPieceBalance(driveTrain);
@@ -145,10 +146,10 @@ public class RobotContainer {
         auto = new PlaceBottom(elevator, grabber);
         break;
       case "ZeroPiece2":
-        auto = new ZeroPiece2(driveTrain);
+        auto = new ZeroPieceRed(driveTrain);
         break;
       case "OnePiece2":
-        auto = new OnePiece2(driveTrain, grabber, elevator);
+        auto = new OnePieceRed(driveTrain, grabber, elevator);
     }
     return auto;
   }

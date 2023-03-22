@@ -1,6 +1,7 @@
 package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.Elevator;
 

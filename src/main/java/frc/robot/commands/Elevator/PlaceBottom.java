@@ -1,6 +1,8 @@
 package frc.robot.commands.Elevator;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.drivetrain.DriveSlow;
 import frc.robot.commands.grabber.Grab;
 import frc.robot.commands.grabber.Ungrab;
 import frc.robot.misc.Constants;
@@ -10,14 +12,19 @@ import frc.robot.subsystems.Grabber;
 public class PlaceBottom extends SequentialCommandGroup {
     public PlaceBottom(Elevator elevator, Grabber grabber){
         addCommands(
-            // new SetArmPosition(elevator, 0.1, Constants.Elevator.elbowSafe, Constants.Elevator.wristSafe).withTimeout(5),
-            // new SetArmPosition(elevator, 0.1, -90, 0).withTimeout(5),
-            // new SetArmPosition(elevator, 0.1, -90, -10).withTimeout(5),
-            // new Ungrab(grabber).withTimeout(0.3),
-            // new Grab(grabber).withTimeout(0.3),
-            // new SetArmPosition(elevator, 0.1, -90, 0).withTimeout(5),
-            // new SetArmPosition(elevator, 0.1, Constants.Elevator.elbowSafe, Constants.Elevator.wristSafe).withTimeout(5)
-            new Ungrab(grabber).withTimeout(1)
+            new ParallelCommandGroup(
+                new SequentialCommandGroup(
+                    // new SetArmPosition(elevator, 0.1, Constants.Elevator.elbowSafe, Constants.Elevator.wristSafe).withTimeout(5),
+                    // new SetArmPosition(elevator, 0.1, -90, 0).withTimeout(5),
+                    // new SetArmPosition(elevator, 0.1, -90, -10).withTimeout(5),
+                    // new Ungrab(grabber).withTimeout(0.3),
+                    // new Grab(grabber).withTimeout(0.3),
+                    // new SetArmPosition(elevator, 0.1, -90, 0).withTimeout(5),
+                    // new SetArmPosition(elevator, 0.1, Constants.Elevator.elbowSafe, Constants.Elevator.wristSafe).withTimeout(5)
+                    new Ungrab(grabber).withTimeout(1)
+                ),
+                new DriveSlow()
+            )
         );
     }
 }
