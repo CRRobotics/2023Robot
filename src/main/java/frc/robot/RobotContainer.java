@@ -63,7 +63,7 @@ public class RobotContainer {
   public static SendableChooser<String> autoMode = new SendableChooser<>();
   // configure sendable chooser
   static {
-    autoMode.setDefaultOption("1PieceBalance", "1PieceBalance");
+    autoMode.setDefaultOption("OnePieceBalance", "OnePieceBalance");
     autoMode.addOption("OnePieceBlue", "OnePiece");
     autoMode.addOption("OnePieceBalance", "OnePieceBalance");
     autoMode.addOption("OnePieceOnePickupBalance", "OnePieceOnePickupBalance");
