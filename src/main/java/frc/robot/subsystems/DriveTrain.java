@@ -61,6 +61,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     // The gyro sensor
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
     
+    
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(
         Constants.Drive.driveKinematics,
         Rotation2d.fromDegrees(gyro.getAngle()),
@@ -82,7 +83,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
             backLeft.getPosition(),
             backRight.getPosition()
         },
-        new Pose2d(0, 0, Rotation2d.fromRadians(0)), // initial pose
+        new Pose2d(1.81, 0.45, Rotation2d.fromRadians(Math.PI)), // initial pose
         VecBuilder.fill(0.1, 0.1, 0.1), // odometry standard deviation for x, y, theta
         VecBuilder.fill(0.5, 0.5, 0.5) // visions standard deviation for x, y, theta
     );
@@ -92,11 +93,13 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
 
     /** Creates a new DriveSubsystem. */
     public DriveTrain() {
-        resetOdometry(new Pose2d(1.6, 4.4, Rotation2d.fromRadians(2.8)));
+        // resetOdometry(new Pose2d(1.6, 4.4, Rotation2d.fromRadians(2.8)));
+        zeroHeading();
     }
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("gyro angle", gyro.getAngle());
         SwerveModulePosition[] swervePosition = {
             frontLeft.getPosition(),
             frontRight.getPosition(),
@@ -105,7 +108,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         };
         
         poseEstimator.update(
-            Rotation2d.fromDegrees(-gyro.getAngle()),
+            Rotation2d.fromDegrees(gyro.getAngle()),
             swervePosition
         );
 

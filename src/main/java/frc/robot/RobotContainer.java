@@ -4,6 +4,12 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,6 +20,8 @@ import frc.robot.commands.Auto.OnePiece;
 import frc.robot.commands.Auto.OnePiece2;
 import frc.robot.commands.Auto.OnePieceBalance;
 import frc.robot.commands.Auto.OnePieceOnePickupBalance;
+import frc.robot.commands.Auto.TuneRotation;
+import frc.robot.commands.Auto.TuneTranslation;
 import frc.robot.commands.Auto.TwoPiece;
 import frc.robot.commands.Auto.TwoPieceBalance;
 import frc.robot.commands.Auto.ZeroPiece;
@@ -65,6 +73,10 @@ public class RobotContainer {
     return grabber;
   }
 
+  public DriveTrain getDriveTrain() {
+    return driveTrain;
+  }
+
   static {
     autoMode.setDefaultOption("1PieceBalance", "1PieceBalance");
     autoMode.addOption("OnePiece", "OnePiece");
@@ -79,6 +91,8 @@ public class RobotContainer {
     autoMode.addOption("PlaceLow", "PlaceLow");
     autoMode.addOption("ZeroPiece2", "ZeroPiece2");
     autoMode.addOption("OnePiece2", "OnePiece2");
+    autoMode.addOption("Tune Translation", "Tune Translation");
+    autoMode.addOption("Tune Rotation", "Tune Rotation");
     SmartDashboard.putData("Auto Mode", autoMode);
   }
 
@@ -145,8 +159,8 @@ new JoystickButton(driver, XboxController.Button.kB.value)
   .whileTrue(new DriveToPiece(driveTrain));
 new JoystickButton(driver, XboxController.Button.kX.value)
   .whileTrue(new BalanceRoutine(driveTrain));
-new JoystickButton(driver, 5).whileTrue(new DriveSlow());
-new JoystickButton(driver, 6).whileTrue(new DriveFast());
+new JoystickButton(driver, 6).whileTrue(new DriveSlow());
+new JoystickButton(driver, 5).whileTrue(new DriveFast());
   }
 
   /**
@@ -193,7 +207,20 @@ new JoystickButton(driver, 6).whileTrue(new DriveFast());
         break;
       case "OnePiece2":
         auto = new OnePiece2(driveTrain, grabber, elevator);
+        break;
+      case "Tune Translation":
+        auto = new TuneTranslation(driveTrain);
+        break;
+      case "Tune Rotation":
+        auto = new TuneRotation(driveTrain);
+        break;
     }
     return auto;
+  }
+
+  public static Pose2d getInitialPose(String pathName, boolean mirrored) {
+    Pose2d path = PathPlanner.loadPath(pathName, Constants.Auto.constraints).getInitialPose();
+    if (!mirrored) return path;
+    else return new Pose2d(new Translation2d(16.5, 0), new Rotation2d(Math.PI)).minus(path);
   }
 }

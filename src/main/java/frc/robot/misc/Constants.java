@@ -73,14 +73,14 @@ public interface Constants {
                 new Translation2d(wheelBase / 2, -trackWidth / 2),
                 new Translation2d(-wheelBase / 2, trackWidth / 2),
                 new Translation2d(-wheelBase / 2, -trackWidth / 2));//Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
-        double maxSpeed = 2; // meters per second
+        double maxSpeed = 4; // meters per second
         double maxAngularSpeed = 2 * Math.PI; // radians per second;
         boolean gyroReversed = true; //Determines whether the gyro is reversed (I think)
 
         double driveDeadBand = 0.025;
 
-        double magnitudeSlewRate = 1.8; //rads per second
-        double kDirectionSlewRate = 1.2; // percent per second (1 = 100%)
+        double magnitudeSlewRate = 2.4; //rads per second
+        double kDirectionSlewRate = 1.8; // percent per second (1 = 100%)
         double rotationSlewRate = 2.0; // percent per second (1 = 100%)
     }
 
@@ -114,7 +114,7 @@ public interface Constants {
         double allowableAngleError = 0.07;
         double allowableElevatorError = 0.04;
         int elevatorMotorID = 62;
-        double elevatorP = 0.003;
+        double elevatorP = 0.0015;
         double elevatorI = 0;
         double elevatorD = 0;
         double elevatorKG = 0.03;
