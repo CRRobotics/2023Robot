@@ -82,10 +82,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    System.out.println(DriverStation.getAlliance().toString());
+    // robotContainer.getDriveTrain().setGyroAngle(0);
     autoCommand = robotContainer.getAutonomousCommand();
     boolean mirrored = !(DriverStation.getAlliance() == Alliance.Blue); 
-    robotContainer.getDriveTrain().resetOdometry(mirrored ? RobotContainer.getInitialPose("1Piece", mirrored));
+    robotContainer.getDriveTrain().resetOdometry(robotContainer.getInitialPose("1Piece", mirrored));
     if (autoCommand != null) {
       autoCommand.schedule();
     }

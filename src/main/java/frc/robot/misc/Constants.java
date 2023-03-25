@@ -114,7 +114,7 @@ public interface Constants {
         double allowableAngleError = 0.07;
         double allowableElevatorError = 0.04;
         int elevatorMotorID = 62;
-        double elevatorP = 0.0015;
+        double elevatorP = 0.0005;
         double elevatorI = 0;
         double elevatorD = 0;
         double elevatorKG = 0.03;

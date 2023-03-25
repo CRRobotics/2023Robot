@@ -99,6 +99,27 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
 
     @Override
     public void periodic() {
+
+        
+        double xTarget = DriverStation.getAlliance().equals(Alliance.Red) ? 14.73 : 1.82;
+        double[] scoringPositions = {
+            0.46, 1.07, 1.64, 2.2, 2.74, 1.81, 3.87, 4.42, 5.07 // y positions in m of 9 scoring positions
+        };
+        Translation2d robotPosition = getPose().getTranslation(); // current position
+
+        // calculates which position is closest
+        double[] distances = new double[9];
+        int minDistanceIndex = 0;
+        for (int i = 0; i < distances.length; i++) {
+            distances[i] = robotPosition.getDistance(new Translation2d(xTarget, scoringPositions[i]));
+            if (distances[i] < distances[minDistanceIndex]) {
+                minDistanceIndex = i;
+            }
+        }
+        SmartDashboard.putNumber("closest scoring position", minDistanceIndex);
+        SmartDashboard.putNumber("distanceToPosition", robotPosition.getDistance(new Translation2d(xTarget, scoringPositions[minDistanceIndex])));
+
+
         SmartDashboard.putNumber("gyro angle", gyro.getAngle());
         SwerveModulePosition[] swervePosition = {
             frontLeft.getPosition(),
@@ -127,7 +148,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
                         NetworkTableWrapper.getDouble(i, "ry"),
                         Rotation2d.fromRadians(NetworkTableWrapper.getDouble(i, "theta"))
                     ),
-                    Timer.getFPGATimestamp(), // needs to be tested and calibrated
+                    Timer.getFPGATimestamp() + 0.01, // needs to be tested and calibrated
                     VecBuilder.fill(0.8 * distance, 0.8 * distance, 0.8 * distance) // needs to be calibrated
                 );
             }
@@ -215,6 +236,11 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         gyro.reset();
     }
 
+    public void setGyroAngle(double angle) {
+        // gyro.setAngleAdjustment(angle * 180 / Math.PI);
+        gyro.setAngleAdjustment(getHeading());
+    }
+
     public double getGyroAngle() {
         return gyro.getAngle() * Math.PI / 180;
     }
@@ -263,6 +289,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         }
         SmartDashboard.putNumber("closest scoring position", minDistanceIndex);
 
+        minDistanceIndex = 3;
         Pose2d targetPose = new Pose2d(new Translation2d(xTarget, scoringPositions[minDistanceIndex]), Rotation2d.fromDegrees(0)); // top node on red
         Translation2d translationDifference = targetPose.getTranslation().minus(robotPosition); // difference between target and current
         // calculates wheel angle needed to target from x and y components
@@ -299,11 +326,18 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
             new PathPoint(new Translation2d(xCoordinateOfRobot, targetY), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180))
             // new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation())
             ),
-            gyroReversed);
+            false);
+        field.getObject("traj").setTrajectory(PathPlanner.generatePath(
+            new PathConstraints(0.25, 0.25),
+            new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation()),
+            new PathPoint(new Translation2d(xCoordinateOfRobot, targetY), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180))
+            // new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation())
+            ));
         return driveCommand;
     }
 
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean mirrorPath) {
+        field.getObject("traj").setTrajectory(traj);
         return new SequentialCommandGroup(
                      new PPSwerveControllerCommand(
                         traj, 
@@ -320,7 +354,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
                             SmartDashboard.getNumber("drivetrain/xD", 0)
                         ), // Y PID controller, probably the same as X controller
                         new PIDController(
-                            SmartDashboard.getNumber("drivetrain/thetaP", 0),
+                            SmartDashboard.getNumber("drivetrain/thetaP", 0.0001),
                             SmartDashboard.getNumber("drivetrain/thetaI", 0),
                             SmartDashboard.getNumber("drivetrain/thetaD", 0)
                         ), // Rotation PID controller

@@ -218,9 +218,10 @@ new JoystickButton(driver, 5).whileTrue(new DriveFast());
     return auto;
   }
 
-  public static Pose2d getInitialPose(String pathName, boolean mirrored) {
+  public Pose2d getInitialPose(String pathName, boolean red) {
     Pose2d path = PathPlanner.loadPath(pathName, Constants.Auto.constraints).getInitialPose();
-    if (!mirrored) return path;
-    else return new Pose2d(new Translation2d(16.5, 0), new Rotation2d(Math.PI)).minus(path);
+    if (!red) return new Pose2d(path.getTranslation(), new Rotation2d(Math.PI));
+    // else driveTrain.setGyroAngle(0);
+    return new Pose2d(new Translation2d(16.5 - path.getX(), path.getY()), new Rotation2d(Math.PI));
   }
 }

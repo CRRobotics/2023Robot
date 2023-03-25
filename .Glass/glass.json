@@ -47,7 +47,29 @@
       "/SmartDashboard/PIDController[3]": "PIDController"
     },
     "windows": {
+      "/SmartDashboard/Auto Mode": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Field": {
+        "Robot": {
+          "style": "Box/Image"
+        },
+        "image": "C:\\Users\\user\\Downloads\\PathPlanner-Windows\\data\\flutter_assets\\images\\field23.png",
+        "traj": {
+          "arrowSize": 21,
+          "arrows": false,
+          "color": [
+            0.02828964963555336,
+            0.4283345341682434,
+            0.9578059315681458,
+            255.0
+          ],
+          "style": "Line",
+          "weight": 2.0
+        },
+        "width": 16.850000381469727,
         "window": {
           "visible": true
         }
@@ -257,6 +279,29 @@
       "window": {
         "visible": false
       }
+    },
+    "Plot <7>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
+          "height": 332,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/gyro angle"
+            }
+          ]
+        }
+      ]
     }
   }
 }
