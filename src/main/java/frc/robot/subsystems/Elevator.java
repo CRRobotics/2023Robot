@@ -166,14 +166,17 @@ public class Elevator extends SubsystemBase implements Constants.Elevator {
         SmartDashboard.putNumber("elbow/elbow position", elbowMotor.getSelectedSensorPosition());
         SmartDashboard.putNumber("elbow/elbow voltage", elbowMotor.getMotorOutputVoltage());
         SmartDashboard.putNumber("elbow/elbow position degrees", elbowMotor.getSelectedSensorPosition() / elbowTicksPerDegree);
+        SmartDashboard.putNumber("elbow/elbow velocity", getElbowVelocity());
 
         SmartDashboard.putNumber("wrist/wrist position", wristMotor.getSelectedSensorPosition());
         SmartDashboard.putNumber("wrist/wrist voltage", wristMotor.getMotorOutputVoltage());
         SmartDashboard.putNumber("wrist/wrist position degrees", wristMotor.getSelectedSensorPosition() / wristTicksPerDegree);
+        SmartDashboard.putNumber("wrist/wrist velocity", getWristVelocity());
 
         SmartDashboard.putNumber("elevator/elevator position", elevatorEncoder.getDistance());
         SmartDashboard.putNumber("elevator/elevator position meters", elevatorEncoder.getDistance() / elevatorTicksPerMeter);
         SmartDashboard.putNumber("elevator/elevator voltage", elevatorMotor.getAppliedOutput());
+        SmartDashboard.putNumber("elevator/elevator velocity", getElevatorVelocity());
     }
 
     /**

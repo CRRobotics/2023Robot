@@ -11,10 +11,7 @@ public class AutoTop extends SequentialCommandGroup{
     public AutoTop(Elevator elevator, Grabber grabber){
         addCommands(
             new Grab(grabber).withTimeout(.7),
-            new SetArmPosition(elevator, 0.34, Constants.Elevator.elbowOffset, Constants.Elevator.wristOffset).withTimeout(5),
-            new SetArmPosition(elevator, 0.34, -75, 0).withTimeout(5),
-            new SetArmPosition(elevator, 0.755, -75, 0).withTimeout(5),
-            new SetArmPosition(elevator, 0.755, -10, 0).withTimeout(5),
+            new PlaceTop(elevator),
             new Ungrab(grabber).withTimeout(.5),
             new SetArmPosition(elevator, 0.755, -75, 0).withTimeout(5),
             new SetArmPosition(elevator, 0.34, -75, 0).withTimeout(5),

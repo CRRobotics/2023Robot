@@ -25,7 +25,7 @@ public class DriveToPiece extends CommandBase {
 
     @Override
     public void initialize() {
-        pid = new PIDController(SmartDashboard.getNumber("piece auto P", 0), 0, 0);
+        driveTrain.driveToPieceCommand().schedule();
     }
 
     @Override

@@ -31,27 +31,27 @@ public class SetArmPosition extends CommandBase implements Constants.Elevator {
     private TrapezoidProfile.State wristGoal;
     private TrapezoidProfile wristProfile;
 
-    public SetArmPosition(Elevator elevator, double elevatorPosition, double elevatorVelocity, double elbowPoisition, double elbowVelocity, double wristPosition, double wristVelocity) {
+    public SetArmPosition(Elevator elevator, double elevatorPosition, double elevatorVelocity, double elbowPosition, double elbowVelocity, double wristPosition, double wristVelocity) {
         this.elevator = elevator;
         this.elevatorPosition = elevatorPosition;
-        this.elevatorVelocity = elevatorVelocity;
         this.elbowPosition = elbowPosition * (Math.PI / 180);
-        this.elbowVelocity = elbowVelocity;
         this.wristPosition = wristPosition * (Math.PI / 180);
+        this.elevatorVelocity = elevatorVelocity;
+        this.elbowVelocity = elbowVelocity;
         this.wristVelocity = wristVelocity;
         addRequirements(elevator);
     }
 
     public SetArmPosition(Elevator elevator, double elevatorPosition, double elbowPosition, double wristPosition) {
     // this(elevator, elevatorPosition, 0, elbowPosition, 0, wristPosition, 0);
-    this.elevator = elevator;
-    this.elevatorPosition = elevatorPosition;
-    this.elbowPosition = elbowPosition * (Math.PI / 180);
-    this.wristPosition = wristPosition * (Math.PI / 180);
-    this.elevatorVelocity = 0;
-    this.elbowVelocity = 0;
-    this.wristVelocity = 0;
-    addRequirements(elevator);
+        this.elevator = elevator;
+        this.elevatorPosition = elevatorPosition;
+        this.elbowPosition = elbowPosition * (Math.PI / 180);
+        this.wristPosition = wristPosition * (Math.PI / 180);
+        this.elevatorVelocity = 0;
+        this.elbowVelocity = 0;
+        this.wristVelocity = 0;
+        addRequirements(elevator);
     }
 
     @Override
@@ -63,15 +63,19 @@ public class SetArmPosition extends CommandBase implements Constants.Elevator {
         elbowGoal = new TrapezoidProfile.State(elbowPosition, elbowVelocity);
         wristGoal = new TrapezoidProfile.State(wristPosition, wristVelocity);
 
+        System.out.println("elevator goal position: " + elevatorGoal.position);
+        System.out.println("elevator goal velocity: " + elevatorGoal.velocity);
+        System.out.println("elbow goal position: " + elbowGoal.position);
+        System.out.println("elbow goal velocity: " + elbowGoal.velocity);
+        System.out.println("wrist goal position: " + wristGoal.position);
+        System.out.println("wrist goal velocity: " + wristGoal.velocity);
+
         elevator.getElbowMotor().config_kP(0, elbowMotorP);
         elevator.getWristMotor().config_kP(0, wristMotorP);
 
-        elevatorSetpoint = new TrapezoidProfile.State(elevator.getElevatorPosition(), 0);
+        elevatorSetpoint = new TrapezoidProfile.State(elevator.getElevatorPosition(), elevator.getElevatorVelocity());
         elbowSetpoint = new TrapezoidProfile.State(elevator.getElbowPosition(), 0);
         wristSetpoint = new TrapezoidProfile.State(elevator.getWristPosition(), 0);
-        
-        System.out.println(elbowGoal.position);
-        System.out.println(elevator.getElbowPosition());
         
         elevatorProfile = new TrapezoidProfile(
             new TrapezoidProfile.Constraints(elevatorMaxVelocity, elevatorMaxAcceleration), elevatorGoal, elevatorSetpoint);

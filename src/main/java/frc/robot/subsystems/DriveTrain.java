@@ -76,7 +76,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     // Kalman filter for tracking robot pose
     SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
         Constants.Drive.driveKinematics, // kinematics
-        Rotation2d.fromDegrees(gyro.getAngle()), // initial angle
+        Rotation2d.fromDegrees(-gyro.getAngle()), // initial angle
         new SwerveModulePosition[] { // initial module positions
             frontLeft.getPosition(),
             frontRight.getPosition(),
@@ -129,7 +129,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         };
         
         poseEstimator.update(
-            Rotation2d.fromDegrees(gyro.getAngle()),
+            Rotation2d.fromDegrees(-gyro.getAngle()),
             swervePosition
         );
 
@@ -140,7 +140,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         
         // update with visions data from these cameras ids:
         for (String i : new String[]{"0", "2", "4"}) {
-            if (NetworkTableWrapper.getDouble(i, "ntags") != 0) {
+            if (NetworkTableWrapper.getDouble(i, "ntags") != 0 && NetworkTableWrapper.getDouble(i, "rx") < 20 && NetworkTableWrapper.getDouble(i, "ry") < 20) {
                 double distance = getPose().getTranslation().getDistance(new Translation2d(NetworkTableWrapper.getDouble(i, "rx"), NetworkTableWrapper.getDouble(i, "ry")));
                 poseEstimator.addVisionMeasurement(
                     new Pose2d(
@@ -316,34 +316,36 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     }
 
     public Command driveToPieceCommand() {
-        double[] pieceData;
-        if (NetworkTableWrapper.getArray("Detector", "Cone")[0] == 1) {
-            pieceData = NetworkTableWrapper.getArray("Detector", "Cone");
-        } else {
-            pieceData = NetworkTableWrapper.getArray("Detector", "Cube");
-        }
-        Translation2d currentPosition = getPose().getTranslation();
+        // double[] pieceData;
+        // if (NetworkTableWrapper.getArray("Detector", "Cone")[0] == 1) {
+        //     pieceData = NetworkTableWrapper.getArray("Detector", "Cone");
+        // } else {
+        //     pieceData = NetworkTableWrapper.getArray("Detector", "Cube");
+        // }
+        // Translation2d currentPosition = getPose().getTranslation();
 
-        double xCoordinateOfRobot = currentPosition.getX();
-        double yCoordinateOfRobot = currentPosition.getY();
-        double rotationAngleOfRobot = getPose().getRotation().getRadians();
-        GetGlobalCoordinates myGlobalCoordinates = new GetGlobalCoordinates(xCoordinateOfRobot, yCoordinateOfRobot, rotationAngleOfRobot, pieceData);
-        double targetX = myGlobalCoordinates.globalX;
-        double targetY = myGlobalCoordinates.globalY;
+        // double xCoordinateOfRobot = currentPosition.getX();
+        // double yCoordinateOfRobot = currentPosition.getY();
+        // double rotationAngleOfRobot = getPose().getRotation().getRadians();
+        // GetGlobalCoordinates myGlobalCoordinates = new GetGlobalCoordinates(xCoordinateOfRobot, yCoordinateOfRobot, rotationAngleOfRobot, pieceData);
+        // double targetX = myGlobalCoordinates.globalX;
+        // double targetY = myGlobalCoordinates.globalY;
+        double targetX = 0.872;
+        double targetY = 6.77;
         Rotation2d translationRotation = new Rotation2d(targetX, targetY);
         SmartDashboard.putNumber("target X", targetX);
         SmartDashboard.putNumber("target Y", targetY);
         Command driveCommand = followTrajectoryCommand(PathPlanner.generatePath(
-            new PathConstraints(0.25, 0.25),
+            new PathConstraints(0.5, 0.5),
             new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation()),
-            new PathPoint(new Translation2d(xCoordinateOfRobot, targetY), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180))
+            new PathPoint(new Translation2d(targetX, targetY), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180))
             // new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation())
             ),
             false);
         field.getObject("traj").setTrajectory(PathPlanner.generatePath(
-            new PathConstraints(0.25, 0.25),
+            new PathConstraints(0.5, 0.5),
             new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation()),
-            new PathPoint(new Translation2d(xCoordinateOfRobot, targetY), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180))
+            new PathPoint(new Translation2d(targetX, targetY), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180))
             // new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation())
             ));
         return driveCommand;
