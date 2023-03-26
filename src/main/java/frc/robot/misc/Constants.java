@@ -8,12 +8,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public interface Constants {
-    interface Indexer {
-        double indexerP = 0.001; //TODO these values need to be tuned
-        double indexerI = 0;
-        double indexerD = 0;
-        String indexerCamTable = "0";
-    }
     interface SwerveModule {
         double wheelDiameter = 0.0762; //meters
         double wheelCircumference = Math.PI * wheelDiameter; // meters
@@ -183,13 +177,5 @@ public interface Constants {
         double groundElevator = 0;
         double groundElbow = 0;
         double groundWrist = 0;
-    }
-
-    interface Acquisition {
-        int highMotorID = 1;
-        int lowMotorID = 2;
-        double intakeSpeed = 0.25;
-        double rejectSpeed = 0.25;
-        double downPosition = 0;
     }
 }

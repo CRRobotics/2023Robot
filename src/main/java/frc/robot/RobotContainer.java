@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,13 +12,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Auto.OnePieceBlue;
-import frc.robot.commands.Auto.OnePieceRed;
 import frc.robot.commands.Auto.OnePieceOnePickupBalance;
+import frc.robot.commands.Auto.OnePieceRed;
 import frc.robot.commands.Auto.TwoPiece;
 import frc.robot.commands.Auto.TwoPieceBalance;
+import frc.robot.commands.Auto.ZeroPieceBalance;
 import frc.robot.commands.Auto.ZeroPieceBlue;
 import frc.robot.commands.Auto.ZeroPieceRed;
-import frc.robot.commands.Auto.ZeroPieceBalance;
 import frc.robot.commands.Elevator.AcquireDoubleSub;
 import frc.robot.commands.Elevator.AutoTop;
 import frc.robot.commands.Elevator.FoldIn;
@@ -25,13 +26,13 @@ import frc.robot.commands.Elevator.GroundPickupCube;
 import frc.robot.commands.Elevator.PlaceBottom;
 import frc.robot.commands.Elevator.PlaceMid;
 import frc.robot.commands.Elevator.PlaceTop;
-import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.drivetrain.BalanceRoutine;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
 import frc.robot.commands.drivetrain.DriveStates;
 import frc.robot.commands.drivetrain.DriveToPiece;
 import frc.robot.commands.drivetrain.DriveToScoring;
+import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.grabber.Grab;
 import frc.robot.commands.grabber.Ungrab;
 import frc.robot.misc.Constants;
@@ -49,12 +50,12 @@ public class RobotContainer {
   public Elevator getElevator() {return elevator;}
   private final Grabber grabber = new Grabber();
   public Grabber getGrabber() {return grabber;}
-  
-  private static final Mode.Speed SPEED = Mode.Speed.FAST;
-  private static final Mode.WheelState WHEEL_STATE = Mode.WheelState.ADAPTIVE;
-  private static final Mode.PieceType PIECE_TYPE = Mode.PieceType.CONE;
-  private static final Mode.Alliance ALLIANCE = (DriverStation.getAlliance() == DriverStation.Alliance.RED)? Mode.Allience.RED:Mode.Allience.BLUE;
-  private static final Mode.StartingPos STARTING_POS = Mode.StartingPos.CLOSE;
+
+  private static final Mode state = new Mode(
+    DriverStation.getAlliance(),
+    DriverStation.getLocation(),
+    Mode.ControllMode.ROBOT_RELATIVE
+  );
 
   
   // INPUT
