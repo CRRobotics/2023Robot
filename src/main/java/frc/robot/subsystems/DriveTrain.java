@@ -160,7 +160,10 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         // SmartDashboard.putData(odoField);
         field.setRobotPose(getPose());
         SmartDashboard.putData(field);
-        SmartDashboard.putNumber("odoTheta", odoField.getRobotPose().getRotation().getDegrees());
+    }
+
+    public Field2d getField() {
+        return field;
     }
 
     /**
@@ -254,6 +257,16 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         return poseEstimator.getEstimatedPosition().getRotation().getDegrees();
     }
 
+    public SwerveModuleState[] getModuleStates() {
+        SwerveModuleState[] states = {
+            frontLeft.getState(),
+            frontRight.getState(),
+            backLeft.getState(),
+            backRight.getState()
+        };
+        return states;
+    }
+
     public double getPitch() {
         return gyro.getPitch();
     }
@@ -274,7 +287,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     public Command closestScoringCommand() {
         double xTarget = DriverStation.getAlliance().equals(Alliance.Red) ? 14.73 : 1.82;
         double[] scoringPositions = {
-            0.46, 1.07, 1.64, 2.2, 2.74, 1.81, 3.87, 4.42, 5.07 // y positions in m of 9 scoring positions
+            0.46, 1.07, 1.64, 2.2, 2.74, 3.33, 3.87, 4.42, 5.07 // y positions in m of 9 scoring positions
         };
         Translation2d robotPosition = getPose().getTranslation(); // current position
 
@@ -287,9 +300,9 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
                 minDistanceIndex = i;
             }
         }
+        minDistanceIndex = 5;
         SmartDashboard.putNumber("closest scoring position", minDistanceIndex);
 
-        minDistanceIndex = 3;
         Pose2d targetPose = new Pose2d(new Translation2d(xTarget, scoringPositions[minDistanceIndex]), Rotation2d.fromDegrees(0)); // top node on red
         Translation2d translationDifference = targetPose.getTranslation().minus(robotPosition); // difference between target and current
         // calculates wheel angle needed to target from x and y components
@@ -337,6 +350,15 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     }
 
     public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean mirrorPath) {
+        PIDController thetaController = new PIDController(
+            SmartDashboard.getNumber("drivetrain/thetaP", 0),
+            SmartDashboard.getNumber("drivetrain/thetaI", 0),
+            SmartDashboard.getNumber("drivetrain/thetaD", 0)
+        ); // Rotation PID controller
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        thetaController.setTolerance(0.025);
+        SmartDashboard.putNumber("theta position tolerance", thetaController.getPositionTolerance());
+        SmartDashboard.putNumber("theta velocity tolerance", thetaController.getVelocityTolerance());
         field.getObject("traj").setTrajectory(traj);
         return new SequentialCommandGroup(
                      new PPSwerveControllerCommand(
@@ -353,11 +375,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
                             SmartDashboard.getNumber("drivetrain/xI", 0),
                             SmartDashboard.getNumber("drivetrain/xD", 0)
                         ), // Y PID controller, probably the same as X controller
-                        new PIDController(
-                            SmartDashboard.getNumber("drivetrain/thetaP", 0.0001),
-                            SmartDashboard.getNumber("drivetrain/thetaI", 0),
-                            SmartDashboard.getNumber("drivetrain/thetaD", 0)
-                        ), // Rotation PID controller
+                        thetaController,
                         this::setModuleStates, // Module states consumer
                         mirrorPath, // mirrors path based on alliance
                         this // Requires this drive subsystem

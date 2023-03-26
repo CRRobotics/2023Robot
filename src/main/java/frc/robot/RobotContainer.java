@@ -111,7 +111,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("grabber/speed", 0.6);
     SmartDashboard.putNumber("grabber/current limit", 10);
     
-    SmartDashboard.putNumber("drivetrain/xP", 0);
+    SmartDashboard.putNumber("drivetrain/xP", 0.22);
     SmartDashboard.putNumber("drivetrain/xI", 0);
     SmartDashboard.putNumber("drivetrain/xD", 0);
     SmartDashboard.putNumber("drivetrain/thetaP", 0);
