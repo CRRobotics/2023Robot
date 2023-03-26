@@ -35,6 +35,7 @@ import frc.robot.commands.drivetrain.DriveToScoring;
 import frc.robot.commands.grabber.Grab;
 import frc.robot.commands.grabber.Ungrab;
 import frc.robot.misc.Constants;
+import frc.robot.misc.Mode;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
@@ -49,6 +50,11 @@ public class RobotContainer {
   private final Grabber grabber = new Grabber();
   public Grabber getGrabber() {return grabber;}
   
+  private static final Mode.Speed SPEED = Mode.Speed.FAST;
+  private static final Mode.WheelState WHEEL_STATE = Mode.WheelState.ADAPTIVE;
+  private static final Mode.PieceType PIECE_TYPE = Mode.PieceType.CONE;
+  private static final Mode.Alliance ALLIANCE = (DriverStation.getAlliance() == DriverStation.Alliance.RED)? Mode.Allience.RED:Mode.Allience.BLUE;
+  private static final Mode.StartingPos STARTING_POS = Mode.StartingPos.CLOSE;
 
   
   // INPUT

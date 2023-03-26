@@ -3,12 +3,17 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-import edu.wpi.first.hal.AllianceStationID;
+
+import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.CoordinateAxis;
-import edu.wpi.first.math.geometry.CoordinateSystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,9 +22,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,37 +35,42 @@ import frc.robot.misc.GetGlobalCoordinates;
 import frc.robot.misc.NetworkTableWrapper;
 import frc.robot.misc.SwerveModule;
 
-import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPoint;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 public class DriveTrain extends SubsystemBase implements Constants.Drive {
-    // Create MAXSwerveModules
-    private final SwerveModule frontLeft = new SwerveModule( // chimera 11& 12
+    //#region MOTORS
+    // Swerve Modules (MAXSwerveModule)
+    private final SwerveModule frontLeft = new SwerveModule( // chimera 11 & 12
             Constants.Drive.chimeraWheelID,
             Constants.Drive.chimeraTurnID,
             Constants.Drive.frontLeftAngularOffset);
 
-    private final SwerveModule frontRight = new SwerveModule( // manticore 9&10
+    private final SwerveModule frontRight = new SwerveModule( // manticore 9 & 10
             Constants.Drive.manticoreWheelID,
             Constants.Drive.manticoreTurnID,
             Constants.Drive.frontRightAngularOffset);
 
-    private final SwerveModule backLeft = new SwerveModule( //phoenix 13&14
+    private final SwerveModule backLeft = new SwerveModule( //phoenix 13 & 14
             Constants.Drive.phoenixWheelID,
             Constants.Drive.phoenixTurnID,
             Constants.Drive.backLeftAngularOffset);
 
-    private final SwerveModule backRight = new SwerveModule( //Leviathan 5&6
+    private final SwerveModule backRight = new SwerveModule( //Leviathan 5 & 6
             Constants.Drive.leviathanWheelID,
             Constants.Drive.leviathanTurnID,
             Constants.Drive.backRightAngularOffset);
-// Cerberus 7&8
-    // The gyro sensor
+    // Cerberus 7&8
+    //#endregion MOTORS
+
+
+
+    //#region OBJECTS
+    // Onboard gyroscope
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
-    
+    // Kinematic field
+    private Field2d field = new Field2d();
+    // Odometric field
+    private Field2d odoField = new Field2d();
+
+    // Odometry object
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(
         Constants.Drive.driveKinematics,
         Rotation2d.fromDegrees(gyro.getAngle()),
@@ -86,12 +96,14 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         VecBuilder.fill(0.1, 0.1, 0.1), // odometry standard deviation for x, y, theta
         VecBuilder.fill(0.5, 0.5, 0.5) // visions standard deviation for x, y, theta
     );
+    //#endregion OBJECTS
 
-    private Field2d field = new Field2d();
-    private Field2d odoField = new Field2d();
 
+
+    // CONSTRUCTOR
     /** Creates a new DriveSubsystem. */
     public DriveTrain() {
+        
         resetOdometry(new Pose2d(1.6, 4.4, Rotation2d.fromRadians(2.8)));
     }
 
@@ -139,9 +151,10 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         SmartDashboard.putNumber("odoTheta", odoField.getRobotPose().getRotation().getDegrees());
     }
 
+
+    
     /**
      * Returns the currently-estimated pose of the robot.
-     *
      * @return The pose.
      */
     public Pose2d getPose() {
@@ -190,7 +203,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         backRight.setDesiredState(desiredStates[3]);
     }
 
-    // public void setMotorSpeeds(double speed) {
+    public void setMotorSpeeds(double speed) {
         setModuleStates(new SwerveModuleState[]{
             new SwerveModuleState(speed, new Rotation2d(0)),
             new SwerveModuleState(speed, new Rotation2d(0)),
