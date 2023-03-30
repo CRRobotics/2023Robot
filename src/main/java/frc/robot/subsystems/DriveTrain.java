@@ -245,7 +245,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     }
 
     public double getGyroAngle() {
-        return gyro.getAngle() * Math.PI / 180;
+        return -gyro.getAngle() * Math.PI / 180;
     }
 
     /**
@@ -300,7 +300,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
                 minDistanceIndex = i;
             }
         }
-        minDistanceIndex = 5;
+        //minDistanceIndex = 5;
         SmartDashboard.putNumber("closest scoring position", minDistanceIndex);
 
         Pose2d targetPose = new Pose2d(new Translation2d(xTarget, scoringPositions[minDistanceIndex]), Rotation2d.fromDegrees(0)); // top node on red
@@ -316,22 +316,22 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     }
 
     public Command driveToPieceCommand() {
-        // double[] pieceData;
-        // if (NetworkTableWrapper.getArray("Detector", "Cone")[0] == 1) {
-        //     pieceData = NetworkTableWrapper.getArray("Detector", "Cone");
-        // } else {
-        //     pieceData = NetworkTableWrapper.getArray("Detector", "Cube");
-        // }
-        // Translation2d currentPosition = getPose().getTranslation();
+        double[] pieceData;
+        if (NetworkTableWrapper.getArray("Detector", "Cone")[0] == 1) {
+            pieceData = NetworkTableWrapper.getArray("Detector", "Cone");
+        } else {
+            pieceData = NetworkTableWrapper.getArray("Detector", "Cube");
+        }
+        Translation2d currentPosition = getPose().getTranslation();
 
-        // double xCoordinateOfRobot = currentPosition.getX();
-        // double yCoordinateOfRobot = currentPosition.getY();
-        // double rotationAngleOfRobot = getPose().getRotation().getRadians();
-        // GetGlobalCoordinates myGlobalCoordinates = new GetGlobalCoordinates(xCoordinateOfRobot, yCoordinateOfRobot, rotationAngleOfRobot, pieceData);
-        // double targetX = myGlobalCoordinates.globalX;
-        // double targetY = myGlobalCoordinates.globalY;
-        double targetX = 0.872;
-        double targetY = 6.77;
+        double xCoordinateOfRobot = currentPosition.getX();
+        double yCoordinateOfRobot = currentPosition.getY();
+        double rotationAngleOfRobot = getPose().getRotation().getRadians();
+        GetGlobalCoordinates myGlobalCoordinates = new GetGlobalCoordinates(xCoordinateOfRobot, yCoordinateOfRobot, rotationAngleOfRobot, pieceData);
+        double targetX = myGlobalCoordinates.globalX + (DriverStation.getAlliance() == Alliance.Blue ? -0.77 : 0.77);
+        double targetY = myGlobalCoordinates.globalY;
+        // double targetX = 0.872;
+        // double targetY = 6.77;
         Rotation2d translationRotation = new Rotation2d(targetX, targetY);
         SmartDashboard.putNumber("target X", targetX);
         SmartDashboard.putNumber("target Y", targetY);

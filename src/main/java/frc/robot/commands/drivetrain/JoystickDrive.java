@@ -24,6 +24,7 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
     SlewRateLimiter magnitudeLimiter;
     SlewRateLimiter rotationLimiter;
     double previousTime;
+
     XboxController controller = new XboxController(0);
     private double speedAdjustedMaxSpeed;
 
@@ -65,7 +66,9 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
         double xSpeed = -MathUtil.applyDeadband(controller.getLeftY(), driveDeadBand);
         double ySpeed = -MathUtil.applyDeadband(controller.getLeftX(), driveDeadBand);
         double rotation = -MathUtil.applyDeadband(controller.getRightX(), driveDeadBand);
-        boolean fieldRelative = false;
+        // boolean fieldRelative = SmartDashboard.getBoolean("field relative", false);
+        boolean fieldRelative = true;
+
 
         SmartDashboard.putNumber("xspeed", -controller.getLeftY());
         SmartDashboard.putNumber("ySpeed", -controller.getLeftX());

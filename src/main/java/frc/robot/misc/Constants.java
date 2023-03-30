@@ -111,11 +111,11 @@ public interface Constants {
     }
 
     interface Elevator {
-        double safetyFactor = 1;
+        double safetyFactor = 3.25;
         double allowableAngleError = 0.07;
         double allowableElevatorError = 0.04;
         int elevatorMotorID = 62;
-        double elevatorP = 0.002;
+        double elevatorP = 0.00145;
         double elevatorI = 0;
         double elevatorD = 0;
         double elevatorKG = 0.03;

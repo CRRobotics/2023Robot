@@ -79,18 +79,18 @@ public class RobotContainer {
 
   static {
     autoMode.setDefaultOption("1PieceBalance", "1PieceBalance");
-    autoMode.addOption("OnePiece", "OnePiece");
+    autoMode.addOption("OnePieceBlue", "OnePiece");
     autoMode.addOption("OnePieceBalance", "OnePieceBalance");
     autoMode.addOption("OnePieceOnePickupBalance", "OnePieceOnePickupBalance");
     autoMode.addOption("TwoPiece", "TwoPiece");
     autoMode.addOption("TwoPieceBalance", "TwoPieceBalance");
-    autoMode.addOption("ZeroPiece", "ZeroPiece");
+    autoMode.addOption("ZeroPieceBlue", "ZeroPiece");
     autoMode.addOption("ZeroPieceBalance", "ZeroPieceBalance");
     autoMode.addOption("PlaceTop", "PlaceTop");
     autoMode.addOption("PlaceMid", "PlaceMid");
     autoMode.addOption("PlaceLow", "PlaceLow");
-    autoMode.addOption("ZeroPiece2", "ZeroPiece2");
-    autoMode.addOption("OnePiece2", "OnePiece2");
+    autoMode.addOption("ZeroPieceRed", "ZeroPiece2");
+    autoMode.addOption("OnePieceRed", "OnePiece2");
     autoMode.addOption("Tune Translation", "Tune Translation");
     autoMode.addOption("Tune Rotation", "Tune Rotation");
     SmartDashboard.putData("Auto Mode", autoMode);
@@ -125,6 +125,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("elevator/elevator setpoint", 0);
     SmartDashboard.putNumber("elevator/elbow setpoint", 0);
     SmartDashboard.putNumber("elevator/arm setpoint", 0);
+    SmartDashboard.putBoolean("field relative", false);
   
   }
 
