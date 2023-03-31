@@ -89,7 +89,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // robotContainer.getDriveTrain().setGyroAngle(0);
-    new InstantCommand(() -> {robotContainer.getLED().showAuto();});
+    robotContainer.getLED().showAuto();
     autoCommand = robotContainer.getAutonomousCommand();
     boolean mirrored = !(DriverStation.getAlliance() == Alliance.Blue); 
     // robotContainer.getDriveTrain().resetOdometry(robotContainer.getInitialPose("1Piece", mirrored));
@@ -120,7 +120,7 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.cancel();
     }
-    new InstantCommand(() -> {robotContainer.getLED().turnOff();});
+    robotContainer.getLED().turnOff();
     robotContainer.getGrabber().removeDefaultCommand();
   }
 

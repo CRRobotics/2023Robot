@@ -11,11 +11,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class LED extends SubsystemBase {
   private AddressableLED led;
   private AddressableLEDBuffer ledBuffer;
+  private int count;
 
   public LED() {
     led = new AddressableLED(0);
     ledBuffer = new AddressableLEDBuffer(60);
     led.setLength(ledBuffer.getLength());
+    count = 0;
 
     led.setData(ledBuffer);
     led.start();
@@ -55,5 +57,12 @@ public class LED extends SubsystemBase {
         ledBuffer.setRGB(i, 255, 0, 0);
     }
     led.setData(ledBuffer);
+  }
+
+  @Override
+  public void periodic() {
+    // ledBuffer.setRGB(count, 0, 0, 0);
+    // ledBuffer.setRGB(count + 1, 255, 0, 0);
+    // count = (count + 1) % ledBuffer.getLength();
   }
 }

@@ -60,7 +60,7 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
                 speedAdjustedMaxSpeed = maxSpeed;
                 break;
             case slow:
-                speedAdjustedMaxSpeed = maxSpeed * .1;
+                speedAdjustedMaxSpeed = maxSpeed * .25;
                 break;
         }
         SmartDashboard.putNumber("adjusted max speed", speedAdjustedMaxSpeed);

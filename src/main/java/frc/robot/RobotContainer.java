@@ -74,6 +74,10 @@ public class RobotContainer {
     return elevator;
   }
 
+  public static void setDriveState(DriveStates state) {
+    driveStates = state;
+  }
+
   public Grabber getGrabber() {
     return grabber;
   }
