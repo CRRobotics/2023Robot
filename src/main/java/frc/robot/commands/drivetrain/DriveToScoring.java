@@ -22,7 +22,7 @@ public class DriveToScoring extends CommandBase {
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
         driveTrain.closestScoringCommand().schedule();
     }
     // @Override

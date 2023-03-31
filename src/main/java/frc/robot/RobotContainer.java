@@ -49,12 +49,15 @@ import frc.robot.misc.Constants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.LED;
+import frc.robot.subsystems.LED;
 
 public class RobotContainer {
   // The robot's subsystems
   private final DriveTrain driveTrain = new DriveTrain();
   private final Elevator elevator = new Elevator();
   private final Grabber grabber = new Grabber();
+  private final LED led = new LED();
 
   // The driver's controller
   public static DriveStates driveStates = DriveStates.normal;
@@ -75,6 +78,10 @@ public class RobotContainer {
 
   public DriveTrain getDriveTrain() {
     return driveTrain;
+  }
+
+  public LED getLED() {
+    return led;
   }
 
   static {
@@ -160,8 +167,6 @@ new JoystickButton(driver, XboxController.Button.kB.value)
   .whileTrue(new DriveToPiece(driveTrain));
 new JoystickButton(driver, 6).whileTrue(new DriveSlow());
 new JoystickButton(driver, 5).whileTrue(new DriveFast());
-new JoystickButton(driver, XboxController.Button.kA.value)
-    .whileTrue(new Balance(driveTrain));
   }
 
   /**

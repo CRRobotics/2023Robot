@@ -355,7 +355,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         Translation2d robotPosition = getPose().getTranslation(); // current position
 
         // calculates which position is closest
-        double[] distances = new double[9];
+        double[] distances = new double[2];
         int minDistanceIndex = 0;
         for (int i = 0; i < distances.length; i++) {
             distances[i] = robotPosition.getDistance(new Translation2d(xTarget, scoringPositions[i]));
