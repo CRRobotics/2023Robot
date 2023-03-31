@@ -16,13 +16,11 @@ import frc.robot.subsystems.Grabber;
 public class TwoPiece extends SequentialCommandGroup {
     public TwoPiece(DriveTrain driveTrain, Elevator elevator, Grabber grabber) {
         addCommands(
-            new InstantCommand(() -> {Robot.setPieceType(PieceType.Cube);}),
             new AutoTop(elevator, grabber),
             driveTrain.followTrajectoryCommand(
                 PathPlanner.loadPath("2PieceA", Constants.Auto.constraints),
                 true
             ),
-            new InstantCommand(() -> {Robot.setPieceType(PieceType.Cone);}),
             new GroundPickupCube(elevator, grabber),
             driveTrain.followTrajectoryCommand(
                 PathPlanner.loadPath("2PieceB", Constants.Auto.constraints),

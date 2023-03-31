@@ -13,10 +13,8 @@ public class AutoTop extends SequentialCommandGroup{
             new Grab(grabber).withTimeout(.7),
             new PlaceTop(elevator),
             new Ungrab(grabber).withTimeout(.5),
-            new SetArmPosition(elevator, 0.755, -75, 0).withTimeout(5),
-            new SetArmPosition(elevator, 0.34, -75, 0).withTimeout(5),
-            new SetArmPosition(elevator, 0.1, Constants.Elevator.elbowSafe, Constants.Elevator.wristSafe).withTimeout(5)
+            new FoldIn(elevator)
+
         );
-        System.out.println("goofier auto called");
     }
 }

@@ -29,5 +29,10 @@ public class Balance extends CommandBase implements Constants.Auto {
         driveTrain.setMotorSpeeds(pidController.calculate(driveTrain.getPitch()));
     }
 
+    @Override
+    public void end(boolean interrupted) {
+        driveTrain.setMotorSpeeds(0);
+    }
+
 
 }

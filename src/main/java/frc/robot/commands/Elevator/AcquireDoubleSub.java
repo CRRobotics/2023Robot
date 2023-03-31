@@ -13,7 +13,7 @@ public class AcquireDoubleSub extends SequentialCommandGroup{
             addCommands(
                 new SetArmPosition(elevator, 0.2, 0, Constants.Elevator.elbowSafe, 0, Constants.Elevator.wristSafe, 0).withTimeout(5),
                 // new SetArmPosition(elevator, 0.2, Constants.Elevator.elbowSafe, Constants.Elevator.wristSafe).withTimeout(5),
-                new SetArmPosition(elevator, 0.18, -93.5, 28).withTimeout(5)
+                new SetArmPosition(elevator, 0.22, -93.5, 26).withTimeout(5)
             );
         
     }

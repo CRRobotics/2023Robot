@@ -316,38 +316,65 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     }
 
     public Command driveToPieceCommand() {
-        double[] pieceData;
-        if (NetworkTableWrapper.getArray("Detector", "Cone")[0] == 1) {
-            pieceData = NetworkTableWrapper.getArray("Detector", "Cone");
-        } else {
-            pieceData = NetworkTableWrapper.getArray("Detector", "Cube");
-        }
-        Translation2d currentPosition = getPose().getTranslation();
+        // double[] pieceData;
+        // if (NetworkTableWrapper.getArray("Detector", "Cone")[0] == 1) {
+        //     pieceData = NetworkTableWrapper.getArray("Detector", "Cone");
+        // } else {
+        //     pieceData = NetworkTableWrapper.getArray("Detector", "Cube");
+        // }
+        // Translation2d currentPosition = getPose().getTranslation();
 
-        double xCoordinateOfRobot = currentPosition.getX();
-        double yCoordinateOfRobot = currentPosition.getY();
-        double rotationAngleOfRobot = getPose().getRotation().getRadians();
-        GetGlobalCoordinates myGlobalCoordinates = new GetGlobalCoordinates(xCoordinateOfRobot, yCoordinateOfRobot, rotationAngleOfRobot, pieceData);
-        double targetX = myGlobalCoordinates.globalX + (DriverStation.getAlliance() == Alliance.Blue ? -0.77 : 0.77);
-        double targetY = myGlobalCoordinates.globalY;
-        // double targetX = 0.872;
-        // double targetY = 6.77;
-        Rotation2d translationRotation = new Rotation2d(targetX, targetY);
-        SmartDashboard.putNumber("target X", targetX);
-        SmartDashboard.putNumber("target Y", targetY);
+        // double xCoordinateOfRobot = currentPosition.getX();
+        // double yCoordinateOfRobot = currentPosition.getY();
+        // double rotationAngleOfRobot = getPose().getRotation().getRadians();
+        // GetGlobalCoordinates myGlobalCoordinates = new GetGlobalCoordinates(xCoordinateOfRobot, yCoordinateOfRobot, rotationAngleOfRobot, pieceData);
+        // double targetX = myGlobalCoordinates.globalX + (DriverStation.getAlliance() == Alliance.Blue ? -0.77 : 0.77);
+        // double targetY = myGlobalCoordinates.globalY;
+
+        // Rotation2d translationRotation = new Rotation2d(targetX, targetY);
+        // SmartDashboard.putNumber("target X", targetX);
+        // SmartDashboard.putNumber("target Y", targetY);
+        // Command driveCommand = followTrajectoryCommand(PathPlanner.generatePath(
+        //     new PathConstraints(0.5, 0.5),
+        //     new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation()),
+        //     new PathPoint(new Translation2d(targetX, targetY), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180))
+        //     // new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation())
+        //     ),
+        //     false);
+        // field.getObject("traj").setTrajectory(PathPlanner.generatePath(
+        //     new PathConstraints(0.5, 0.5),
+        //     new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation()),
+        //     new PathPoint(new Translation2d(targetX, targetY), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180))
+        //     // new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation())
+        //     ));
+        // return driveCommand;
+        double xTarget = DriverStation.getAlliance().equals(Alliance.Red) ? 0.72 : 15.8;
+        double[] scoringPositions = {
+            6.15, 7.48 // y positions in m of 9 scoring positions
+        };
+        Translation2d robotPosition = getPose().getTranslation(); // current position
+
+        // calculates which position is closest
+        double[] distances = new double[9];
+        int minDistanceIndex = 0;
+        for (int i = 0; i < distances.length; i++) {
+            distances[i] = robotPosition.getDistance(new Translation2d(xTarget, scoringPositions[i]));
+            if (distances[i] < distances[minDistanceIndex]) {
+                minDistanceIndex = i;
+            }
+        }
+        //minDistanceIndex = 5;
+        SmartDashboard.putNumber("closest scoring position", minDistanceIndex);
+
+        Pose2d targetPose = new Pose2d(new Translation2d(xTarget, scoringPositions[minDistanceIndex]), Rotation2d.fromDegrees(0)); // top node on red
+        Translation2d translationDifference = targetPose.getTranslation().minus(robotPosition); // difference between target and current
+        // calculates wheel angle needed to target from x and y components
+        Rotation2d translationRotation = new Rotation2d(translationDifference.getX(), translationDifference.getY());
         Command driveCommand = followTrajectoryCommand(PathPlanner.generatePath(
             new PathConstraints(0.5, 0.5),
-            new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation()),
-            new PathPoint(new Translation2d(targetX, targetY), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180))
-            // new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation())
-            ),
+            new PathPoint(robotPosition, translationRotation, getPose().getRotation()), // starting pose
+            new PathPoint(targetPose.getTranslation(), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Red ? 0 : 180))), // ending pose
             false);
-        field.getObject("traj").setTrajectory(PathPlanner.generatePath(
-            new PathConstraints(0.5, 0.5),
-            new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation()),
-            new PathPoint(new Translation2d(targetX, targetY), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180))
-            // new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation())
-            ));
         return driveCommand;
     }
 

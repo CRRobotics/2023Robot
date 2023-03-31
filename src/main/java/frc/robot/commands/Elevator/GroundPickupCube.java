@@ -14,7 +14,7 @@ public class GroundPickupCube extends SequentialCommandGroup {
         addCommands( // Elevator: 0, Elbow: 52.2, Wrist: 0.1
             new SetArmPosition(elevator, 0, Constants.Elevator.elbowSafe, Constants.Elevator.wristSafe).withTimeout(5),
             new SetArmPosition(elevator, 0, 52.2, Constants.Elevator.wristSafe).withTimeout(5),
-            new SetArmPosition(elevator, 0, 52.2, 5)
+            new SetArmPosition(elevator, 0, 52.2, 10)
         );
     }
 }

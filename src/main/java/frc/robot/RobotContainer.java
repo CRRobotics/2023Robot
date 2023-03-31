@@ -158,10 +158,10 @@ new JoystickButton(driver, XboxController.Button.kA.value)
   .whileTrue(new DriveToScoring(driveTrain));
 new JoystickButton(driver, XboxController.Button.kB.value)
   .whileTrue(new DriveToPiece(driveTrain));
-new JoystickButton(driver, XboxController.Button.kX.value)
-  .whileTrue(new BalanceRoutine(driveTrain));
 new JoystickButton(driver, 6).whileTrue(new DriveSlow());
 new JoystickButton(driver, 5).whileTrue(new DriveFast());
+new JoystickButton(driver, XboxController.Button.kA.value)
+    .whileTrue(new Balance(driveTrain));
   }
 
   /**

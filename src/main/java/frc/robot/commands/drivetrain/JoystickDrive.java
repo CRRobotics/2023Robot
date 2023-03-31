@@ -6,7 +6,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
@@ -58,7 +60,7 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
                 speedAdjustedMaxSpeed = maxSpeed;
                 break;
             case slow:
-                speedAdjustedMaxSpeed = maxSpeed * .4;
+                speedAdjustedMaxSpeed = maxSpeed * .1;
                 break;
         }
         SmartDashboard.putNumber("adjusted max speed", speedAdjustedMaxSpeed);
@@ -132,7 +134,7 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
 
         SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(
             fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(driveTrain.getGyroAngle()))
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(DriverStation.getAlliance() == Alliance.Blue?driveTrain.getGyroAngle(): driveTrain.getGyroAngle() + Math.PI))
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
         driveTrain.setModuleStates(swerveModuleStates);
     }
