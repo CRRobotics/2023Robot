@@ -7,14 +7,17 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.Auto.TuneRotation;
 import frc.robot.misc.PieceType;
+import frc.robot.subsystems.LED;
 
 /**
  * Subsubsubclass of the <code>RobotBase</code> class from edu.wpi.first.wpilibj.RobotBase
@@ -48,6 +51,7 @@ public class Robot extends TimedRobot {
     robotContainer = new RobotContainer();
     pieceType = PieceType.Cone;
     System.out.println("Adam says hi");
+
   }
 
   /**
@@ -91,6 +95,7 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.schedule();
     }
+    new InstantCommand(() -> {robotContainer.getLED().showAuto();});
     
   }
 
@@ -104,7 +109,9 @@ public class Robot extends TimedRobot {
    * Same as <code>robotExit</code>, but only for the autonomous state
    */
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+    new InstantCommand(() -> {robotContainer.getLED().turnOff();});
+  }
 
   /**
    * Same as <code>robotInnit</code>, but only for the teleoperated state

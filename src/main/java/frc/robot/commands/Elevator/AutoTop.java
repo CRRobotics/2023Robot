@@ -8,11 +8,11 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
 
 public class AutoTop extends SequentialCommandGroup{
-    public AutoTop(Elevator elevator, Grabber grabber){
+    public AutoTop(Elevator elevator, Grabber grabber) {
         addCommands(
             new Grab(grabber).withTimeout(.7),
             new PlaceTop(elevator),
-            new Ungrab(grabber).withTimeout(.5),
+            new Ungrab(grabber).withTimeout(.7),
             new FoldIn(elevator)
 
         );
