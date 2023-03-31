@@ -89,13 +89,13 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // robotContainer.getDriveTrain().setGyroAngle(0);
+    new InstantCommand(() -> {robotContainer.getLED().showAuto();});
     autoCommand = robotContainer.getAutonomousCommand();
     boolean mirrored = !(DriverStation.getAlliance() == Alliance.Blue); 
     // robotContainer.getDriveTrain().resetOdometry(robotContainer.getInitialPose("1Piece", mirrored));
     if (autoCommand != null) {
       autoCommand.schedule();
     }
-    new InstantCommand(() -> {robotContainer.getLED().showAuto();});
     
   }
 
@@ -110,7 +110,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousExit() {
-    new InstantCommand(() -> {robotContainer.getLED().turnOff();});
   }
 
   /**
@@ -121,6 +120,7 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.cancel();
     }
+    new InstantCommand(() -> {robotContainer.getLED().turnOff();});
     robotContainer.getGrabber().removeDefaultCommand();
   }
 

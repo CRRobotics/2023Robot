@@ -25,6 +25,8 @@ import frc.robot.commands.Auto.TuneTranslation;
 import frc.robot.commands.Auto.TwoPiece;
 import frc.robot.commands.Auto.TwoPieceBalance;
 import frc.robot.commands.Auto.ZeroPiece;
+import frc.robot.commands.Auto.OnePieceEngageNoBalance;
+import frc.robot.commands.Auto.OnePieceEngageNoBalanceRed;
 import frc.robot.commands.Auto.ZeroPiece2;
 import frc.robot.commands.Auto.ZeroPieceBalance;
 import frc.robot.commands.Elevator.AcquireDoubleSub;
@@ -100,6 +102,10 @@ public class RobotContainer {
     autoMode.addOption("OnePieceRed", "OnePiece2");
     autoMode.addOption("Tune Translation", "Tune Translation");
     autoMode.addOption("Tune Rotation", "Tune Rotation");
+    autoMode.addOption("OnePieceEngageNoBalanceBlue", "OnePieceEngageNoBalanceBlue");
+    autoMode.addOption("OnePieceEngageNoBalanceRed", "OnePieceEngageNoBalanceRed");
+
+  
     SmartDashboard.putData("Auto Mode", autoMode);
   }
 
@@ -125,7 +131,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("drivetrain/thetaI", 0);
     SmartDashboard.putNumber("drivetrain/thetaD", 0);
 
-    SmartDashboard.putNumber("drivetrain/balanceP", 0);
+    SmartDashboard.putNumber("drivetrain/balanceP", 0.0001);
     SmartDashboard.putNumber("drivetrain/balanceI", 0);
     SmartDashboard.putNumber("drivetrain/balanceD", 0);
 
@@ -161,12 +167,16 @@ public class RobotContainer {
     new JoystickButton(controller, XboxController.Button.kRightStick.value)
       .onTrue(new InstantCommand(() -> {Robot.togglePieceType();}));
 
-new JoystickButton(driver, XboxController.Button.kA.value)
-  .whileTrue(new DriveToScoring(driveTrain));
-new JoystickButton(driver, XboxController.Button.kB.value)
-  .whileTrue(new DriveToPiece(driveTrain));
-new JoystickButton(driver, 6).whileTrue(new DriveSlow());
-new JoystickButton(driver, 5).whileTrue(new DriveFast());
+  new JoystickButton(driver, XboxController.Button.kA.value)
+    .whileTrue(new DriveToScoring(driveTrain));
+  new JoystickButton(driver, XboxController.Button.kB.value)
+    .whileTrue(new DriveToPiece(driveTrain));
+  new JoystickButton(driver, 6).whileTrue(new DriveSlow());
+  new JoystickButton(driver, 5).whileTrue(new DriveFast());
+  new JoystickButton(driver, XboxController.Button.kY.value)
+    .whileTrue(new Balance(driveTrain, led));
+  new JoystickButton(driver, XboxController.Button.kStart.value)
+    .whileTrue(new InstantCommand(() -> {led.test();}));
   }
 
   /**
@@ -203,8 +213,8 @@ new JoystickButton(driver, 5).whileTrue(new DriveFast());
         auto = new AutoTop(elevator, grabber);
         break;
       // case "PlaceMid":
-        // auto = new AutoMid(elevator, grabber);
-        // break;
+      //   auto = new AutoMid(elevator, grabber);
+      //   break;
       case "PlaceLow":
         auto = new PlaceBottom(elevator, grabber);
         break;
@@ -219,6 +229,12 @@ new JoystickButton(driver, 5).whileTrue(new DriveFast());
         break;
       case "Tune Rotation":
         auto = new TuneRotation(driveTrain);
+        break;
+      case "OnePieceEngageNoBalanceBlue":
+        auto = new OnePieceEngageNoBalance(driveTrain, elevator, grabber);
+        break;
+        case "OnePieceEngageNoBalanceRed":
+        auto = new OnePieceEngageNoBalanceRed(driveTrain, elevator, grabber);
         break;
     }
     return auto;

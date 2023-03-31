@@ -99,7 +99,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
 
     @Override
     public void periodic() {
-
+        SmartDashboard.putNumber("pitch", getPitch());
         
         double xTarget = DriverStation.getAlliance().equals(Alliance.Red) ? 14.73 : 1.82;
         double[] scoringPositions = {

@@ -28,8 +28,8 @@ public class OnePieceOnePickupBalance extends SequentialCommandGroup {
             driveTrain.followTrajectoryCommand(
                 PathPlanner.loadPath("1Piece1PickupBalance", Constants.Auto.constraints),
                 true
-            ),
-            new Balance(driveTrain)
+            )
+            // new Balance(driveTrain)
         );
     }
 }

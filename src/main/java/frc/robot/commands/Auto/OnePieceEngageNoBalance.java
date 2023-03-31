@@ -1,5 +1,6 @@
 package frc.robot.commands.Auto;
 
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -13,15 +14,14 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
 
-public class OnePieceBalance extends SequentialCommandGroup {
-    public OnePieceBalance(DriveTrain driveTrain, Elevator elevator, Grabber grabber) {
+public class OnePieceEngageNoBalance extends SequentialCommandGroup {
+    public OnePieceEngageNoBalance(DriveTrain driveTrain, Elevator elevator, Grabber grabber) {
         addCommands(
-            new InstantCommand(() -> {Robot.setPieceType(PieceType.Cube);}),
+            new InstantCommand(() -> {Robot.setPieceType(PieceType.Cone);}),
             new AutoTop(elevator, grabber),
             driveTrain.followTrajectoryCommand(
-                PathPlanner.loadPath("1PieceBalance", Constants.Auto.constraints), 
+                PathPlanner.loadPath("DockNoEngageAutoBlue", new PathConstraints(0.5, 0.5)), 
                 true)
-            // new Balance(driveTrain)
         );
     }
 }

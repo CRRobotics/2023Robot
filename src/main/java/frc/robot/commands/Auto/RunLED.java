@@ -12,16 +12,11 @@ import frc.robot.misc.PieceType;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
+import frc.robot.subsystems.LED;
 
-public class OnePieceBalance extends SequentialCommandGroup {
-    public OnePieceBalance(DriveTrain driveTrain, Elevator elevator, Grabber grabber) {
+public class RunLED extends SequentialCommandGroup {
+    public RunLED(LED led) {
         addCommands(
-            new InstantCommand(() -> {Robot.setPieceType(PieceType.Cube);}),
-            new AutoTop(elevator, grabber),
-            driveTrain.followTrajectoryCommand(
-                PathPlanner.loadPath("1PieceBalance", Constants.Auto.constraints), 
-                true)
-            // new Balance(driveTrain)
-        );
+    );
     }
 }

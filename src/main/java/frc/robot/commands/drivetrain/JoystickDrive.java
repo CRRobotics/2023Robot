@@ -134,7 +134,7 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
 
         SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(
             fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(DriverStation.getAlliance() == Alliance.Blue?driveTrain.getGyroAngle(): driveTrain.getGyroAngle() + Math.PI))
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(DriverStation.getAlliance() == Alliance.Blue?driveTrain.getGyroAngle() + Math.PI: driveTrain.getGyroAngle() + Math.PI))
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
         driveTrain.setModuleStates(swerveModuleStates);
     }
