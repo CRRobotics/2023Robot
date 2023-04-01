@@ -51,6 +51,7 @@ public class Robot extends TimedRobot {
     robotContainer = new RobotContainer();
     pieceType = PieceType.Cone;
     System.out.println("Adam says hi");
+    robotContainer.getLED().codeRedRobotics();
 
   }
 
