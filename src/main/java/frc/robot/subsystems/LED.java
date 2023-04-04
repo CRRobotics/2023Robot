@@ -2,18 +2,27 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LED extends SubsystemBase {
   private AddressableLED led;
   private AddressableLEDBuffer ledBuffer;
+  private static final Color RED = new Color(255, 0, 0);
+  private static final Color WHITE = new Color(255, 255, 255);
+  private static final Color YELLOW = new Color(255, 255, 127);
+  private static final Color BLUE = new Color(100, 13, 255);
+  private static final Color OFF = new Color(0, 0, 0);
   private int count;
+  private int speed = 4;
+  private int speedCount;
 
   public LED() {
     led = new AddressableLED(0);
     ledBuffer = new AddressableLEDBuffer(60);
     led.setLength(ledBuffer.getLength());
     count = 0;
+    speedCount = 0;
 
     led.setData(ledBuffer);
     led.start();
@@ -21,14 +30,14 @@ public class LED extends SubsystemBase {
 
   public void showCone() {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
-        ledBuffer.setRGB(i, 255, 255, 127);
+        ledBuffer.setLED(i, YELLOW);
     }
     led.setData(ledBuffer);
   }
 
   public void showCube() {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
-        ledBuffer.setRGB(i, 100, 13, 255);
+        ledBuffer.setLED(i, BLUE);
     }
     led.setData(ledBuffer);
   }
@@ -36,40 +45,69 @@ public class LED extends SubsystemBase {
   public void showAuto() {
     System.out.println("led running");
     for (int i = 0; i < ledBuffer.getLength(); i++) {
-        ledBuffer.setRGB(i, 0, 255, 0);
+        ledBuffer.setLED(i, WHITE);
     }
     led.setData(ledBuffer);
   }
 
-  public void codeRedRobotics() {
-    System.out.println("WHO ARE WE?");
-    System.out.println("CODE RED!");
+  public void red() {
+    // System.out.println("WHO ARE WE?");
+    // System.out.println("CODE RED!");
 
     for (int i = 0; i < ledBuffer.getLength(); i++) {
-        ledBuffer.setRGB(i, 255, 1, 1);
+        ledBuffer.setLED(i, RED);
     }
     led.setData(ledBuffer);
   }
+
+
   public void turnOff() {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
-        ledBuffer.setRGB(i, 0, 0, 0);
+        ledBuffer.setLED(i, OFF);
     }
     led.setData(ledBuffer);
   }
 
   public void test() {
     for (int i = 0; i < ledBuffer.getLength(); i++) {
-        ledBuffer.setRGB(i, 255, 0, 0);
+        ledBuffer.setLED(i, RED);
     }
     led.setData(ledBuffer);
   }
 
   @Override
   public void periodic() {
-    // ledBuffer.setRGB(count, 202, 17, 17);
-    // System.out.println(count + "set");
-    // count = (count + 1) % (ledBuffer.getLength());
-    // System.out.println(count + "reset");
-    // ledBuffer.setRGB(count + 1, 0, 0, 0);
+    scrollHead(count);
+    if (speedCount < speed) {
+      speedCount++;
+    }
+    else {
+      speedCount = 0;
+      count++;
+    }
+
+    count %= ledBuffer.getLength();
+    led.setData(ledBuffer);
+  }
+
+  public void scrollHead(int i) {
+    i %= ledBuffer.getLength(); // checks for overflow
+    // System.out.println("set: " + i); // debug
+    ledBuffer.setLED(i, RED); // set color
+    i++; // increment
+
+    i %= ledBuffer.getLength();
+    // System.out.println("reset: " + i);
+    ledBuffer.setLED(i, OFF);
+    i++; // increment
+
+    i %= ledBuffer.getLength();
+    System.out.println("reset: " + i);
+    ledBuffer.setLED(i, WHITE);
+    i++; // increment
+
+    i %= ledBuffer.getLength();
+    System.out.println("reset: " + i);
+    ledBuffer.setLED(i, OFF);
   }
 }

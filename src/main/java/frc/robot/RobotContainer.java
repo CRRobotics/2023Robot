@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,15 +17,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Auto.OnePiece;
 import frc.robot.commands.Auto.OnePiece2;
-import frc.robot.commands.Auto.OnePieceBalance;
+import frc.robot.commands.Auto.OnePieceEngageNoBalance;
+import frc.robot.commands.Auto.OnePieceEngageNoBalanceRed;
 import frc.robot.commands.Auto.OnePieceOnePickupBalance;
 import frc.robot.commands.Auto.TuneRotation;
 import frc.robot.commands.Auto.TuneTranslation;
 import frc.robot.commands.Auto.TwoPiece;
 import frc.robot.commands.Auto.TwoPieceBalance;
 import frc.robot.commands.Auto.ZeroPiece;
-import frc.robot.commands.Auto.OnePieceEngageNoBalance;
-import frc.robot.commands.Auto.OnePieceEngageNoBalanceRed;
 import frc.robot.commands.Auto.ZeroPiece2;
 import frc.robot.commands.Auto.ZeroPieceBalance;
 import frc.robot.commands.Elevator.AcquireDoubleSub;
@@ -36,22 +34,19 @@ import frc.robot.commands.Elevator.GroundPickupCube;
 import frc.robot.commands.Elevator.PlaceBottom;
 import frc.robot.commands.Elevator.PlaceMid;
 import frc.robot.commands.Elevator.PlaceTop;
-import frc.robot.commands.Elevator.SetArmPosition;
-import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.drivetrain.Balance;
-import frc.robot.commands.drivetrain.BalanceRoutine;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
 import frc.robot.commands.drivetrain.DriveStates;
 import frc.robot.commands.drivetrain.DriveToPiece;
 import frc.robot.commands.drivetrain.DriveToScoring;
+import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.grabber.Grab;
 import frc.robot.commands.grabber.Ungrab;
 import frc.robot.misc.Constants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Grabber;
-import frc.robot.subsystems.LED;
 import frc.robot.subsystems.LED;
 
 public class RobotContainer {
@@ -171,16 +166,16 @@ public class RobotContainer {
     new JoystickButton(controller, XboxController.Button.kRightStick.value)
       .onTrue(new InstantCommand(() -> {Robot.togglePieceType();}));
 
-  new JoystickButton(driver, XboxController.Button.kA.value)
-    .whileTrue(new DriveToScoring(driveTrain));
-  new JoystickButton(driver, XboxController.Button.kB.value)
-    .whileTrue(new DriveToPiece(driveTrain));
+  // new JoystickButton(driver, XboxController.Button.kA.value)
+  //   .whileTrue(new DriveToScoring(driveTrain));
+  // new JoystickButton(driver, XboxController.Button.kB.value)
+  //   .whileTrue(new DriveToPiece(driveTrain));
   new JoystickButton(driver, 6).whileTrue(new DriveSlow());
   new JoystickButton(driver, 5).whileTrue(new DriveFast());
-  new JoystickButton(driver, XboxController.Button.kY.value)
-    .whileTrue(new Balance(driveTrain, led));
-  new JoystickButton(driver, XboxController.Button.kStart.value)
-    .whileTrue(new InstantCommand(() -> {led.test();}));
+  // new JoystickButton(driver, XboxController.Button.kY.value)
+  //   .whileTrue(new Balance(driveTrain, led));
+// new JoystickButton(driver, XboxController.Button.kStart.value)
+//   .whileTrue(new InstantCommand(() -> {led.test();}));
   }
 
   /**

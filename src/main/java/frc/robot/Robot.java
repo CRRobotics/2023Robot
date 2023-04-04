@@ -51,8 +51,6 @@ public class Robot extends TimedRobot {
     robotContainer = new RobotContainer();
     pieceType = PieceType.Cone;
     System.out.println("Adam says hi");
-    robotContainer.getLED().codeRedRobotics();
-
   }
 
   /**
@@ -96,8 +94,7 @@ public class Robot extends TimedRobot {
     // robotContainer.getDriveTrain().resetOdometry(robotContainer.getInitialPose("1Piece", mirrored));
     if (autoCommand != null) {
       autoCommand.schedule();
-    }
-    
+    } 
   }
 
   /**
@@ -121,7 +118,7 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.cancel();
     }
-    robotContainer.getLED().turnOff();
+    robotContainer.getLED().red();
     robotContainer.getGrabber().removeDefaultCommand();
   }
 
