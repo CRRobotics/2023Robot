@@ -34,7 +34,7 @@ public class TuneRotation extends SequentialCommandGroup {
         PathPlannerTrajectory trajectory = PathPlanner.generatePath(
             new PathConstraints(0.25, 0.25),
             new PathPoint(driveTrain.getPose().getTranslation(), new Rotation2d(0), initialHeading),
-            new PathPoint(targetTranslation, targetHeading,  targetHolonomicRotation));
+            new PathPoint(targetTranslation, targetHeading,  targetHolonomicRotation)); 
         driveTrain.getField().getObject("traj").setTrajectory(trajectory);
         String[] states = new String[4];
         for (int i = 0; i < driveTrain.getModuleStates().length; i++) {

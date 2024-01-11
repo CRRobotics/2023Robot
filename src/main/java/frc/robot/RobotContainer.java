@@ -35,6 +35,7 @@ import frc.robot.commands.Elevator.PlaceBottom;
 import frc.robot.commands.Elevator.PlaceMid;
 import frc.robot.commands.Elevator.PlaceTop;
 import frc.robot.commands.drivetrain.Balance;
+import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
 import frc.robot.commands.drivetrain.DriveStates;
@@ -108,6 +109,13 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Mode", autoMode);
   }
 
+  public static SendableChooser<String> ddr = new SendableChooser<>();
+  static {
+    ddr.setDefaultOption("controller", "controller");
+    ddr.addOption("ddr", "ddr");
+    SmartDashboard.putData("Use DDR?", ddr);
+  }
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -118,6 +126,7 @@ public class RobotContainer {
     // Configure default commands
     driveTrain.setDefaultCommand(
       new JoystickDrive(driveTrain));
+      // new DDRDrive(driveTrain));
     grabber.setDefaultCommand(new Grab(grabber));
 
     SmartDashboard.putNumber("grabber/speed", 0.6);
@@ -176,6 +185,22 @@ public class RobotContainer {
   //   .whileTrue(new Balance(driveTrain, led));
 // new JoystickButton(driver, XboxController.Button.kStart.value)
 //   .whileTrue(new InstantCommand(() -> {led.test();}));
+  }
+
+  public Command getDriveCommand() {
+    Command driveCommand;
+    switch (ddr.getSelected()) {
+      default:
+        driveCommand = new JoystickDrive(driveTrain);
+        break;
+      case "controller":
+        driveCommand = new JoystickDrive(driveTrain);
+        break;
+      case "ddr":
+        driveCommand = new DDRDrive(driveTrain);
+        break;
+    }
+    return driveCommand;
   }
 
   /**

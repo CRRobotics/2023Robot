@@ -102,12 +102,12 @@ public class LED extends SubsystemBase {
     i++; // increment
 
     i %= ledBuffer.getLength();
-    System.out.println("reset: " + i);
+    // System.out.println("reset: " + i);
     ledBuffer.setLED(i, WHITE);
     i++; // increment
 
     i %= ledBuffer.getLength();
-    System.out.println("reset: " + i);
+    // System.out.println("reset: " + i);
     ledBuffer.setLED(i, OFF);
   }
 }

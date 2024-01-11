@@ -60,7 +60,6 @@
         "Robot": {
           "style": "Box/Image"
         },
-        "image": "C:\\Users\\user\\Downloads\\PathPlanner-Windows\\data\\flutter_assets\\images\\field23.png",
         "traj": {
           "arrowSize": 21,
           "arrows": false,
@@ -178,7 +177,7 @@
     "Plot <3>": {
       "plots": [
         {
-          "height": 242,
+          "height": 332,
           "series": [
             {
               "color": [
@@ -205,7 +204,7 @@
     "Plot <4>": {
       "plots": [
         {
-          "height": 362,
+          "height": 332,
           "series": [
             {
               "color": [
@@ -241,7 +240,7 @@
     "Plot <5>": {
       "plots": [
         {
-          "height": 0
+          "height": 332
         }
       ]
     },
@@ -292,7 +291,7 @@
               "autoFit": true
             }
           ],
-          "height": 332,
+          "height": 0,
           "series": [
             {
               "color": [

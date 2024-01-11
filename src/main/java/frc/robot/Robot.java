@@ -25,6 +25,7 @@ import frc.robot.subsystems.LED;
  */
 public class Robot extends TimedRobot {
   private Command autoCommand;
+  private Command driveCommand;
 
   private RobotContainer robotContainer;
   public static PieceType pieceType;
@@ -120,6 +121,11 @@ public class Robot extends TimedRobot {
     }
     robotContainer.getLED().red();
     robotContainer.getGrabber().removeDefaultCommand();
+    driveCommand = robotContainer.getDriveCommand();
+    System.out.println("driveCommand: " + driveCommand);
+    if (driveCommand != null) {
+      driveCommand.schedule();
+    }
   }
 
   /**
