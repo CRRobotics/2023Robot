@@ -55,7 +55,7 @@ public class LED extends SubsystemBase {
     // System.out.println("CODE RED!");
 
     for (int i = 0; i < ledBuffer.getLength(); i++) {
-        ledBuffer.setLED(i, RED);
+        ledBuffer.setLED(i, BLUE);
     }
     led.setData(ledBuffer);
   }
@@ -77,17 +77,12 @@ public class LED extends SubsystemBase {
 
   @Override
   public void periodic() {
-    scrollHead(count);
-    if (speedCount < speed) {
-      speedCount++;
+    for (int i = 0; i < ledBuffer.getLength(); i++) {
+      ledBuffer.setHSV(i, (count + i * (int)(180.0 / ledBuffer.getLength())) % 180, 255, 255);
+      // ledBuffer.setRGB(i, (int)(128 + 128*Math.sin(i)), 0, 0);
     }
-    else {
-      speedCount = 0;
-      count++;
-    }
-
-    count %= ledBuffer.getLength();
     led.setData(ledBuffer);
+    count += 5;
   }
 
   public void scrollHead(int i) {
